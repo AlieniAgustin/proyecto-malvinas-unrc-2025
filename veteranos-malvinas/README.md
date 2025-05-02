@@ -63,7 +63,7 @@ La cantidad **máxima de personas** que se podrá almacenar será **X veteranos*
 
 - **Otros**:
   - X (para templates, DEFINIR QUIEN ES X)
-  - Moqups (bocetos gráficos de interfaz)
+  - Figma (bocetos gráficos de interfaz)
 
 ---
 
@@ -98,7 +98,7 @@ veteranos-malvinas/
 ├── requirements.txt          # Lista de dependencias
 ├── .gitignore                # Archivos ignorados por Git
 ├── README.md                 # Este archivo
-├── moqups-link.txt           # 🔗 Enlace al boceto gráfico en Moqups
+├── figma-link.txt           # 🔗 Enlace al boceto gráfico en Moqups
 └── documentacion/            # 📄 PDF con requerimientos del proyecto
     └── requerimientos.pdf
 ```
@@ -108,7 +108,7 @@ veteranos-malvinas/
 ## 🧩 Bocetos visuales del proyecto (Moqups)
 
 Podés visualizar los diseños preliminares de la interfaz en el siguiente enlace:  
-📌 **[Ver diseño en Moqups](https://app.moqups.com/OSiMSWQboXL3U89B3LBsX2jzk8QPjwEX/view/page/a71c591d7)**
+📌 **[Ver diseño en Moqups](https://www.figma.com/design/lnTIY4ccpOcWNXkZkoarZG)**
 
 ---
 
