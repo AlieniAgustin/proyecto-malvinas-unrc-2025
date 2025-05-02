@@ -105,10 +105,10 @@ veteranos-malvinas/
 
 ---
 
-## 🧩 Bocetos visuales del proyecto (Moqups)
+## 🧩 Bocetos visuales del proyecto (Figma)
 
 Podés visualizar los diseños preliminares de la interfaz en el siguiente enlace:  
-📌 **[Ver diseño en Moqups](https://www.figma.com/design/lnTIY4ccpOcWNXkZkoarZG)**
+📌 **[Ver diseño en Figma](https://www.figma.com/design/lnTIY4ccpOcWNXkZkoarZG)**
 
 ---
 
