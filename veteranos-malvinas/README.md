@@ -69,37 +69,39 @@ La cantidad **máxima de personas** que se podrá almacenar será **X veteranos*
 
 ## 📁 Estructura del Proyecto
 
+```
 veteranos-malvinas/
 │
-├── app/ # Código principal de la aplicación
-│ ├── init.py # Inicialización de la app Flask
-│ ├── routes/ # Módulos de rutas
-│ │ └── main_routes.py
-│ ├── templates/ # Archivos HTML con X (DEFINIR QUIEN ES X)
-│ │ ├── base.html
-│ │ ├── index.html
-│ │ └── ...
-│ ├── static/ # Recursos estáticos
-│ │ ├── css/
-│ │ │ └── styles.css
-│ │ ├── js/
-│ │ │ └── scripts.js
-│ │ └── img/
-│ ├── models/ # Modelos de datos
-│ │ └── veterano.py
-│ ├── forms/ # Formularios (opcional)
-│ │ └── veterano_form.py
-│ └── utils/ # Funciones auxiliares
-│   └── db.py
+├── app/                      # Código principal de la aplicación
+│   ├── __init__.py           # Inicialización de la app Flask
+│   ├── routes/               # Módulos de rutas
+│   │   └── main_routes.py
+│   ├── templates/            # Archivos HTML con Jinja2 (motor de plantillas de Flask)
+│   │   ├── base.html
+│   │   ├── index.html
+│   │   └── ...
+│   ├── static/               # Recursos estáticos
+│   │   ├── css/
+│   │   │   └── styles.css
+│   │   ├── js/
+│   │   │   └── scripts.js
+│   │   └── img/
+│   ├── models/               # Modelos de datos
+│   │   └── veterano.py
+│   ├── forms/                # Formularios (opcional)
+│   │   └── veterano_form.py
+│   └── utils/                # Funciones auxiliares
+│       └── db.py
 │
-├── config.py # Configuración general
-├── run.py # Punto de inicio de la aplicación
-├── requirements.txt # Lista de dependencias
-├── .gitignore # Archivos ignorados por Git
-├── README.md # Este archivo
-├── moqups-link.txt # 🔗 Enlace al boceto gráfico en Moqups
-└── documentacion/ # 📄 PDF con requerimientos del proyecto
+├── config.py                 # Configuración general
+├── run.py                    # Punto de inicio de la aplicación
+├── requirements.txt          # Lista de dependencias
+├── .gitignore                # Archivos ignorados por Git
+├── README.md                 # Este archivo
+├── moqups-link.txt           # 🔗 Enlace al boceto gráfico en Moqups
+└── documentacion/            # 📄 PDF con requerimientos del proyecto
     └── requerimientos.pdf
+```
 
 ---
 
