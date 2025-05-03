@@ -98,7 +98,7 @@ veteranos-malvinas/
 ├── requirements.txt          # Lista de dependencias
 ├── .gitignore                # Archivos ignorados por Git
 ├── README.md                 # Este archivo
-├── figma-link.txt           # 🔗 Enlace al boceto gráfico en Moqups
+├── figma-link.txt           # 🔗 Enlace al boceto gráfico en Figma
 └── documentacion/            # 📄 PDF con requerimientos del proyecto
     └── requerimientos.pdf
 ```
