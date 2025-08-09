@@ -62,7 +62,6 @@ La cantidad **máxima de personas** que se podrá almacenar será **X veteranos*
   - MySQL
 
 - **Otros**:
-  - X (para templates, DEFINIR QUIEN ES X)
   - Figma (bocetos gráficos de interfaz)
 
 ---
@@ -70,37 +69,28 @@ La cantidad **máxima de personas** que se podrá almacenar será **X veteranos*
 ## 📁 Estructura del Proyecto
 
 ```
-veteranos-malvinas/
-│
-├── app/                      # Código principal de la aplicación
-│   ├── __init__.py           # Inicialización de la app Flask
-│   ├── routes/               # Módulos de rutas
-│   │   └── main_routes.py
-│   ├── templates/            # Archivos HTML con Jinja2 (motor de plantillas de Flask)
-│   │   ├── base.html
-│   │   ├── index.html
-│   │   └── ...
-│   ├── static/               # Recursos estáticos
-│   │   ├── css/
-│   │   │   └── styles.css
-│   │   ├── js/
-│   │   │   └── scripts.js
-│   │   └── img/
-│   ├── models/               # Modelos de datos
-│   │   └── veterano.py
-│   ├── forms/                # Formularios (opcional)
-│   │   └── veterano_form.py
-│   └── utils/                # Funciones auxiliares
-│       └── db.py
-│
-├── config.py                 # Configuración general
-├── run.py                    # Punto de inicio de la aplicación
-├── requirements.txt          # Lista de dependencias
-├── .gitignore                # Archivos ignorados por Git
-├── README.md                 # Este archivo
-├── figma-link.txt           # 🔗 Enlace al boceto gráfico en Figma
-└── documentacion/            # 📄 PDF con requerimientos del proyecto
-    └── requerimientos.pdf
+proyecto-malvinas-unrc-2025/
+├── app
+│   ├── db.py
+│   ├── __init__.py
+│   ├── routes.py
+│   ├── static
+│   │   ├── css
+│   │   │   └── styles.css
+│   │   ├── img
+│   │   │   └── borrar.txt
+│   │   └── js
+│   │       └── scripts.js
+│   └── templates
+│       ├── base.html
+│       └── start.html
+├── config.py
+├── documentacion
+│   ├── figma-link.txt
+│   └── Proyecto Malvinas 2025_DEFINITIVO-1.pdf
+├── README.md
+├── requirements.txt
+└── run.py
 ```
 
 ---
