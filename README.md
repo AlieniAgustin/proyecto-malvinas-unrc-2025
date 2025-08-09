@@ -66,6 +66,32 @@ La cantidad **máxima de personas** que se podrá almacenar será **X veteranos*
 
 ---
 
+
+## Cómo correr el proyecto con Docker
+
+1. **Instalar Docker y Docker Compose**  
+   Asegurate de tener Docker y Docker Compose instalados en tu máquina.
+
+2. **Construir las imágenes**  
+   ```bash
+   sudo docker-compose build
+   ```
+
+3. **Levantar los servicios en segundo plano**  
+   ```bash
+   sudo docker-compose up -d
+   ```
+
+4. **Verificar que los servicios estén corriendo**  
+   ```bash
+   sudo docker ps
+   ```
+
+5. **Parar el proyecto cuando ya no lo necesiten**  
+   ```bash
+   sudo docker-compose down
+   ```
+
 ## 📁 Estructura del Proyecto
 
 ```
