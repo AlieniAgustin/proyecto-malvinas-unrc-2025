@@ -89,7 +89,7 @@ La cantidad **máxima de personas** que se podrá almacenar será **X veteranos*
 
 5. **Parar el proyecto cuando ya no lo necesiten**  
    ```bash
-   sudo docker-compose down
+   sudo docker-compose down -v
    ```
 
 ## 📁 Estructura del Proyecto
