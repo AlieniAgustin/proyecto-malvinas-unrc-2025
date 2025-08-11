@@ -11,8 +11,8 @@ services:
       - FLASK_ENV=development
       - MYSQL_HOST=db
       - MYSQL_USER=root
-      - MYSQL_PASSWORD=tu_password
-      - MYSQL_DB=nombre_base
+      - MYSQL_PASSWORD=Malvinas2025!
+      - MYSQL_DB=malvinas_db
     depends_on:
       - db
 
@@ -26,6 +26,7 @@ services:
       - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
+      - ./db:/docker-entrypoint-initdb.d
 
 volumes:
   mysql_data:

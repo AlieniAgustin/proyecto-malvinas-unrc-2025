@@ -10,5 +10,4 @@ def start():
     cursor.execute("SELECT NOW();")  # Consulta simple para probar
     current_time = cursor.fetchone()[0]
     cursor.close()
-    conn.close()
     return render_template('start.html', current_time=current_time)
