@@ -1,30 +1,9 @@
-<!-- templates/start.html -->
 {% extends "base.html" %}
 
-{% block title %}Lista de Personas{% endblock %}
+{% block title %}Inicio{% endblock %}
 
 {% block content %}
-<h2>Listado de Personas y Teléfonos</h2>
-<table border="1">
-    <thead>
-        <tr>
-            <th>DNI</th>
-            <th>Nombre</th>
-            <th>Apellido</th>
-            <th>Género</th>
-            <th>Teléfono</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for row in data %}
-        <tr>
-            <td>{{ row.dni }}</td>
-            <td>{{ row.nombre }}</td>
-            <td>{{ row.apellido }}</td>
-            <td>{{ row.genero }}</td>
-            <td>{{ row.telefono }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+  <h2>Bienvenido a la página de inicio</h2>
+  <p>Contenido en construcción.</p>
 {% endblock %}
+
