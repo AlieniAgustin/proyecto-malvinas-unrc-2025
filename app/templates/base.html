@@ -1,10 +1,26 @@
+<!-- templates/base.html -->
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-    <title>Mi App Flask</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Proyecto Malvinas{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    {% block content %}
-    {% endblock %}
+    <header>
+        <h1>Proyecto Malvinas - Administración de Personas</h1>
+        <nav>
+            <a href="/">Inicio</a>
+        </nav>
+    </header>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        <p>© 2025 Proyecto Malvinas</p>
+    </footer>
 </body>
 </html>
