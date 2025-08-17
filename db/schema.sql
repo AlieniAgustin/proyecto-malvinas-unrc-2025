@@ -68,6 +68,42 @@ CREATE TABLE agrupacion(
     REFERENCES localidad(id_localidad)
 );
 
+-- ver donde dejaremos las fotos dentro de los archivos para hacer la prueva
+DROP TABLE IF EXISTS foto;
+CREATE TABLE foto(
+  id_foto INT AUTO_INCREMENT PRIMARY KEY,
+  dni_foto VARCHAR(8) NOT NULL,
+  ruta_foto VARCHAR(255) NOT NULL,
+  CONSTRAINT fk_dni_persona FOREIGN KEY (dni_foto)
+    REFERENCES persona(dni) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+DROP TABLE IF EXISTS rol;
+CREATE TABLE rol (
+  id_rol INT AUTO_INCREMENT PRIMARY KEY,
+  nombre_rol ENUM(
+    'Presidente',
+    'Vicepresidente',
+    'Secretario',
+    'Tesorero',
+    'Secretario de Prensa',
+    'Secretario de Obra Social',
+    'Vocal Titular',
+    'Vocal Suplente'
+  ) NOT NULL UNIQUE
+);
+
+DROP TABLE IF EXISTS autoridad;
+CREATE TABLE autoridad (
+  dni_autoridad VARCHAR(8) NOT NULL,
+  id_rol INT NOT NULL,
+  CONSTRAINT pk_autoridad PRIMARY KEY(dni_autoridad, id_rol),
+  CONSTRAINT fk_autoridad_persona FOREIGN KEY (dni_autoridad)
+    REFERENCES persona(dni) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT fk_autoridad_rol FOREIGN KEY (id_rol)
+    REFERENCES rol(id_rol) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
 DROP TABLE IF EXISTS veterano;
 CREATE TABLE veterano(
   dni_veterano VARCHAR(8) NOT NULL,
@@ -96,5 +132,27 @@ CREATE TABLE veterano(
     --REFERENCES grado(id_grado) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT fk_veterano_fuerza FOREIGN KEY(id_fuerza) 
     REFERENCES fuerza(id_fuerza) ON DELETE SET NULL ON UPDATE CASCADE
+);
+
+DROP TABLE IF EXISTS fallecido;
+CREATE TABLE fallecido (
+  dni_veterano VARCHAR(8) NOT NULL,
+  fecha_fallecimiento DATE NOT NULL,
+  id_causa INT,
+  CONSTRAINT pk_fallecido PRIMARY KEY(dni_veterano),
+  CONSTRAINT fk_fallecido_veterano FOREIGN KEY (dni_veterano)
+    REFERENCES veterano(dni_veterano) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT fk_fallecido_causa FOREIGN KEY (id_causa)
+    REFERENCES causa_fallecimiento(id_causa) ON DELETE SET NULL ON UPDATE CASCADE
+);
+
+DROP TABLE IF EXISTS causa_fallecimiento;
+CREATE TABLE causa_fallecimiento (
+  id_causa INT AUTO_INCREMENT PRIMARY KEY,
+  descripcion ENUM(
+    'en combate',
+    'post combate',
+    'natural'
+  ) NOT NULL UNIQUE
 );
 
