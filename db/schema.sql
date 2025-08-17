@@ -1,5 +1,5 @@
 SET sql_mode = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION';
-
+ 
 CREATE DATABASE IF NOT EXISTS malvinas_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE malvinas_db;
 
@@ -80,7 +80,7 @@ CREATE TABLE veterano(
   localidad_nacimiento INT,
   localidad_residencia INT,
   id_agrupacion INT,
-  -- id_grado INT, DESCOMENTAR CUANDO ESTE LA TABLA GRADO
+  /* id_grado INT, DESCOMENTAR CUANDO ESTE LA TABLA GRADO */
   id_fuerza INT,
   CONSTRAINT pk_veterano PRIMARY KEY(dni_veterano),
   CONSTRAINT uq_veterano_nro_beneficio_nacional UNIQUE(nro_beneficio_nacional),
@@ -92,9 +92,20 @@ CREATE TABLE veterano(
     REFERENCES localidad(id_localidad) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT fk_veterano_agrupacion FOREIGN KEY(id_agrupacion) 
     REFERENCES agrupacion(id_agrupacion) ON DELETE SET NULL ON UPDATE CASCADE,
-  --CONSTRAINT fk_veterano_grado FOREIGN KEY(id_grado) 
-    --REFERENCES grado(id_grado) ON DELETE SET NULL ON UPDATE CASCADE,
+  /* CONSTRAINT fk_veterano_grado FOREIGN KEY(id_grado) 
+  REFERENCES grado(id_grado) ON DELETE SET NULL ON UPDATE CASCADE, */
   CONSTRAINT fk_veterano_fuerza FOREIGN KEY(id_fuerza) 
     REFERENCES fuerza(id_fuerza) ON DELETE SET NULL ON UPDATE CASCADE
 );
 
+DROP TABLE IF EXISTS documento;
+CREATE TABLE documento(
+  id_documento INT AUTO_INCREMENT NOT NULL,
+  nombre VARCHAR(255) NOT NULL,
+  descripcion TEXT,
+  ruta_archivo VARCHAR(255) NOT NULL,
+  CONSTRAINT pk_documento PRIMARY KEY(id_documento)
+);
+
+INSERT INTO documento (nombre, descripcion, ruta_archivo) VALUES
+('Prueba de PDF', 'Documento para probar como se ve el PDF', 'static/docs/der.png');
