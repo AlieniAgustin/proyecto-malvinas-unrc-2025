@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template
 from app.db import get_db
+from datetime import date
 
 bp = Blueprint('main', __name__)
 
@@ -13,13 +14,19 @@ def start():
 
     cursor.execute("SELECT COUNT(id_fuerza) AS total_fuerzas FROM fuerza")
     total_fuerzas = cursor.fetchone()['total_fuerzas']
-    
+
     cursor.execute("SELECT nombre, descripcion, ruta_archivo FROM documento")
-    documentos = cursor.fetchall()  
+    documentos = cursor.fetchall()
+
+    inicio_guerra = date(1982,4,2)
+    hoy = date.today()
+    anos_historia = hoy.year - inicio_guerra.year
+    if (hoy.month, hoy.day) < (inicio_guerra.month, inicio_guerra.day):
+        anos_historia -= 1
 
     cursor.close()
 
-    return render_template('start.html',total_veteranos = total_veteranos, total_fuerzas = total_fuerzas, documentos = documentos)
+    return render_template('start.html',total_veteranos = total_veteranos, total_fuerzas = total_fuerzas, documentos = documentos, anos_historia = anos_historia)
 
 @bp.route('/buscar')
 def buscar():
