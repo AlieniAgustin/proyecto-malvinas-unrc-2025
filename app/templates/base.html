@@ -11,58 +11,75 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
     <!-- Fuente Source Sans Pro -->
     <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro&display=swap" rel="stylesheet" />
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            height: 100%;
+            overscroll-behavior: none;
+            font-family: 'Source Sans Pro', sans-serif;
+        }
+
+        .nav-link-active, .nav-link:hover {
+            background-color: #ffffff40;
+        }
+    </style>
 </head>
-<body class="bg-white text-secondary" style="font-family: 'Source Sans Pro', sans-serif;">
 
-    <header class="bg-info text-white py-2">
-        <div class="container-fluid d-flex justify-content-between align-items-center px-1">
-            <!-- Izquierda: logo + texto -->
-            <div class="d-flex align-items-center">
-                <img src="{{ url_for('static', filename='img/logo.jpg') }}" alt="Logo" height="60" class="me-2" />
-                <div>
-                    <span class="fw-semibold fs-5">Agrupacion Veteranos de Guerra de Malvinas</span><br />
-                    <small class="fw-semibold fs-6">Operativo Virgen del Rosario</small>
-                </div>
+<body class="bg-white">
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary px-3">
+        <!-- Logo -->
+        <a class="navbar-brand d-flex align-items-center" href="/">
+            <img class="me-2 rounded-circle" src="{{url_for('static', filename='img/logo.jpg')}}" alt="Logo de la agrupacion" width="60px" height="60px">
+            <div class="d-flex flex-column align-items-center fw-bold">
+                <span class="d-block">Agrupación Veteranos de Guerra de Malvinas</span>
+                <span class="d-block">"Operativo Virgen del Rosario"</span>
             </div>
+       </a> 
 
-            <!-- Derecha: menú -->
-            <nav>
-                <ul class="nav">
-                    <li class="nav-item">
-                        <a href="/" class="nav-link text-white d-flex align-items-center fw-semibold px-1">
-                            <i class="bi bi-house-door-fill me-1"></i> Inicio
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="/buscar" class="nav-link text-white d-flex align-items-center fw-semibold px-1">
-                            <i class="bi bi-search me-1"></i> Buscar y ver datos
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="/admin" class="nav-link text-white d-flex align-items-center fw-semibold px-1">
-                            <i class="bi bi-person-badge-fill me-1"></i> Administrador
-                        </a>
-                    </li>
-                </ul>
-            </nav>
+       <!-- Boton para desplegar el menu -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Links --> 
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link d-flex align-items-center text-white mx-1 p-2 {% if request.path == '/' %}nav-link-active{% endif %}" href="/">
+                    <i class="bi bi-house me-2"></i> Inicio
+                </a>
+                <a class="nav-link d-flex align-items-center text-white mx-1 p-2 {% if request.path.startswith('/buscar') %}nav-link-active{% endif %}" href="/buscar">
+                    <i class="bi bi-search me-2"></i> Buscar y ver datos
+                </a>
+                <a class="nav-link d-flex align-items-center text-white mx-1 p-2 {% if request.path.startswith('/admin') %}nav-link-active{% endif %}" href="/admin">
+                    <i class="bi bi-box-arrow-in-right me-2"></i> Administrador
+                </a>
+            </div>
         </div>
-    </header>
+    </nav>
 
     <main class="container my-4">
         {% block content %}{% endblock %}
     </main>
 
-    <footer class="bg-info text-white py-3 mt-auto">
+    <footer class="bg-primary text-white py-3 mt-auto">
         <div class="container text-center">
             <ul class="nav justify-content-center mb-2">
-                <li class="nav-item"><a href="/contacto" class="nav-link px-3 text-white fw-semibold">Contacto</a></li>
-                <li class="nav-item"><a href="/terminos" class="nav-link px-3 text-white fw-semibold">Términos</a></li>
-                <li class="nav-item"><a href="/privacidad" class="nav-link px-3 text-white fw-semibold">Privacidad</a></li>
+                <li class="nav-item"><a href="/contacto" class="nav-link px-3 mx-2 text-white {% if request.path.startswith('/contacto') %}nav-link-active{% endif %}">Contacto</a></li>
+                <li class="nav-item"><a href="/terminos" class="nav-link px-3 mx-2 text-white {% if request.path.startswith('/terminos') %}nav-link-active{% endif %}">Términos</a></li>
+                <li class="nav-item"><a href="/privacidad" class="nav-link px-3 mx-2 text-white {% if request.path.startswith('/privacidad') %}nav-link-active{% endif %}">Privacidad</a></li>
             </ul>
             <p class="small mb-1">
                 Desarrollado en el marco de un proyecto de extensión de la Universidad Nacional de Río Cuarto en colaboración con la Agrupación Veteranos de Guerra de Malvinas "Operativo Virgen del Rosario".
             </p>
-            <p class="small mb-0">
+            <p class="small">
                 Honrando a nuestros héroes desde 1982
             </p>
         </div>
@@ -71,5 +88,6 @@
     <!-- Bootstrap JS Bundle CDN -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>
 
