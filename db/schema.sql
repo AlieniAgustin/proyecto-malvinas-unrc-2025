@@ -104,8 +104,8 @@ DROP TABLE IF EXISTS foto;
 CREATE TABLE foto(
   id_foto INT AUTO_INCREMENT PRIMARY KEY,
   id_veterano VARCHAR(8) NOT NULL,
-  ruta_foto VARCHAR(255) NOT NULL,--ver que este bien hecho lo foráneo
-  CONSTRAINT fk_dni_veterano FOREIGN KEY (dni_foto)
+  ruta_foto VARCHAR(255) NOT NULL,
+  CONSTRAINT fk_dni_veterano FOREIGN KEY (dni_veterano)
     REFERENCES veterano(dni_veterano) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
@@ -128,11 +128,21 @@ DROP TABLE IF EXISTS autoridad;
 CREATE TABLE autoridad (
   dni_autoridad VARCHAR(8) NOT NULL,
   id_rol INT NOT NULL,
-  CONSTRAINT pk_autoridad PRIMARY KEY(dni_autoridad, id_rol),
+  CONSTRAINT pk_autoridad PRIMARY KEY(dni_autoridad),
   CONSTRAINT fk_autoridad_veterano FOREIGN KEY (dni_autoridad)
     REFERENCES persona(dni) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT fk_autoridad_rol FOREIGN KEY (id_rol)
     REFERENCES rol(id_rol) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+DROP TABLE IF EXISTS causa_fallecimiento;
+CREATE TABLE causa_fallecimiento (
+  id_causa INT AUTO_INCREMENT PRIMARY KEY,
+  descripcion ENUM(
+    'en combate',
+    'post combate',
+    'natural'
+  ) NOT NULL UNIQUE
 );
 
 DROP TABLE IF EXISTS fallecido;
@@ -147,13 +157,4 @@ CREATE TABLE fallecido (
     REFERENCES causa_fallecimiento(id_causa) ON DELETE SET NULL ON UPDATE CASCADE
 );
 
-DROP TABLE IF EXISTS causa_fallecimiento;
-CREATE TABLE causa_fallecimiento (
-  id_causa INT AUTO_INCREMENT PRIMARY KEY,
-  descripcion ENUM(
-    'en combate',
-    'post combate',
-    'natural'
-  ) NOT NULL UNIQUE
-);
 
