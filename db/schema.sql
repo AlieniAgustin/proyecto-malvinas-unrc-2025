@@ -92,8 +92,8 @@ CREATE TABLE veterano(
     REFERENCES localidad(id_localidad) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT fk_veterano_agrupacion FOREIGN KEY(id_agrupacion) 
     REFERENCES agrupacion(id_agrupacion) ON DELETE SET NULL ON UPDATE CASCADE,
-  --CONSTRAINT fk_veterano_grado FOREIGN KEY(id_grado) 
-    --REFERENCES grado(id_grado) ON DELETE SET NULL ON UPDATE CASCADE,
+  -- CONSTRAINT fk_veterano_grado FOREIGN KEY(id_grado) 
+    -- REFERENCES grado(id_grado) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT fk_veterano_fuerza FOREIGN KEY(id_fuerza) 
     REFERENCES fuerza(id_fuerza) ON DELETE SET NULL ON UPDATE CASCADE
 );
@@ -156,5 +156,44 @@ CREATE TABLE fallecido (
   CONSTRAINT fk_fallecido_causa FOREIGN KEY (id_causa)
     REFERENCES causa_fallecimiento(id_causa) ON DELETE SET NULL ON UPDATE CASCADE
 );
+
+DROP TABLE IF EXISTS familiar;
+CREATE TABLE familiar(
+  dni_familiar VARCHAR(8) NOT NULL,
+  CONSTRAINT pk_familiar PRIMARY KEY(dni_familiar),
+  CONSTRAINT fk_familiar_persona FOREIGN KEY (dni_familiar)
+    REFERENCES persona(dni) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+DROP TABLE IF EXISTS familiarveterano;
+CREATE TABLE familiarveterano(
+  dni_familiar VARCHAR(8) NOT NULL,
+  dni_veterano VARCHAR(8) NOT NULL,
+  CONSTRAINT pk_familiarveterano PRIMARY KEY(dni_familiar,dni_veterano),
+  CONSTRAINT fk_familiarveterano_veterano FOREIGN KEY (dni_veterano)
+    REFERENCES veterano(dni_veterano) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT fk_familiarveterano_familiar FOREIGN KEY (dni_familiar)
+    REFERENCES persona(dni) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+DROP TABLE IF EXISTS redsocial;
+CREATE TABLE redsocial(
+  id_red_social INT AUTO_INCREMENT PRIMARY KEY,
+  nombre VARCHAR(100) NOT NULL,
+  link VARCHAR(255) NOT NULL,
+  id_agrupacion INT NOT NULL,
+  CONSTRAINT fk_red_social_agrupacion FOREIGN KEY (id_agrupacion)
+    REFERENCES agrupacion(id_agrupacion) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+DROP TABLE IF EXISTS grado;
+CREATE TABLE grado(
+  id_grado INT AUTO_INCREMENT PRIMARY KEY,
+  nombre VARCHAR(100) NOT NULL,
+  id_fuerza INT NOT NULL,
+  CONSTRAINT fk_grado_fuerza FOREIGN KEY (id_fuerza)
+    REFERENCES fuerza(id_fuerza) ON DELETE CASCADE ON UPDATE CASCADE
+)
+
 
 
