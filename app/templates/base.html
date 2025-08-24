@@ -30,16 +30,17 @@
         }
     </style>
 </head>
+<body class="bg-white text-secondary d-flex flex-column min-vh-100" style="font-family: 'Source Sans Pro', sans-serif;">
 
-<body class="bg-white">
-
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary px-3">
-        <!-- Logo -->
-        <a class="navbar-brand d-flex align-items-center" href="/">
-            <img class="me-2 rounded-circle" src="{{url_for('static', filename='img/logo.jpg')}}" alt="Logo de la agrupacion" width="60px" height="60px">
-            <div class="d-flex flex-column align-items-center fw-bold">
-                <span class="d-block">Agrupación Veteranos de Guerra de Malvinas</span>
-                <span class="d-block">"Operativo Virgen del Rosario"</span>
+    <header class="bg-info text-white py-2">
+        <div class="container-fluid d-flex justify-content-between align-items-center px-1">
+            <!-- Izquierda: logo + texto -->
+            <div class="d-flex align-items-center">
+                <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo" height="60" class="me-2" />
+                <div>
+                    <span class="fw-semibold fs-5">Agrupacion Veteranos de Guerra de Malvinas</span><br />
+                    <small class="fw-semibold fs-6">Operativo Virgen del Rosario</small>
+                </div>
             </div>
        </a> 
 
