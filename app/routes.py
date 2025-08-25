@@ -85,6 +85,7 @@ def privacidad():
     return render_template('privacidad.html')
 
 @bp.route('/dashboard')
+@login_required
 def dashboard():
     return render_template('dashboard.html')
 
