@@ -58,7 +58,7 @@ CREATE TABLE localidad(
 
 DROP TABLE IF EXISTS agrupacion;
 CREATE TABLE agrupacion(
-  id_agrupacion INT AUTO_INCREMENT NOT NULL,
+  id_agrupacion INT NOT NULL,
   nombre_agrupacion VARCHAR(100) NOT NULL,
   direccion VARCHAR(255),
   mail VARCHAR(100),
@@ -109,3 +109,14 @@ CREATE TABLE documento(
 
 INSERT INTO documento (nombre, descripcion, ruta_archivo) VALUES
 ('Prueba de PDF', 'Documento para probar como se ve el PDF', 'static/docs/der.png');
+
+DROP TABLE IF EXISTS administrador;
+CREATE TABLE administrador(
+	agrupacion INT NOT NULL,
+	email VARCHAR(255) NOT NULL,
+    psswd VARCHAR(50) NOT NULL,
+    CONSTRAINT pk_administrador PRIMARY KEY(agrupacion),
+    CONSTRAINT ck_password_length CHECK(LENGTH(psswd) >= 8),
+    CONSTRAINT fk_agrupacion FOREIGN KEY (agrupacion) 
+		REFERENCES agrupacion(id_agrupacion) ON DELETE CASCADE ON UPDATE CASCADE
+);

@@ -1,4 +1,7 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask_login import login_user, logout_user, login_required
+from .models.administrador import Administrador
+from werkzeug.security import check_password_hash
 from app.db import get_db
 from datetime import date
 
@@ -33,8 +36,41 @@ def buscar():
     return render_template('buscar.html')
 
 @bp.route('/admin')
+@login_required
 def admin():
     return render_template('admin.html')
+
+@bp.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        email = request.form.get("email", "").strip()
+        password = request.form.get("password", "")
+
+        if not email or not password:
+            flash("Ingresá email y contraseña.", "warning")
+            return redirect(url_for("main.login"))
+
+        conn = get_db()
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute("SELECT agrupacion, email, psswd FROM administrador WHERE email = %s", (email,))
+        row = cursor.fetchone()
+        cursor.close()
+
+        if row and (row["psswd"] == password or check_password_hash(row["psswd"], password)):
+            user = Administrador(row["agrupacion"], row["email"], row["psswd"])
+            login_user(user)
+            return redirect(url_for("main.dashboard"))
+        else:
+            flash("Usuario o contraseña incorrectos", "danger")
+            return redirect(url_for("main.login"))
+
+    return render_template("admin.html")
+
+@bp.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for("main.start"))
 
 @bp.route('/contacto')
 def contacto():
@@ -48,5 +84,8 @@ def terminos():
 def privacidad():
     return render_template('privacidad.html')
 
+@bp.route('/dashboard')
+def dashboard():
+    return render_template('dashboard.html')
 
 

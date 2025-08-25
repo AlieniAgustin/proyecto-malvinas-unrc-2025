@@ -8,18 +8,18 @@
     <div class="card shadow rounded-4 bg-light" id="login-card" style="width: 400px;">
         <div class="card-body p-4">
             <h4 class="text-center mb-4 fw-bold">Iniciar Sesión</h4>
-            <form>
+            <form method="POST" action="{{ url_for('main.login') }}">
                 <!-- Campo de correo electrónico -->
                 <div class="mb-3 text-start">
                     <label for="login-email" class="form-label">Correo Electrónico</label>
-                    <input type="email" class="form-control" id="login-email" placeholder="Ingrese su correo electrónico">
+                    <input type="email" name="email" class="form-control" id="login-email" placeholder="Ingrese su correo electrónico">
                 </div>
 
                 <!-- Campo de contraseña con botón para mostrar/ocultar -->
                 <div class="mb-2 text-start">
                     <label for="login-psswd" class="form-label">Contraseña</label>
                     <div class="input-group">
-                        <input type="password" class="form-control" id="login-psswd" placeholder="Ingrese su contraseña">
+                        <input type="password" name="password" class="form-control" id="login-psswd" placeholder="Ingrese su contraseña">
                         <!-- Ícono para mostrar/ocultar contraseña integrado al input -->
                         <span class="input-group-text bg-white border-start-0" id="togglePassword" style="cursor:pointer;">
                             <i class="bi bi-eye" id="eyeIcon"></i>
