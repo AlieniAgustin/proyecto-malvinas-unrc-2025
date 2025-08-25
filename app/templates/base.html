@@ -25,6 +25,10 @@
             font-family: 'Source Sans Pro', sans-serif;
         }
 
+        #main-navbar, #main-footer{
+            background-color: #4B9EE9;
+        }
+
         .nav-link-active, .nav-link:hover {
             background-color: #ffffff40;
         }
@@ -32,7 +36,7 @@
 </head>
 <body class="bg-white d-flex flex-column min-vh-100">
 
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary px-3">
+    <nav class="navbar navbar-expand-lg navbar-dark px-3" id="main-navbar">
         <!-- Logo -->
         <a class="navbar-brand d-flex align-items-center" href="/">
             <img class="me-2 rounded-circle" src="{{url_for('static', filename='img/logo.png')}}" alt="Logo de la agrupacion" width="60px" height="60px">
@@ -68,7 +72,7 @@
         {% block content %}{% endblock %}
     </main>
 
-    <footer class="bg-primary text-white py-3 mt-auto">
+    <footer class="text-white py-3 mt-auto" id="main-footer">
         <div class="container text-center">
             <ul class="nav justify-content-center mb-2">
                 <li class="nav-item"><a href="/contacto" class="nav-link px-3 mx-2 text-white {% if request.path.startswith('/contacto') %}nav-link-active{% endif %}">Contacto</a></li>
