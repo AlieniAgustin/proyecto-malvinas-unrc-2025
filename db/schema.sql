@@ -68,6 +68,15 @@ CREATE TABLE agrupacion(
     REFERENCES localidad(id_localidad)
 );
 
+DROP TABLE IF EXISTS grado;
+CREATE TABLE grado(
+  id_grado INT AUTO_INCREMENT PRIMARY KEY,
+  nombre VARCHAR(100) NOT NULL,
+  id_fuerza INT NOT NULL,
+  CONSTRAINT fk_grado_fuerza FOREIGN KEY (id_fuerza)
+    REFERENCES fuerza(id_fuerza) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
 DROP TABLE IF EXISTS veterano;
 CREATE TABLE veterano(
   dni_veterano VARCHAR(8) NOT NULL,
@@ -80,7 +89,7 @@ CREATE TABLE veterano(
   localidad_nacimiento INT,
   localidad_residencia INT,
   id_agrupacion INT,
-  /* id_grado INT, DESCOMENTAR CUANDO ESTE LA TABLA GRADO */
+  id_grado INT,
   id_fuerza INT,
   CONSTRAINT pk_veterano PRIMARY KEY(dni_veterano),
   CONSTRAINT uq_veterano_nro_beneficio_nacional UNIQUE(nro_beneficio_nacional),
@@ -92,8 +101,8 @@ CREATE TABLE veterano(
     REFERENCES localidad(id_localidad) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT fk_veterano_agrupacion FOREIGN KEY(id_agrupacion) 
     REFERENCES agrupacion(id_agrupacion) ON DELETE SET NULL ON UPDATE CASCADE,
-  /* CONSTRAINT fk_veterano_grado FOREIGN KEY(id_grado) 
-  REFERENCES grado(id_grado) ON DELETE SET NULL ON UPDATE CASCADE, */
+  CONSTRAINT fk_veterano_grado FOREIGN KEY(id_grado) 
+    REFERENCES grado(id_grado) ON DELETE SET NULL ON UPDATE CASCADE, 
   CONSTRAINT fk_veterano_fuerza FOREIGN KEY(id_fuerza) 
     REFERENCES fuerza(id_fuerza) ON DELETE SET NULL ON UPDATE CASCADE
 );
@@ -120,3 +129,91 @@ CREATE TABLE administrador(
     CONSTRAINT fk_agrupacion FOREIGN KEY (agrupacion) 
 		REFERENCES agrupacion(id_agrupacion) ON DELETE CASCADE ON UPDATE CASCADE
 );
+
+DROP TABLE IF EXISTS foto;
+CREATE TABLE foto(
+  id_foto INT AUTO_INCREMENT PRIMARY KEY,
+  dni_veterano VARCHAR(8) NOT NULL,
+  ruta_foto VARCHAR(255) NOT NULL,
+  CONSTRAINT fk_dni_veterano FOREIGN KEY (dni_veterano)
+    REFERENCES veterano(dni_veterano) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+DROP TABLE IF EXISTS rol;
+CREATE TABLE rol (
+  id_rol INT AUTO_INCREMENT PRIMARY KEY,
+  nombre_rol ENUM(
+    'Presidente',
+    'Vicepresidente',
+    'Secretario',
+    'Tesorero',
+    'Secretario de Prensa',
+    'Secretario de Obra Social',
+    'Vocal Titular',
+    'Vocal Suplente'
+  ) NOT NULL UNIQUE
+);
+
+DROP TABLE IF EXISTS autoridad;
+CREATE TABLE autoridad (
+  dni_autoridad VARCHAR(8) NOT NULL,
+  id_rol INT NOT NULL,
+  CONSTRAINT pk_autoridad PRIMARY KEY(dni_autoridad),
+  CONSTRAINT fk_autoridad_veterano FOREIGN KEY (dni_autoridad)
+    REFERENCES veterano(dni_veterano) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT fk_autoridad_rol FOREIGN KEY (id_rol)
+    REFERENCES rol(id_rol) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+DROP TABLE IF EXISTS causa_fallecimiento;
+CREATE TABLE causa_fallecimiento (
+  id_causa INT AUTO_INCREMENT PRIMARY KEY,
+  descripcion ENUM(
+    'en combate',
+    'post combate',
+    'natural'
+  ) NOT NULL UNIQUE
+);
+
+DROP TABLE IF EXISTS fallecido;
+CREATE TABLE fallecido (
+  dni_veterano VARCHAR(8) NOT NULL,
+  fecha_fallecimiento DATE NOT NULL,
+  id_causa INT,
+  CONSTRAINT pk_fallecido PRIMARY KEY(dni_veterano),
+  CONSTRAINT fk_fallecido_veterano FOREIGN KEY (dni_veterano)
+    REFERENCES veterano(dni_veterano) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT fk_fallecido_causa FOREIGN KEY (id_causa)
+    REFERENCES causa_fallecimiento(id_causa) ON DELETE SET NULL ON UPDATE CASCADE
+);
+
+DROP TABLE IF EXISTS familiar;
+CREATE TABLE familiar(
+  dni_familiar VARCHAR(8) NOT NULL,
+  CONSTRAINT pk_familiar PRIMARY KEY(dni_familiar),
+  CONSTRAINT fk_familiar_persona FOREIGN KEY (dni_familiar)
+    REFERENCES persona(dni) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+DROP TABLE IF EXISTS familiarveterano;
+CREATE TABLE familiarveterano(
+  dni_familiar VARCHAR(8) NOT NULL,
+  dni_veterano VARCHAR(8) NOT NULL,
+  CONSTRAINT pk_familiarveterano PRIMARY KEY(dni_familiar,dni_veterano),
+  CONSTRAINT fk_familiarveterano_veterano FOREIGN KEY (dni_veterano)
+    REFERENCES veterano(dni_veterano) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT fk_familiarveterano_familiar FOREIGN KEY (dni_familiar)
+    REFERENCES persona(dni) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+DROP TABLE IF EXISTS redsocial;
+CREATE TABLE redsocial(
+  id_red_social INT AUTO_INCREMENT PRIMARY KEY,
+  nombre VARCHAR(100) NOT NULL,
+  link VARCHAR(255) NOT NULL,
+  id_agrupacion INT NOT NULL,
+  CONSTRAINT fk_red_social_agrupacion FOREIGN KEY (id_agrupacion)
+    REFERENCES agrupacion(id_agrupacion) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+
