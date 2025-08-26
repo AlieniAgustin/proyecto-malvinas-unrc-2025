@@ -68,6 +68,15 @@ CREATE TABLE agrupacion(
     REFERENCES localidad(id_localidad)
 );
 
+DROP TABLE IF EXISTS telefono_agrupacion;
+CREATE TABLE telefono_agrupacion(
+  id_agrupacion INT NOT NULL, 
+  telefono VARCHAR(30) NOT NULL, 
+    CONSTRAINT pk_telefono_agrupacion PRIMARY KEY (id_agrupacion, telefono),
+    CONSTRAINT fk_telefono_agrupacion FOREIGN KEY (id_agrupacion) 
+      REFERENCES agrupacion(id_agrupacion)
+);
+
 DROP TABLE IF EXISTS grado;
 CREATE TABLE grado(
   id_grado INT AUTO_INCREMENT PRIMARY KEY,
