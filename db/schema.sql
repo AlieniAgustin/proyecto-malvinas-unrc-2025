@@ -195,8 +195,8 @@ CREATE TABLE familiar(
     REFERENCES persona(dni) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-DROP TABLE IF EXISTS familiarveterano;
-CREATE TABLE familiarveterano(
+DROP TABLE IF EXISTS familiar_veterano;
+CREATE TABLE familiar_veterano(
   dni_familiar VARCHAR(8) NOT NULL,
   dni_veterano VARCHAR(8) NOT NULL,
   CONSTRAINT pk_familiarveterano PRIMARY KEY(dni_familiar,dni_veterano),
@@ -206,8 +206,8 @@ CREATE TABLE familiarveterano(
     REFERENCES persona(dni) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-DROP TABLE IF EXISTS redsocial;
-CREATE TABLE redsocial(
+DROP TABLE IF EXISTS red_social;
+CREATE TABLE red_social(
   id_red_social INT AUTO_INCREMENT PRIMARY KEY,
   nombre VARCHAR(100) NOT NULL,
   link VARCHAR(255) NOT NULL,
