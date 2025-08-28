@@ -68,7 +68,7 @@
         </div>
     </nav>
 
-    <main class="container my-4">
+    <main>
         {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
         <div class="mb-3">
@@ -86,7 +86,7 @@
 
     <footer class="text-white py-3 mt-auto" id="main-footer">
         <div class="container text-center">
-            <ul class="nav justify-content-center mb-2">
+            <ul class="d-flex flex-column d-sm-flex flex-sm-row nav justify-content-center mb-2">
                 <li class="nav-item"><a href="/contacto" class="nav-link px-3 mx-2 text-white {% if request.path.startswith('/contacto') %}nav-link-active{% endif %}">Contacto</a></li>
                 <li class="nav-item"><a href="/terminos" class="nav-link px-3 mx-2 text-white {% if request.path.startswith('/terminos') %}nav-link-active{% endif %}">Términos</a></li>
                 <li class="nav-item"><a href="/privacidad" class="nav-link px-3 mx-2 text-white {% if request.path.startswith('/privacidad') %}nav-link-active{% endif %}">Privacidad</a></li>

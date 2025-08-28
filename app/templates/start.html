@@ -2,15 +2,16 @@
 {% block title %}Inicio{% endblock %}
 
 {% block content %}
+<div class="container">
   <h1 class="text-black fw-bold mb-3">Sistema de Gestión de Veteranos de Guerra de Malvinas</h1>
-
+  
   <p class="text-secondary">
     La Agrupación Veteranos de Guerra de Malvinas "Operativo Virgen del Rosario", con sede en la ciudad de Río Cuarto, trabaja activamente en la preservación de la memoria histórica del conflicto del Atlántico Sur de 1982. Su labor se centra en brindar contención, asesoramiento y acompañamiento a los veteranos y a sus familias, así como en promover actividades conmemorativas, educativas y de concientización en la comunidad.
   </p>
   <p class="text-secondary">
     Este sistema ha sido desarrollado para mejorar la comunicación entre los veteranos, permitiendo realizar consultas y mantenernos conectados, fortaleciendo así los lazos de compañerismo y apoyo mutuo. Porque Malvinas nos une, y solo unidos podemos seguir malvinizando y honrando la memoria de quienes dieron todo por nuestra Patria.
   </p>
-
+  
   <!-- Contenedor gris -->
   <div class="p-4 my-5" style="background-color: #f1f1f1; border-radius: 10px;">
     <h3 class="fw-bold mb-4">Estadísticas</h3>
@@ -25,7 +26,7 @@
           </div>
         </div>
       </div>
-
+      
       <!-- Card 2 -->
       <div class="col-md-4">
         <div class="card shadow-sm h-100">
@@ -35,7 +36,7 @@
           </div>
         </div>
       </div>
-
+      
       <!-- Card 3 -->
       <div class="col-md-4">
         <div class="card shadow-sm h-100">
@@ -64,7 +65,7 @@
             </div>
             <p class="text-secondary">{{ doc.descripcion }}</p> 
             <a href="{{ url_for('static', filename=doc.ruta_archivo|replace('static/', '')) }}" class="btn btn-primary mt-2">
-                Descargar PDF
+              Descargar PDF
             </a>
           </div>
         </div>
@@ -72,5 +73,7 @@
       {% endfor %}
     </div>
   </div>
-{% endblock %}
-
+</div>
+  {% endblock %}
+  
+  
