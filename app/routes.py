@@ -33,7 +33,72 @@ def start():
 
 @bp.route('/buscar')
 def buscar():
-    return render_template('buscar.html')
+    query = """
+        SELECT 
+            p.apellido,
+            p.nombre,
+            fza.nombre AS fuerza
+           
+        FROM persona p
+        JOIN veterano v ON p.dni = v.dni_veterano
+        LEFT JOIN fuerza fza ON v.id_fuerza = fza.id_fuerza
+        LEFT JOIN localidad loc ON v.localidad_nacimiento = loc.id_localidad
+        LEFT JOIN provincia prov ON loc.id_provincia = prov.id_provincia
+        LEFT JOIN fallecido fal ON v.dni_veterano = fal.dni_veterano
+        WHERE 1=1
+    """
+
+    params = []
+
+    # Filtros
+    apellido = request.args.get("apellido", "")
+    nombre = request.args.get("nombre", "")
+    provincia_id = request.args.get("provincia", "")
+    departamento_id = request.args.get("departamento", "")
+    localidad_id = request.args.get("localidad", "")
+    fuerza_id = request.args.get("fuerza", "")
+    vf = request.args.get("vf", "") # 1 Vivo - 0 Fallecido
+    
+
+   
+    if apellido:
+        query += " AND LOWER(p.apellido) LIKE %s"
+        params.append("%" + apellido.lower() + "%")
+
+    if nombre:
+        query += " AND LOWER(p.nombre) LIKE %s"
+        params.append("%" + nombre.lower() + "%")
+
+    if departamento_id:
+        query += " AND LOWER(loc.departamento) LIKE %s"
+        params.append("%" + departamento_id.lower() + "%")
+
+    if provincia_id:
+        query += " AND loc.id_provincia = %s"
+        params.append(provincia_id)
+
+    if localidad_id:
+        query += " AND loc.id_localidad = %s"
+        params.append(localidad_id)
+
+    if fuerza_id:
+        query += " AND v.id_fuerza= %s"
+        params.append(fuerza_id)
+    
+    if vf:
+        if vf in ["0", "fallecido"]:
+            query += " AND fal.dni_veterano IS NOT NULL" 
+        elif vf in ["1", "vivo"]:
+            query += " AND fal.dni_veterano IS NULL"       
+
+    conn = get_db()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute(query, params)
+    resultados = cursor.fetchall()
+    conn.close()
+
+    return {"resultados": resultados}
+    # return render_template('buscar.html')
 
 @bp.route('/admin')
 @login_required
