@@ -3,5 +3,135 @@
 {% block title %}Contacto{% endblock %}
 
 {% block content %}
-<h2>Contacto</h2>
+<h1 class="fs-3 fw-bold" style="color: #4D78a2; text-align: center;">Contacto</h1>
+<p class="fs-8 fw-bold"  style="color: #4e4d4d; text-align: center;">Estamos aquí para responder a sus consultas y brindarle la información que necesita.</p>
+
+
+<!-- Cards -->
+<div class="row g-2">
+    <!-- Card 1 Info contacto-->
+    <div class="col-md-4">
+      <div class="card shadow-sm h-100" style="background-color: #f1f1f1; border-radius: 15px;">
+        <div class="card-body text-center">
+          <h5 class="fw-bold" style="color: #4D78a2;">Información de Contacto</h5>
+            <!-- Card direccion-->
+            <div class="container mt-3 d-flex p-2">
+              <div class="col-md-2">
+                <img src="{{ url_for('static', filename='img/direccion_icon.png') }}" alt="Dirección" style="width: 47px; height: 47px;" class="me-2">
+              </div>
+              <div class="col-md-10">
+                <p class="fs-5 fw-bold mb-0"  style=" line-height: 1;color: #4e4d4d; text-align: left;">Dirección</p>
+                <p class="fs-7 fw-bold mb-0"  style="color: #4e4d4d; text-align: left;">{{ direccion_agrupacion }}. </p>
+            </div>
+          </div>
+          <!-- Card correo-->
+            <div class="container mt-3 d-flex p-2">
+              <div class="col-md-2">
+                <img src="{{ url_for('static', filename='img/correo_icon.png') }}" alt="Correo" style="width: 48px; height: 48px;" class="me-2">
+              </div>
+              <div class="col-md-10">
+                <p class="fs-5 fw-bold mb-0"  style=" line-height: 1;color: #4e4d4d; text-align: left;">Correo Electrónico</p>
+                <p class="fs-7 fw-bold mb-0"  style="color: #4e4d4d; text-align: left;">{{ correo_agrupacion }}. </p>
+            </div>
+          </div>
+          <!-- Card telefonos-->
+            <div class="container mt-3 d-flex p-2">
+              <div class="col-md-2">
+                <img src="{{ url_for('static', filename='img/telefonos_icon.png') }}" alt="Telefonos" style="width: 47px; height: 47px;" class="me-2">
+              </div>
+              <div class="col-md-10">
+                <p class="fs-5 fw-bold mb-0"  style=" line-height: 1;color: #4e4d4d; text-align: left;">Telefonos</p>
+                <p class="fs-7 fw-bold mb-0"  style="color: #4e4d4d; text-align: left;">{{ telefonos_agrupacion }}.</p>
+              </div>
+            </div>
+          <!-- Card facebook-->
+            <div class="container mt-3 d-flex p-2">
+              <div class="col-md-2">
+                <img src="{{ url_for('static', filename='img/facebook_icon.png') }}" alt="Facebook" style="width: 43px; height: 43px;" class="me-2">
+              </div>
+              <div class="col-md-10">
+                <p class="fs-5 fw-bold mb-0"  style=" line-height: 1;color: #4e4d4d; text-align: left;">Facebook</p>
+                <p class="fs-7 fw-bold mb-0"  style="color: #4e4d4d; text-align: left;">{{ facebook_agrupacion }}.</p>
+                <!--
+                <a href="{{ url_facebook_agrupacion }}" class="link-primary" target="_blank" rel="noopener noreferrer">{{ nombre_facebook_agrupacion }}.</a>
+                -->
+              </div>
+            </div>
+          <!-- Card instagram-->
+            <div class="container mt-3 d-flex p-2">
+              <div class="col-md-2">
+                <img src="{{ url_for('static', filename='img/instagram_icon.png') }}" alt="Instagram" style="width: 43px; height: 43px;" class="me-2">
+              </div>
+              <div class="col-md-10">
+                <p class="fs-5 fw-bold mb-0"  style=" line-height: 1;color: #4e4d4d; text-align: left;">Instagram</p>
+                <p class="fs-7 fw-bold mb-0"  style="color: #4e4d4d; text-align: left;">{{ instagram_agrupacion }}.</p>
+                <!--
+                <a href="{{ url_instagram_agrupacion }}" class="link-primary"  target="_blank" rel="noopener noreferrer">{{ nombre_instagram_agrupacion }}.</a>
+                -->
+              </div>
+            </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="col-md-4">
+      <div class="card shadow-sm h-100 " style="background-color: #f1f1f1; border-radius: 15px;">
+        <div class="card-body text-center">
+          <h5 class="fw-bold" style="color: #4D78a2;">Autoridades</h5>
+            {% for cargo_mostrar in cargos %}
+              <h5 class="fw-bold" style="color: #4D78a2;"> {{ cargo_mostrar.cargo }} </h5>
+                {% for persona_mostrar cargo_mostrar.personas %}
+                  <h class="fw-bold" style="color: #4D78a2;">   
+                    <p class="fs-5 fw-bold mb-0"  style=" line-height: 1;color: #4e4d4d;"> {{ persona_mostrar }} </p>
+                {% endfor %}
+            {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 3 Ubicacion -->
+    <div class="col-md-4">
+      <div class="card shadow-sm h-100 " style="background-color: #f1f1f1; border-radius: 15px;">
+        <div class="card-body text-center">
+          <h5 class="fw-bold" style="color: #4D78a2;">Nuestra Ubicación</h5>
+            <div class="container mt-8 p-2">
+              <div class="embed-responsive embed-responsive-16by9">
+                <!-- </iframe>  src={{ Ubicacion_Mapa }} -->
+                <iframe 
+                  class="embed-responsive-item"
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3341.250458239664!2d-64.33985132544058!3d-33.128784081109174!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95d20007f50d874f%3A0xaded0b9566fe82de!2sLuis%20Pasteur%20260%2C%20X5800%20R%C3%ADo%20Cuarto%2C%20C%C3%B3rdoba!5e0!3m2!1ses-419!2sar!4v1756331290738!5m2!1ses-419!2sar"
+                  width="100%"
+                  height="250px"
+                  style="border: radius 15px;;"
+                  allowfullscreen=""
+                  loading="lazy"
+                  referrerpolicy="no-referrer-when-downgrade">
+                </iframe>
+              </div>
+              <p class="fs-8 fw-bold"  style="color: #4e4d4d; text-align: center;">{{ direccion_agrupacion }}. </p>
+            </div>
+        </div>
+      </div>
+    </div>
+
+<!--
+   Las variables uqe necesito devuelta:
+    Ubicacion_Mapa
+      masomenos deberia ser "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3341.250458239664!2d-64.33985132544058!3d-33.128784081109174!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95d20007f50d874f%3A0xaded0b9566fe82de!2sLuis%20Pasteur%20260%2C%20X5800%20R%C3%ADo%20Cuarto%2C%20C%C3%B3rdoba!5e0!3m2!1ses-419!2sar!4v1756331290738!5m2!1ses-419!2sar"
+        
+      calculo que estas serian strings simples
+    url_instagram_agrupacion
+    nombre_instagram_agrupacion
+    url_facebook_agrupacion
+    nombre-facebook_agrupacion
+    telefonos_agrupacion
+    correo_agrupacion
+    direccion_agrupacion
+
+    cargos
+    masomenos deberia ser cargos.cargo (string con el nombre del cargo) y cargos.persona (lista con los nombres de personas)
+    es para mostrar un cargo en la organización y la lista de personas que cumplen ese cargo.
+
+-->
 {% endblock %}
