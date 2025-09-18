@@ -35,7 +35,9 @@ def start():
 def buscar():
     query = """
         SELECT 
-           *
+            p.apellido,
+            p.nombre,
+            fza.nombre AS fuerza
            
         FROM persona p
         JOIN veterano v ON p.dni = v.dni_veterano
