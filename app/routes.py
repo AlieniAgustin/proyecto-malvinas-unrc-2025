@@ -177,7 +177,41 @@ def logout():
 
 @bp.route('/contacto')
 def contacto():
-    return render_template('contacto.html')
+    agrupacion = db.session.execute("""
+        SELECT nombre_agrupacion, direccion, mail
+        FROM agrupacion
+        LIMIT 1
+    """).fetchone()
+
+    telefonos = db.session.execute("""
+        SELECT telefono
+        FROM telefono_agrupacion
+    """).fetchall()
+
+    redes = db.session.execute("""
+        SELECT nombre, link
+        FROM red_social
+    """).fetchall()
+
+    autoridades = db.session.execute("""
+        SELECT r.nombre_rol, v.apellido, v.nombre
+        FROM autoridad a
+        JOIN rol r ON a.rol_id = r.id_rol
+        JOIN veterano v ON a.veterano_id = v.id_veterano
+    """).fetchall()
+
+    ubicacion = db.session.execute("""
+        SELECT l.nombre_localidad, l.provincia
+        FROM agrupacion ag
+        JOIN localidad l ON ag.localidad_agrupacion = l.id_localidad
+        LIMIT 1
+    """).fetchone()
+    return render_template('contacto.html',
+        agrupacion=agrupacion,
+        telefonos=telefonos,
+        redes=redes,
+        autoridades=autoridades,
+        ubicacion=ubicacion)
 
 @bp.route('/terminos')
 def terminos():
