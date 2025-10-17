@@ -148,6 +148,70 @@ def buscar():
                            provincias=provincias,
                            fuerzas=fuerzas)
 
+@bp.route('/persona/<string:dni>')
+def ver_perfil(dni):
+    db = get_db()
+    cursor = db.cursor(dictionary=True)
+
+    query_publica = """
+        SELECT
+            p.nombre, p.apellido,
+            v.fecha_nacimiento,
+            fza.nombre AS fuerza,
+            loc.nombre_localidad, loc.departamento,
+            prov.nombre AS provincia_nacimiento,
+            foto.ruta_foto,
+            fallecido.fecha_fallecimiento
+        FROM persona p
+        JOIN veterano v ON p.dni = v.dni_veterano
+        LEFT JOIN fuerza fza ON v.id_fuerza = fza.id_fuerza
+        LEFT JOIN localidad loc ON v.localidad_nacimiento = loc.id_localidad
+        LEFT JOIN provincia prov ON loc.id_provincia = prov.id_provincia
+        LEFT JOIN foto ON v.dni_veterano = foto.dni_veterano
+        LEFT JOIN fallecido ON v.dni_veterano = fallecido.dni_veterano
+        WHERE p.dni = %s
+    """
+    cursor.execute(query_publica, (dni,))
+    veterano = cursor.fetchone()
+
+    if not veterano:
+        return "Veterano no encontrado", 404
+
+    # Variables para los datos de administrador
+    veterano_admin = None
+    telefonos = None
+
+    # Si el usuario es admin, buscar todos los datos adicionales
+    if current_user.is_authenticated:
+        query_admin = """
+            SELECT
+                v.direccion, v.nro_beneficio_nacional, v.funcion, v.secuelas, v.mail,
+                loc_res.nombre_localidad AS localidad_residencia,
+                prov_res.nombre AS provincia_residencia,
+                g.nombre AS grado,
+                causa.descripcion AS causa_fallecimiento
+            FROM veterano v
+            LEFT JOIN localidad loc_res ON v.localidad_residencia = loc_res.id_localidad
+            LEFT JOIN provincia prov_res ON loc_res.id_provincia = prov_res.id_provincia
+            LEFT JOIN grado g ON v.id_grado = g.id_grado
+            LEFT JOIN fallecido f ON v.dni_veterano = f.dni_veterano
+            LEFT JOIN causa_fallecimiento causa ON f.id_causa = causa.id_causa
+            WHERE v.dni_veterano = %s
+        """
+        cursor.execute(query_admin, (dni,))
+        veterano_admin = cursor.fetchone()
+
+        # Consulta separada para los teléfonos (puede haber más de uno)
+        cursor.execute("SELECT telefono FROM telefono_persona WHERE dni = %s", (dni,))
+        telefonos = cursor.fetchall()
+
+    cursor.close()
+
+    return render_template('perfil.html',
+                           veterano=veterano,
+                           veterano_admin=veterano_admin,
+                           telefonos=telefonos)
+
 @bp.route('/admin')
 @login_required
 def admin():
