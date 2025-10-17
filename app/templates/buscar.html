@@ -4,167 +4,98 @@
 
 {% block content %}
 <div class="container-fluid">
-    <!-- Contenedor que indica que va a trabajar con la grilla de bootstrap-->
-    <div class="row"> 
-        <!-- Seccion del listado de personas -->
+    <div class="row">
         <div class="col-9 px-5 py-3">
-            <h3 class="text-center fw-bold mb-3">Búsqueda de personas</h2>
+            <h3 class="text-center fw-bold mb-3">Búsqueda de personas</h3>
 
-            <!-- Lista de personas generada dinamicamente -->
-
-            <div class="card shadow p-2 d-flex flex-row align-items-center justify-content-between mb-1">
-                <!-- Parte izquierda (avatar y datos de la persona) -->
-                <div class="d-flex align-items-center">
-                    <img src="{{ url_for('static', filename='img/avatar.svg') }}" alt="Avatar" width="70" height="70" class="me-3">
-                    <div class="d-flex flex-column">
-                        <span class="fw-bold">Fulano Fulanez</span>
-                        <!-- 
-                        {% if current_user.is_authenticated %}
-                        <span>DNI: 12.345.678</span> 
-                        {% endif %}
-                        -->
-                        <span>Ejército</span>
+            {% if resultados %}
+                {% for persona in resultados %}
+                <div class="card shadow p-2 d-flex flex-row align-items-center justify-content-between mb-1">
+                    <div class="d-flex align-items-center">
+                        <img src="{{ url_for('static', filename='img/avatar.svg') }}" alt="Avatar" width="70" height="70" class="me-3">
+                        <div class="d-flex flex-column">
+                            <span class="fw-bold">{{ persona.apellido }}, {{ persona.nombre }}</span>
+                            {% if current_user.is_authenticated %}
+                                <span>DNI: {{ persona.dni }}</span> 
+                            {% endif %}
+                            {% if persona.fuerza %}
+                                <span>{{ persona.fuerza }}</span>
+                            {% else %}
+                                <span class="text-muted">Fuerza no especificada</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <a href="/persona/{{ persona.dni }}" class="btn btn-primary fw-bold">Ver perfil</a>
                     </div>
                 </div>
-                <!-- Parte derecha (boton para ir al perfil) -->
-                <div class="d-flex align-items-center">
-                    <a href="/persona/1" class="btn btn-primary fw-bold">Ver perfil</a>
+                {% endfor %}
+            {% else %}
+                <div class="alert alert-info text-center" role="alert">
+                    No se encontraron resultados para los filtros aplicados.
                 </div>
-            </div>
-
-            <div class="card shadow p-2 d-flex flex-row align-items-center justify-content-between mb-1">
-                <!-- Parte izquierda (avatar y datos de la persona) -->
-                <div class="d-flex align-items-center">
-                    <img src="{{ url_for('static', filename='img/avatar.svg') }}" alt="Avatar" width="70" height="70" class="me-3">
-                    <div class="d-flex flex-column">
-                        <span class="fw-bold">Fulano Fulanez</span>
-                        <!-- 
-                        {% if current_user.is_authenticated %}
-                        <span>DNI: 12.345.678</span> 
-                        {% endif %}
-                        -->
-                        <span>Ejército</span>
-                    </div>
-                </div>
-                <!-- Parte derecha (boton para ir al perfil) -->
-                <div class="d-flex align-items-center">
-                    <a href="/persona/1" class="btn btn-primary fw-bold">Ver perfil</a>
-                </div>
-            </div>
-
-            <div class="card shadow p-2 d-flex flex-row align-items-center justify-content-between mb-1">
-                <!-- Parte izquierda (avatar y datos de la persona) -->
-                <div class="d-flex align-items-center">
-                    <img src="{{ url_for('static', filename='img/avatar.svg') }}" alt="Avatar" width="70" height="70" class="me-3">
-                    <div class="d-flex flex-column">
-                        <span class="fw-bold">Fulano Fulanez</span>
-                        <!-- 
-                        {% if current_user.is_authenticated %}
-                        <span>DNI: 12.345.678</span> 
-                        {% endif %}
-                        -->
-                        <span>Ejército</span>
-                    </div>
-                </div>
-                <!-- Parte derecha (boton para ir al perfil) -->
-                <div class="d-flex align-items-center">
-                    <a href="/persona/1" class="btn btn-primary fw-bold">Ver perfil</a>
-                </div>
-            </div>
-
+            {% endif %}
         </div>
 
-        <!-- Seccion de filtros -->
         <div class="col-3 bg-secondary bg-opacity-10 p-3">
-            <h3 class="text-center fw-bold mb-3">Filtros</h2>
-            <form id="filtrosForm" method="GET" action="/buscar">
-                <!-- Apellido -->
+            <h3 class="text-center fw-bold mb-3">Filtros</h3>
+            <form id="filtrosForm" method="GET" action="{{ url_for('main.buscar') }}">
+
                 <div class="mb-3">
                     <label for="apellido" class="form-label fw-bold">Apellido</label>
-                    <input type="text" class="form-control mb-3" id="apellido" name="apellido" placeholder="Ingrese un apellido">
+                    <input type="text" class="form-control" id="apellido" name="apellido" placeholder="Ingrese un apellido">
                 </div>
 
-                <!-- Nombre -->
                 <div class="mb-3">
                     <label for="nombre" class="form-label fw-bold">Nombre</label>
-                    <input type="text" class="form-control mb-3" id="nombre" name="nombre" placeholder="Ingrese un nombre">
+                    <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Ingrese un nombre">
                 </div>
 
-                <!-- Provincia de nacimiento -->
                 <div class="mb-3">
-                    <label for="provinciaNacimiento" class="form-label fw-bold">Provincia de nacimiento</label>
-                    <select class="form-select" id="provinciaNacimiento" name="provinciaNacimiento">
-                        <!-- Generarlas dinámicamente con un query a la tabla de provincias cuando esté el backend en vez de ponerlas manualmente -->
+                    <label for="provincia_nacimiento" class="form-label fw-bold">Provincia de nacimiento</label>
+                    <select class="form-select" id="provincia_nacimiento" name="provincia_nacimiento">
                         <option value="">Todas</option>
-                        <option value="Buenos Aires">Buenos Aires</option>
-                        <option value="Catamarca">Catamarca</option>
-                        <option value="Chaco">Chaco</option>
-                        <option value="Chubut">Chubut</option>
-                        <option value="Ciudad Autónoma de Buenos Aires">Ciudad Autónoma de Buenos Aires</option>
-                        <option value="Córdoba">Córdoba</option>
-                        <option value="Corrientes">Corrientes</option>
-                        <option value="Entre Ríos">Entre Ríos</option>
-                        <option value="Formosa">Formosa</option>
-                        <option value="Jujuy">Jujuy</option>
-                        <option value="La Pampa">La Pampa</option>
-                        <option value="La Rioja">La Rioja</option>
-                        <option value="Mendoza">Mendoza</option>
-                        <option value="Misiones">Misiones</option>
-                        <option value="Neuquén">Neuquén</option>
-                        <option value="Río Negro">Río Negro</option>
-                        <option value="Salta">Salta</option>
-                        <option value="San Juan">San Juan</option>
-                        <option value="San Luis">San Luis</option>
-                        <option value="Santa Cruz">Santa Cruz</option>
-                        <option value="Santa Fe">Santa Fe</option>
-                        <option value="Santiago del Estero">Santiago del Estero</option>
-                        <option value="Tierra del Fuego">Tierra del Fuego</option>
-                        <option value="Tucumán">Tucumán</option>
+                        {% for provincia in provincias %}
+                            <option value="{{ provincia.id_provincia }}">{{ provincia.nombre }}</option>
+                        {% endfor %}
                     </select>
                 </div>
-
-                <!-- Localidad de nacimiento -->
+                
                 <div class="mb-3">
-                    <label for="localidadNacimiento" class="form-label fw-bold">Localidad de nacimiento</label>
-                    <select class="form-select" id="localidadNacimiento" name="localidadNacimiento">
-                        <!-- Generar dinámicamente:
-                                - Si no hay provincia seleccionada, mostrar todas las localidades
-                                - Si hay provincia seleccionada, mostrar solo las localidades de esa provincia 
-                        -->
-                        <option value="">Todas</option>
-                        <option value="Test">Test</option>
-                    </select>
+                    <label for="departamento_nacimiento" class="form-label fw-bold">Departamento de nacimiento</label>
+                    <input type="text" class="form-control" id="departamento_nacimiento" name="departamento_nacimiento" placeholder="Ingrese un departamento">
                 </div>
 
-                <!-- Fuerza -->
+                <div class="mb-3">
+                    <label for="localidad_nacimiento" class="form-label fw-bold">Localidad de nacimiento</label>
+                    <select class="form-select" id="localidad_nacimiento" name="localidad_nacimiento">
+                        <option value="">Todas</option>
+                        </select>
+                </div>
+
                 <div class="mb-3">
                     <label for="fuerza" class="form-label fw-bold">Fuerza</label>
                     <select class="form-select" id="fuerza" name="fuerza">
-                        <!-- Generarlas dinámicamente con la tabla de fuerzas cuando esté el backend en vez de ponerlas manualmente -->
                         <option value="">Todas</option>
-                        <option value="Ejército">Ejército</option>
-                        <option value="Armada">Armada</option>
-                        <option value="Fuerza Aérea">Fuerza Aérea</option>
-                        <option value="Gendarmería">Gendarmería</option>
+                        {% for fuerza in fuerzas %}
+                            <option value="{{ fuerza.id_fuerza }}">{{ fuerza.nombre }}</option>
+                        {% endfor %}
                     </select>
                 </div>
 
-                <!-- Vive / Falleció -->
                 <div class="mb-3">
-                    <label for="estado" class="form-label fw-bold">Estado</label>
-                    <select class="form-select" id="estado" name="estado">
+                    <label for="vf" class="form-label fw-bold">Estado</label>
+                    <select class="form-select" id="vf" name="vf">
                         <option value="">Todos</option>
-                        <option value="vive">Vive</option>
-                        <option value="fallecio">Falleció</option>
+                        <option value="1">Vive</option>
+                        <option value="0">Falleció</option>
                     </select>
                 </div>
-
+                
                 <button type="submit" class="btn btn-primary w-100 fw-bold mb-2">Aplicar filtros</button>
-                <button type="button" class="btn btn-danger w-100 fw-bold" onclick="window.location.href='/buscar'">Borrar filtros</button>
+                <a href="{{ url_for('main.buscar') }}" class="btn btn-danger w-100 fw-bold">Borrar filtros</a>
             </form>
-            
         </div>
     </div>
 </div>
-
 {% endblock %}
