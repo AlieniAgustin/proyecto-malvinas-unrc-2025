@@ -34,12 +34,21 @@ def start():
 
 @bp.route('/buscar')
 def buscar():
+    conn = get_db()
+    cursor = conn.cursor(dictionary=True)
+
+    cursor.execute("SELECT id_provincia, nombre FROM provincia ORDER BY nombre ASC")
+    provincias = cursor.fetchall()
+
+    cursor.execute("SELECT id_fuerza, nombre FROM fuerza ORDER BY nombre ASC")
+    fuerzas = cursor.fetchall()
+
     query = """
         SELECT 
+            p.dni,
             p.apellido,
             p.nombre,
             fza.nombre AS fuerza
-           
         FROM persona p
         JOIN veterano v ON p.dni = v.dni_veterano
         LEFT JOIN fuerza fza ON v.id_fuerza = fza.id_fuerza
@@ -60,9 +69,7 @@ def buscar():
     localidad_nacimiento_id = request.args.get("localidad_nacimiento", "")
     fuerza_id = request.args.get("fuerza", "")
     vf = request.args.get("vf", "") # 1 Vivo - 0 Fallecido
-    
 
-   
     if apellido:
         query += " AND LOWER(p.apellido) LIKE %s"
         params.append("%" + apellido.lower() + "%")
@@ -93,7 +100,7 @@ def buscar():
         elif vf in ["1", "vivo"]:
             query += " AND fal.dni_veterano IS NULL"       
 
- # Filtros restringidos a administradore
+    # Filtros restringidos a administradores
     if current_user.is_authenticated:
         dni = request.args.get("dni", "")
         provincia_residencia_id = request.args.get("provincia_residencia", "")
@@ -131,13 +138,15 @@ def buscar():
                     v.fecha_nacimiento IS NULL
                 )
             """
-    conn = get_db()
-    cursor = conn.cursor(dictionary=True)
-    cursor.execute(query, params)
+
+    cursor.execute(query, tuple(params))
     resultados = cursor.fetchall()
     conn.close()
 
-    return render_template('buscar.html')
+    return render_template('buscar.html',
+                           resultados=resultados,
+                           provincias=provincias,
+                           fuerzas=fuerzas)
 
 @bp.route('/admin')
 @login_required
