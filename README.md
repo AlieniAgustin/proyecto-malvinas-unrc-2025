@@ -91,6 +91,10 @@ La cantidad **máxima de personas** que se podrá almacenar será **X veteranos*
    ```bash
    sudo docker-compose down -v
    ```
+6. **Visualizar la pagina en**
+   ```bash
+   localhost:5000
+   ```
 
 ## 📁 Estructura del Proyecto
 
