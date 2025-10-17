@@ -143,10 +143,13 @@ def buscar():
     resultados = cursor.fetchall()
     conn.close()
 
+    is_admin_view = current_user.is_authenticated
+
     return render_template('buscar.html',
                            resultados=resultados,
                            provincias=provincias,
-                           fuerzas=fuerzas)
+                           fuerzas=fuerzas,
+                           is_admin_view=is_admin_view)
 
 @bp.route('/persona/<string:dni>')
 def ver_perfil(dni):
@@ -215,6 +218,9 @@ def ver_perfil(dni):
 @bp.route('/admin')
 @login_required
 def admin():
+    if current_user.is_authenticated:
+        return redirect(url_for('main.dashboard'))
+
     return render_template('admin.html')
 
 @bp.route('/login', methods=['GET', 'POST'])
@@ -310,4 +316,27 @@ def privacidad():
 def dashboard():
     return render_template('dashboard.html')
 
+@bp.route('/admin/insertar')
+@login_required
+def insertar_persona():
+    return render_template('admin/insertar.html')
 
+@bp.route('/admin/eliminar')
+@login_required
+def eliminar_persona():
+    return render_template('admin/eliminar.html')
+
+@bp.route('/admin/modificar')
+@login_required
+def modificar_datos():
+    return render_template('admin/modificar.html')
+
+@bp.route('/admin/actualizar')
+@login_required
+def actualizar_info():
+    return render_template('admin/actualizar.html')
+
+@bp.route('/admin/documentacion')
+@login_required
+def gestion_documentacion():
+    return render_template('admin/documentacion.html')
