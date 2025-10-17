@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends 'base_admin.html' if is_admin_view else 'base.html' %}
 
 {% block title %}Buscar y ver datos{% endblock %}
 

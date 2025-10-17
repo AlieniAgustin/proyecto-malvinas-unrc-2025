@@ -1,5 +1,120 @@
-{% extends "base_admin.html" %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{% block title %}Panel de Administración{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro&display=swap" rel="stylesheet" />
 
-{% block content %}
+    <style>
+        body {
+            font-family: 'Source Sans Pro', sans-serif;
+        }
+        .sidebar {
+            background-color: #f8f9fa;
+            border-right: 1px solid #dee2e6;
+        }
+        .sidebar .nav-link {
+            color: #333;
+            font-weight: 500;
+        }
+        .sidebar .nav-link.active,
+        .sidebar .nav-link:hover {
+            background-color: #4B9EE9;
+            color: white;
+        }
+        .sidebar .nav-link .bi {
+            margin-right: 0.75rem;
+        }
+        #main-navbar-admin {
+            background-color: #4B9EE9;
+        }
+    </style>
+</head>
+<body class="d-flex flex-column min-vh-100">
 
-{% endblock %}
+    <nav class="navbar navbar-expand-lg navbar-dark px-3" id="main-navbar-admin">
+        <a class="navbar-brand d-flex align-items-center" href="{{ url_for('main.dashboard') }}">
+            <img class="me-2 rounded-circle" src="{{url_for('static', filename='img/logo.png')}}" alt="Logo" width="60px" height="60px">
+            <div class="d-flex flex-column align-items-center fw-bold">
+                <span>Agrupación Veteranos de Guerra de Malvinas</span>
+                <span>"Operativo Virgen del Rosario"</span>
+            </div>
+        </a>
+
+        <div class="navbar-nav ms-auto d-flex flex-row">
+            <a class="nav-link d-flex align-items-center text-white mx-1 p-2" href="{{ url_for('main.start') }}">
+                <i class="bi bi-house me-2"></i> Inicio
+            </a>
+            <a class="nav-link d-flex align-items-center text-white mx-1 p-2" href="{{ url_for('main.logout') }}">
+                <i class="bi bi-box-arrow-right me-2"></i> Salir
+            </a>
+        </div>
+    </nav>
+
+    <div class="container-fluid flex-grow-1">
+        <div class="row h-100">
+            <nav class="col-md-3 col-lg-2 d-md-block sidebar collapse">
+                <div class="position-sticky pt-3">
+                    <h4 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-2 mb-3 text-muted">
+                        <span>Gestión</span>
+                    </h4>
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.path.startswith('/admin/insertar') %}active{% endif %}" href="{{ url_for('main.insertar_persona') }}">
+                                <i class="bi bi-person-plus"></i> Insertar Persona
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.path.startswith('/admin/eliminar') %}active{% endif %}" href="{{ url_for('main.eliminar_persona') }}">
+                                <i class="bi bi-person-dash"></i> Eliminar Persona
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.path.startswith('/admin/modificar') %}active{% endif %}" href="{{ url_for('main.modificar_datos') }}">
+                                <i class="bi bi-pencil-square"></i> Modificar Datos
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.path.startswith('/buscar') %}active{% endif %}" href="{{ url_for('main.buscar') }}">
+                                <i class="bi bi-search"></i> Buscar y ver Datos
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.path.startswith('/admin/actualizar') %}active{% endif %}" href="{{ url_for('main.actualizar_info') }}">
+                                <i class="bi bi-info-circle"></i> Actualizar Información
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.path.startswith('/admin/documentacion') %}active{% endif %}" href="{{ url_for('main.gestion_documentacion') }}">
+                                <i class="bi bi-file-earmark-text"></i> Gestión de Documentación
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <div class="pt-3 pb-2 mb-3 border-bottom">
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                        {% endfor %}
+                    {% endif %}
+                    {% endwith %}
+
+                    {% block content %}{% endblock %}
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,9 +1,16 @@
-{% extends "base.html" %}
+{% extends 'base_admin.html' %}
 
-{% block title %}Dashboard{% endblock %}
+{% block title %}Panel de Administración{% endblock %}
 
 {% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Bienvenido al Panel de Administración</h1>
+</div>
 
-<h1>Estas logueado!</h1>
-
+<p>
+    ¡Has iniciado sesión correctamente!
+</p>
+<p>
+    Seleccioná una opción de la barra lateral izquierda para comenzar a gestionar el contenido del sitio web.
+</p>
 {% endblock %}
