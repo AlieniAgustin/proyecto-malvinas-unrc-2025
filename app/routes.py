@@ -1,3 +1,4 @@
+from collections import defaultdict
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_user, logout_user, login_required, current_user
 from .models.administrador import Administrador
@@ -177,41 +178,51 @@ def logout():
 
 @bp.route('/contacto')
 def contacto():
-    agrupacion = db.session.execute("""
-        SELECT nombre_agrupacion, direccion, mail
-        FROM agrupacion
-        LIMIT 1
-    """).fetchone()
 
-    telefonos = db.session.execute("""
-        SELECT telefono
-        FROM telefono_agrupacion
-    """).fetchall()
+    db = get_db()
+    cursor = db.cursor(dictionary = True) # para que fetch devuelva diccionarios
 
-    redes = db.session.execute("""
-        SELECT nombre, link
-        FROM red_social
-    """).fetchall()
+    cursor.execute("SELECT nombre_agrupacion, direccion, mail FROM agrupacion WHERE id_agrupacion = 1")
+    agrupacion = cursor.fetchone()
 
-    autoridades = db.session.execute("""
-        SELECT r.nombre_rol, v.apellido, v.nombre
-        FROM autoridad a
-        JOIN rol r ON a.rol_id = r.id_rol
-        JOIN veterano v ON a.veterano_id = v.id_veterano
-    """).fetchall()
+    cursor.execute("SELECT telefono FROM telefono_agrupacion WHERE id_agrupacion = 1")
+    telefonos = cursor.fetchall()
 
-    ubicacion = db.session.execute("""
-        SELECT l.nombre_localidad, l.provincia
-        FROM agrupacion ag
-        JOIN localidad l ON ag.localidad_agrupacion = l.id_localidad
-        LIMIT 1
-    """).fetchone()
+    cursor.execute("SELECT nombre, link FROM red_social WHERE id_agrupacion = 1")
+    redes = cursor.fetchall()
+
+    cursor.execute("""
+            SELECT r.nombre_rol, p.apellido, p.nombre 
+            FROM autoridad a
+            JOIN rol r ON a.id_rol = r.id_rol
+            JOIN persona p ON a.dni_autoridad = p.dni
+            JOIN veterano v ON a.dni_autoridad = v.dni_veterano 
+            WHERE v.id_agrupacion = 1
+        """)
+    autoridades_lista = cursor.fetchall()
+
+    autoridades_agrupadas = defaultdict(list)
+    for autoridad in autoridades_lista:
+        nombre_completo = f"{autoridad['nombre']} {autoridad['apellido']}"
+        autoridades_agrupadas[autoridad['nombre_rol']].append(nombre_completo)
+
+    cursor.execute("""
+            SELECT l.nombre_localidad, p.nombre AS provincia
+            FROM agrupacion ag
+            JOIN localidad l ON ag.localidad_agrupacion = l.id_localidad
+            JOIN provincia p ON l.id_provincia = p.id_provincia
+            WHERE ag.id_agrupacion = 1
+        """)
+    ubicacion = cursor.fetchone()
+
+    cursor.close()
+
     return render_template('contacto.html',
         agrupacion=agrupacion,
         telefonos=telefonos,
         redes=redes,
-        autoridades=autoridades,
-        ubicacion=ubicacion)
+        ubicacion=ubicacion,
+        autoridades_agrupadas=autoridades_agrupadas)
 
 @bp.route('/terminos')
 def terminos():
