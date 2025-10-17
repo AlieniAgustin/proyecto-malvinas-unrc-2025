@@ -5,7 +5,7 @@
 {% block content %}
 <div class="container-fluid">
     <div class="row">
-        <div class="col-9 px-5 py-3">
+        <div class="col-md-8 col-lg-9 px-5 py-3">
             <h3 class="text-center fw-bold mb-3">Búsqueda de personas</h3>
 
             {% if resultados %}
@@ -18,15 +18,11 @@
                             {% if current_user.is_authenticated %}
                                 <span>DNI: {{ persona.dni }}</span> 
                             {% endif %}
-                            {% if persona.fuerza %}
-                                <span>{{ persona.fuerza }}</span>
-                            {% else %}
-                                <span class="text-muted">Fuerza no especificada</span>
-                            {% endif %}
+                            <span>{{ persona.fuerza or 'Fuerza no especificada' }}</span>
                         </div>
                     </div>
                     <div class="d-flex align-items-center">
-                        <a href="/persona/{{ persona.dni }}" class="btn btn-primary fw-bold">Ver perfil</a>
+                        <a href="{{ url_for('main.ver_perfil', dni=persona.dni) }}" class="btn btn-primary fw-bold">Ver perfil</a>
                     </div>
                 </div>
                 {% endfor %}
@@ -37,20 +33,20 @@
             {% endif %}
         </div>
 
-        <div class="col-3 bg-secondary bg-opacity-10 p-3">
+        <div class="col-md-4 col-lg-3 bg-secondary bg-opacity-10 p-3">
             <h3 class="text-center fw-bold mb-3">Filtros</h3>
             <form id="filtrosForm" method="GET" action="{{ url_for('main.buscar') }}">
 
                 <div class="mb-3">
                     <label for="apellido" class="form-label fw-bold">Apellido</label>
-                    <input type="text" class="form-control" id="apellido" name="apellido" placeholder="Ingrese un apellido">
+                    <input type="text" class="form-control" id="apellido" name="apellido" placeholder="Ingrese apellido">
                 </div>
 
                 <div class="mb-3">
                     <label for="nombre" class="form-label fw-bold">Nombre</label>
-                    <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Ingrese un nombre">
+                    <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Ingrese nombre">
                 </div>
-
+                
                 <div class="mb-3">
                     <label for="provincia_nacimiento" class="form-label fw-bold">Provincia de nacimiento</label>
                     <select class="form-select" id="provincia_nacimiento" name="provincia_nacimiento">
@@ -60,19 +56,19 @@
                         {% endfor %}
                     </select>
                 </div>
-                
+
                 <div class="mb-3">
-                    <label for="departamento_nacimiento" class="form-label fw-bold">Departamento de nacimiento</label>
-                    <input type="text" class="form-control" id="departamento_nacimiento" name="departamento_nacimiento" placeholder="Ingrese un departamento">
+                    <label for="departamento_nacimiento" class="form-label fw-bold">Departamento</label>
+                    <input type="text" class="form-control" id="departamento_nacimiento" name="departamento_nacimiento" placeholder="Ingrese departamento">
                 </div>
 
                 <div class="mb-3">
-                    <label for="localidad_nacimiento" class="form-label fw-bold">Localidad de nacimiento</label>
-                    <select class="form-select" id="localidad_nacimiento" name="localidad_nacimiento">
-                        <option value="">Todas</option>
+                    <label for="localidad_nacimiento" class="form-label fw-bold">Localidad</label>
+                    <select class="form-select" id="localidad_nacimiento" name="localidad_nacimiento" disabled>
+                        <option value="">(Seleccione una provincia)</option>
                         </select>
                 </div>
-
+                
                 <div class="mb-3">
                     <label for="fuerza" class="form-label fw-bold">Fuerza</label>
                     <select class="form-select" id="fuerza" name="fuerza">
@@ -82,7 +78,7 @@
                         {% endfor %}
                     </select>
                 </div>
-
+                
                 <div class="mb-3">
                     <label for="vf" class="form-label fw-bold">Estado</label>
                     <select class="form-select" id="vf" name="vf">
@@ -92,6 +88,34 @@
                     </select>
                 </div>
                 
+                {% if current_user.is_authenticated %}
+                    <hr>
+                    <h5 class="text-center fw-bold mb-3">Filtros de Administrador</h5>
+
+                    <div class="mb-3">
+                        <label for="dni" class="form-label fw-bold">DNI</label>
+                        <input type="text" class="form-control" id="dni" name="dni" placeholder="Ingrese DNI exacto">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="mes_cumple" class="form-label fw-bold">Mes de Nacimiento</label>
+                        <select class="form-select" id="mes_cumple" name="mes_cumple">
+                            <option value="">Cualquiera</option>
+                            <option value="1">Enero</option><option value="2">Febrero</option><option value="3">Marzo</option>
+                            <option value="4">Abril</option><option value="5">Mayo</option><option value="6">Junio</option>
+                            <option value="7">Julio</option><option value="8">Agosto</option><option value="9">Septiembre</option>
+                            <option value="10">Octubre</option><option value="11">Noviembre</option><option value="12">Diciembre</option>
+                        </select>
+                    </div>
+
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" value="true" id="incompletos" name="incompletos">
+                        <label class="form-check-label fw-bold" for="incompletos">
+                            Solo con datos incompletos
+                        </label>
+                    </div>
+
+                {% endif %}
                 <button type="submit" class="btn btn-primary w-100 fw-bold mb-2">Aplicar filtros</button>
                 <a href="{{ url_for('main.buscar') }}" class="btn btn-danger w-100 fw-bold">Borrar filtros</a>
             </form>
