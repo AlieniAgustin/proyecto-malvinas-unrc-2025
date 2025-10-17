@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block title %}Perfil de {{ veterano.nombre }} {{ veterano.apellido }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    {% if veterano %}
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <h2 class="mb-0">Perfil del Veterano</h2>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-4 text-center">
+                    {% if veterano.ruta_foto %}
+                        <img src="{{ url_for('static', filename=veterano.ruta_foto) }}" class="img-fluid rounded-circle" alt="Foto de {{ veterano.nombre }}">
+                    {% else %}
+                        <img src="{{ url_for('static', filename='img/avatar.svg') }}" class="img-fluid rounded-circle" alt="Avatar por defecto">
+                    {% endif %}
+                </div>
+
+                <div class="col-md-8">
+                    <h3 class="fw-bold">{{ veterano.apellido }}, {{ veterano.nombre }}</h3>
+                    <hr>
+                    <p><strong>Fuerza:</strong> {{ veterano.fuerza or 'No especificada' }}</p>
+                    <p><strong>Lugar de Nacimiento:</strong> {{ veterano.nombre_localidad or 'N/A' }}, {{ veterano.departamento or 'N/A' }}, {{ veterano.provincia_nacimiento or 'N/A' }}</p>
+                    <p>
+                        <strong>Estado:</strong> 
+                        {% if veterano.fecha_fallecimiento %}
+                            <span class="badge bg-secondary">Fallecido</span>
+                        {% else %}
+                            <span class="badge bg-success">Vive</span>
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+
+            {% if current_user.is_authenticated and veterano_admin %}
+            <hr class="my-4">
+            <div class="card mt-3">
+                <div class="card-header bg-secondary text-white">
+                    <h4 class="mb-0">Información Adicional (Visible para Administradores)</h4>
+                </div>
+                <div class="card-body">
+                    <p><strong>DNI:</strong> {{ request.view_args['dni'] }}</p>
+                    <p><strong>Fecha de Nacimiento:</strong> {{ veterano.fecha_nacimiento.strftime('%d/%m/%Y') if veterano.fecha_nacimiento else 'No especificada' }}</p>
+                    <p><strong>Correo Electrónico:</strong> {{ veterano_admin.mail or 'No especificado' }}</p>
+                    
+                    {% if telefonos %}
+                        <p><strong>Teléfonos:</strong></p>
+                        <ul>
+                            {% for tel in telefonos %}
+                                <li>{{ tel.telefono }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+
+                    <p><strong>Dirección de Residencia:</strong> {{ veterano_admin.direccion or 'No especificada' }}</p>
+                    <p><strong>Lugar de Residencia:</strong> {{ veterano_admin.localidad_residencia or 'N/A' }}, {{ veterano_admin.provincia_residencia or 'N/A' }}</p>
+                    <p><strong>Grado:</strong> {{ veterano_admin.grado or 'No especificado' }}</p>
+                    <p><strong>Función en Combate:</strong> {{ veterano_admin.funcion or 'No especificada' }}</p>
+                    <p><strong>Nro. Beneficio Nacional:</strong> {{ veterano_admin.nro_beneficio_nacional or 'No especificado' }}</p>
+
+                    {% if veterano.fecha_fallecimiento %}
+                        <p><strong>Causa de Fallecimiento:</strong> {{ veterano_admin.causa_fallecimiento or 'No especificada' }}</p>
+                    {% endif %}
+
+                    {% if veterano_admin.secuelas %}
+                        <p><strong>Secuelas (Texto):</strong></p>
+                        <p>{{ veterano_admin.secuelas }}</p>
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    {% else %}
+    <div class="alert alert-danger text-center" role="alert">
+        No se pudo encontrar la información para la persona solicitada.
+    </div>
+    {% endif %}
+
+    <div class="text-center mt-4">
+        <a href="{{ url_for('main.buscar') }}" class="btn btn-primary">Volver a la búsqueda</a>
+    </div>
+</div>
+{% endblock %}
