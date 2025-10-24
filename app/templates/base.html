@@ -32,17 +32,28 @@
         .nav-link-active, .nav-link:hover {
             background-color: #ffffff40;
         }
+
+        /* Force text wrapping in navbar brand */
+        .navbar-brand {
+            white-space: normal !important;
+            word-wrap: break-word;
+            max-width: calc(100% - 100px); /* Leave space for hamburger menu */
+        }
     </style>
 </head>
+
 <body class="bg-white d-flex flex-column min-vh-100">
 
     <nav class="navbar navbar-expand-lg navbar-dark px-3" id="main-navbar">
-        <!-- Logo -->
+        <!-- Logo - Responsive -->
         <a class="navbar-brand d-flex align-items-center" href="/">
-            <img class="me-2 rounded-circle" src="{{url_for('static', filename='img/logo.png')}}" alt="Logo de la agrupacion" width="60px" height="60px">
-            <div class="d-flex flex-column align-items-center fw-bold">
-                <span class="d-block">Agrupación Veteranos de Guerra de Malvinas</span>
-                <span class="d-block">"Operativo Virgen del Rosario"</span>
+            <img class="me-2 rounded-circle flex-shrink-0" src="{{url_for('static', filename='img/logo.png')}}" alt="Logo de la agrupacion" width="50px" height="50px">
+            <div class="d-none d-md-flex flex-column align-items-start fw-bold">
+                <span class="d-block small">Agrupación Veteranos de Guerra de Malvinas</span>
+                <span class="d-block small">"Operativo Virgen del Rosario"</span>
+            </div>
+            <div class="d-md-none fw-bold">
+                <span class="small">Veteranos de Malvinas</span>
             </div>
        </a> 
 

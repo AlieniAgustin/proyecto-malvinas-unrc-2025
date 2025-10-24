@@ -9,9 +9,27 @@
     <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro&display=swap" rel="stylesheet" />
 
     <style>
-        body {
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            height: 100%;
+            overscroll-behavior: none;
             font-family: 'Source Sans Pro', sans-serif;
         }
+
+        #main-navbar, #main-footer{
+            background-color: #4B9EE9;
+        }
+
+        .nav-link-active, .nav-link:hover {
+            background-color: #ffffff40;
+        }
+
+        /* Admin-specific styles */
         .sidebar {
             background-color: #e7f3ff; 
             border-right: 1px solid #dee2e6;
@@ -28,51 +46,113 @@
         .sidebar .nav-link .bi {
             margin-right: 0.75rem;
         }
-        #main-navbar-admin, #main-footer-admin { /* Se aplica el estilo al footer también */
-            background-color: #4B9EE9;
+        
+        /* Fix sidebar overflow issues */
+        .sidebar .nav-item {
+            width: 100%;
+            overflow: hidden;
+        }
+        
+        .sidebar .nav-link {
+            width: 100%;
+            min-width: 0;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            white-space: normal;
+        }
+        
+        .sidebar .nav-link span {
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            white-space: normal;
         }
     </style>
 </head>
-<body class="d-flex flex-column min-vh-100">
 
-    <nav class="navbar navbar-expand-lg navbar-dark px-3" id="main-navbar-admin">
-        <a class="navbar-brand d-flex align-items-center" href="{{ url_for('main.dashboard') }}">
-            <img class="me-2 rounded-circle" src="{{url_for('static', filename='img/logo.png')}}" alt="Logo" width="60px" height="60px">
-            <div class="d-flex flex-column align-items-center fw-bold">
-                <span>Agrupación Veteranos de Guerra de Malvinas</span>
-                <span>"Operativo Virgen del Rosario"</span>
+<body class="bg-white d-flex flex-column min-vh-100">
+
+    <nav class="navbar navbar-expand-lg navbar-dark px-3" id="main-navbar">
+        <!-- Logo - Responsive -->
+        <a class="navbar-brand d-flex align-items-center flex-shrink-0" href="{{ url_for('main.dashboard') }}">
+            <img class="me-2 rounded-circle" src="{{url_for('static', filename='img/logo.png')}}" alt="Logo de la agrupacion" width="50px" height="50px">
+            <div class="d-none d-md-flex flex-column align-items-start fw-bold">
+                <span class="d-block small">Agrupación Veteranos de Guerra de Malvinas</span>
+                <span class="d-block small">"Operativo Virgen del Rosario"</span>
             </div>
-        </a>
-        <div class="navbar-nav ms-auto d-flex flex-row">
-            <a class="nav-link d-flex align-items-center text-white mx-1 p-2" href="{{ url_for('main.start') }}">
-                <i class="bi bi-house me-2"></i> Inicio
-            </a>
-            <a class="nav-link d-flex align-items-center text-white mx-1 p-2" href="{{ url_for('main.logout') }}">
-                <i class="bi bi-box-arrow-right me-2"></i> Salir
-            </a>
+            <div class="d-md-none fw-bold">
+                <span class="small">Veteranos de Malvinas</span>
+            </div>
+       </a> 
+
+       <!-- Boton para desplegar el menu -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Links --> 
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link d-flex align-items-center text-white mx-1 p-2 {% if request.path == '/dashboard' %}nav-link-active{% endif %}" href="{{ url_for('main.dashboard') }}">
+                    <i class="bi bi-house me-2"></i> Panel de Administración
+                </a>
+                <a class="nav-link d-flex align-items-center text-white mx-1 p-2" href="{{ url_for('main.logout') }}">
+                    <i class="bi bi-box-arrow-right me-2"></i> Salir
+                </a>
+            </div>
         </div>
     </nav>
 
-    <div class="container-fluid flex-grow-1">
-        <div class="row h-100">
-            <nav class="col-md-3 col-lg-2 d-md-block sidebar collapse">
-                <div class="position-sticky pt-3">
+    <div class="container-fluid flex-grow-1 d-flex">
+        <div class="row flex-grow-1 w-100">
+            <nav class="col-md-3 col-lg-2 d-md-block sidebar collapse d-flex flex-column">
+                <div class="flex-grow-1 pt-3">
                     <h4 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-2 mb-3 text-muted">
                         <span>Gestión</span>
                     </h4>
                     <ul class="nav flex-column">
-                        <li class="nav-item"><a class="nav-link {% if request.path.startswith('/admin/insertar') %}active{% endif %}" href="{{ url_for('main.insertar_persona') }}"><i class="bi bi-person-plus"></i> Insertar Persona</a></li>
-                        <li class="nav-item"><a class="nav-link {% if request.path.startswith('/admin/eliminar') %}active{% endif %}" href="{{ url_for('main.eliminar_persona') }}"><i class="bi bi-person-dash"></i> Eliminar Persona</a></li>
-                        <li class="nav-item"><a class="nav-link {% if request.path.startswith('/admin/modificar') %}active{% endif %}" href="{{ url_for('main.modificar_datos') }}"><i class="bi bi-pencil-square"></i> Modificar Datos</a></li>
-                        <li class="nav-item"><a class="nav-link {% if request.path.startswith('/buscar') %}active{% endif %}" href="{{ url_for('main.buscar') }}"><i class="bi bi-search"></i> Buscar y ver Datos</a></li>
-                        <li class="nav-item"><a class="nav-link {% if request.path.startswith('/admin/actualizar') %}active{% endif %}" href="{{ url_for('main.actualizar_info') }}"><i class="bi bi-info-circle"></i> Actualizar Información</a></li>
-                        <li class="nav-item"><a class="nav-link {% if request.path.startswith('/admin/documentacion') %}active{% endif %}" href="{{ url_for('main.gestion_documentacion') }}"><i class="bi bi-file-earmark-text"></i> Gestión de Documentación</a></li>
+                        <li class="nav-item">
+                            <a class="nav-link d-flex align-items-start {% if request.path.startswith('/admin/insertar') %}active{% endif %}" href="{{ url_for('main.insertar_persona') }}">
+                                <i class="bi bi-person-plus me-3 flex-shrink-0"></i>
+                                <span>Insertar Persona</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link d-flex align-items-start {% if request.path.startswith('/admin/eliminar') %}active{% endif %}" href="{{ url_for('main.eliminar_persona') }}">
+                                <i class="bi bi-person-dash me-3 flex-shrink-0"></i>
+                                <span>Eliminar Persona</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link d-flex align-items-start {% if request.path.startswith('/admin/modificar') %}active{% endif %}" href="{{ url_for('main.modificar_datos') }}">
+                                <i class="bi bi-pencil-square me-3 flex-shrink-0"></i>
+                                <span>Modificar Datos</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link d-flex align-items-start {% if request.path.startswith('/buscar') %}active{% endif %}" href="{{ url_for('main.buscar') }}">
+                                <i class="bi bi-search me-3 flex-shrink-0"></i>
+                                <span>Buscar y ver Datos</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link d-flex align-items-start {% if request.path.startswith('/admin/actualizar') %}active{% endif %}" href="{{ url_for('main.actualizar_info') }}">
+                                <i class="bi bi-info-circle me-3 flex-shrink-0"></i>
+                                <span>Actualizar Información</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link d-flex align-items-start {% if request.path.startswith('/admin/documentacion') %}active{% endif %}" href="{{ url_for('main.gestion_documentacion') }}">
+                                <i class="bi bi-file-earmark-text me-3 flex-shrink-0"></i>
+                                <span>Gestión de Documentación</span>
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </nav>
 
-            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-                <div class="pt-3 pb-2 mb-3">
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 d-flex flex-column">
+                <div class="pt-3 pb-2 mb-3 flex-grow-1">
                     {% with messages = get_flashed_messages(with_categories=true) %}
                     {% if messages %}
                         {% for category, message in messages %}
@@ -90,12 +170,12 @@
         </div>
     </div>
 
-    <footer class="text-white py-3 mt-auto" id="main-footer-admin">
+    <footer class="text-white py-3 mt-auto" id="main-footer">
         <div class="container text-center">
             <ul class="d-flex flex-column d-sm-flex flex-sm-row nav justify-content-center mb-2">
-                <li class="nav-item"><a href="{{ url_for('main.contacto') }}" class="nav-link px-3 mx-2 text-white">Contacto</a></li>
-                <li class="nav-item"><a href="{{ url_for('main.terminos') }}" class="nav-link px-3 mx-2 text-white">Términos</a></li>
-                <li class="nav-item"><a href="{{ url_for('main.privacidad') }}" class="nav-link px-3 mx-2 text-white">Privacidad</a></li>
+                <li class="nav-item"><a href="{{ url_for('main.contacto') }}" class="nav-link px-3 mx-2 text-white {% if request.path.startswith('/contacto') %}nav-link-active{% endif %}">Contacto</a></li>
+                <li class="nav-item"><a href="{{ url_for('main.terminos') }}" class="nav-link px-3 mx-2 text-white {% if request.path.startswith('/terminos') %}nav-link-active{% endif %}">Términos</a></li>
+                <li class="nav-item"><a href="{{ url_for('main.privacidad') }}" class="nav-link px-3 mx-2 text-white {% if request.path.startswith('/privacidad') %}nav-link-active{% endif %}">Privacidad</a></li>
             </ul>
             <p class="small mb-1">
                 Desarrollado en el marco de un proyecto de extensión de la Universidad Nacional de Río Cuarto en colaboración con la Agrupación Veteranos de Guerra de Malvinas "Operativo Virgen del Rosario".

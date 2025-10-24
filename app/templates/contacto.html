@@ -3,98 +3,99 @@
 {% block title %}Contacto{% endblock %}
 
 {% block content %}
-<h1 class="fs-3 fw-bold" style="color: #4D78a2; text-align: center;">Contacto</h1>
-<p class="fs-8 fw-bold" style="color: #4e4d4d; text-align: center;">Estamos aquí para responder a sus consultas y brindarle la información que necesita.</p>
 
-<div class="row g-2">
-    <div class="col-md-4">
-        <div class="card shadow-sm h-100" style="background-color: #f1f1f1; border-radius: 15px;">
-            <div class="card-body text-center">
-                <h5 class="fw-bold" style="color: #4D78a2;">Información de Contacto</h5>
-
-                {% if agrupacion and agrupacion.direccion %}
-                <div class="container mt-3 d-flex p-2">
-                    <div class="col-md-2">
-                        <img src="{{ url_for('static', filename='img/direccion_icon.png') }}" alt="Dirección" style="width: 47px; height: 47px;" class="me-2">
+<div class="container p-4">
+    <h1 class="fs-3 fw-bold" style="color: #4D78a2; text-align: center;">Contacto</h1>
+    <p class="fs-8 fw-bold" style="color: #4e4d4d; text-align: center;">Estamos aquí para responder a sus consultas y brindarle la información que necesita.</p>
+    
+    <div class="row g-3">
+        <!-- Contact Information Card -->
+        <div class="col-12 col-lg-4 mb-3 mb-lg-0">
+            <div class="card shadow-sm h-100" style="background-color: #f1f1f1; border-radius: 15px;">
+                <div class="card-body">
+                    <h5 class="fw-bold text-center mb-4" style="color: #4D78a2;">Información de Contacto</h5>
+    
+                    {% if agrupacion and agrupacion.direccion %}
+                    <div class="d-flex align-items-start mb-3">
+                        <div class="flex-shrink-0 me-3">
+                            <img src="{{ url_for('static', filename='img/direccion_icon.png') }}" alt="Dirección" class="img-fluid" style="width: 48px; height: 48px; object-fit: contain;">
+                        </div>
+                        <div class="flex-grow-1" style="min-width: 0;">
+                            <p class="fw-bold mb-1" style="color: #4e4d4d;">Dirección</p>
+                            <p class="small mb-0 text-break" style="color: #4e4d4d; word-wrap: break-word; overflow-wrap: break-word;">{{ agrupacion.direccion }}</p>
+                        </div>
                     </div>
-                    <div class="col-md-10">
-                        <p class="fs-5 fw-bold mb-0" style="line-height: 1; color: #4e4d4d; text-align: left;">Dirección</p>
-                        <p class="fs-7 fw-bold mb-0" style="color: #4e4d4d; text-align: left;">{{ agrupacion.direccion }}</p>
+                    {% endif %}
+    
+                    {% if agrupacion and agrupacion.mail %}
+                    <div class="d-flex align-items-start mb-3">
+                        <div class="flex-shrink-0 me-3">
+                            <img src="{{ url_for('static', filename='img/correo_icon.png') }}" alt="Correo" class="img-fluid" style="width: 48px; height: 48px; object-fit: contain;">
+                        </div>
+                        <div class="flex-grow-1" style="min-width: 0;">
+                            <p class="fw-bold mb-1" style="color: #4e4d4d;">Correo Electrónico</p>
+                            <p class="small mb-0 text-break" style="color: #4e4d4d; word-wrap: break-word; overflow-wrap: break-word;">{{ agrupacion.mail }}</p>
+                        </div>
                     </div>
-                </div>
-                {% endif %}
-
-                {% if agrupacion and agrupacion.mail %}
-                <div class="container mt-3 d-flex p-2">
-                    <div class="col-md-2">
-                        <img src="{{ url_for('static', filename='img/correo_icon.png') }}" alt="Correo" style="width: 48px; height: 48px;" class="me-2">
+                    {% endif %}
+    
+                    {% if telefonos %}
+                    <div class="d-flex align-items-start mb-3">
+                        <div class="flex-shrink-0 me-3">
+                            <img src="{{ url_for('static', filename='img/telefonos_icon.png') }}" alt="Telefonos" class="img-fluid" style="width: 48px; height: 48px; object-fit: contain;">
+                        </div>
+                        <div class="flex-grow-1" style="min-width: 0;">
+                            <p class="fw-bold mb-1" style="color: #4e4d4d;">Teléfonos</p>
+                            {% for tel in telefonos %}
+                                <p class="small mb-1 text-break" style="color: #4e4d4d; word-wrap: break-word; overflow-wrap: break-word;">{{ tel.telefono }}</p>
+                            {% endfor %}
+                        </div>
                     </div>
-                    <div class="col-md-10">
-                        <p class="fs-5 fw-bold mb-0" style="line-height: 1; color: #4e4d4d; text-align: left;">Correo Electrónico</p>
-                        <p class="fs-7 fw-bold mb-0" style="color: #4e4d4d; text-align: left;">{{ agrupacion.mail }}</p>
+                    {% endif %}
+    
+                    {% for red in redes %}
+                    <div class="d-flex align-items-start mb-3">
+                        <div class="flex-shrink-0 me-3">
+                            {% if 'facebook' in red.nombre|lower %}
+                                <img src="{{ url_for('static', filename='img/facebook_icon.png') }}" alt="Facebook" class="img-fluid" style="width: 48px; height: 48px; object-fit: contain;">
+                            {% elif 'instagram' in red.nombre|lower %}
+                                <img src="{{ url_for('static', filename='img/instagram_icon.png') }}" alt="Instagram" class="img-fluid" style="width: 48px; height: 48px; object-fit: contain;">
+                            {% endif %}
+                        </div>
+                        <div class="flex-grow-1" style="min-width: 0;">
+                            <p class="fw-bold mb-1 text-break" style="color: #4e4d4d; word-wrap: break-word; overflow-wrap: break-word;">{{ red.nombre }}</p>
+                            <a href="{{ red.link }}" class="small text-decoration-none text-break" style="color: #4D78a2; word-wrap: break-word; overflow-wrap: break-word;" target="_blank" rel="noopener noreferrer">Visitar Perfil</a>
+                        </div>
                     </div>
-                </div>
-                {% endif %}
-
-                {% if telefonos %}
-                <div class="container mt-3 d-flex p-2">
-                    <div class="col-md-2">
-                        <img src="{{ url_for('static', filename='img/telefonos_icon.png') }}" alt="Telefonos" style="width: 47px; height: 47px;" class="me-2">
-                    </div>
-                    <div class="col-md-10">
-                        <p class="fs-5 fw-bold mb-0" style="line-height: 1; color: #4e4d4d; text-align: left;">Teléfonos</p>
-                        {% for tel in telefonos %}
-                            <p class="fs-7 fw-bold mb-0" style="color: #4e4d4d; text-align: left;">{{ tel.telefono }}</p>
-                        {% endfor %}
-                    </div>
-                </div>
-                {% endif %}
-
-                {% for red in redes %}
-                <div class="container mt-3 d-flex p-2">
-                    <div class="col-md-2">
-                        {% if 'facebook' in red.nombre|lower %}
-                            <img src="{{ url_for('static', filename='img/facebook_icon.png') }}" alt="Facebook" style="width: 43px; height: 43px;" class="me-2">
-                        {% elif 'instagram' in red.nombre|lower %}
-                            <img src="{{ url_for('static', filename='img/instagram_icon.png') }}" alt="Instagram" style="width: 43px; height: 43px;" class="me-2">
-                        {% endif %}
-                    </div>
-                    <div class="col-md-10">
-                        <p class="fs-5 fw-bold mb-0" style="line-height: 1; color: #4e4d4d; text-align: left;">{{ red.nombre }}</p>
-                        <a href="{{ red.link }}" class="fs-7 fw-bold mb-0 link-primary" style="text-align: left;" target="_blank" rel="noopener noreferrer">Visitar Perfil</a>
-                    </div>
-                </div>
-                {% endfor %}
-
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-4">
-        <div class="card shadow-sm h-100" style="background-color: #f1f1f1; border-radius: 15px;">
-            <div class="card-body text-center">
-                <h5 class="fw-bold" style="color: #4D78a2;">Autoridades</h5>
-                {% for rol, personas in autoridades_agrupadas.items() %}
-                    <h6 class="fw-bold mt-3" style="color: #4D78a2; text-align: left;">{{ rol }}</h6>
-                    {% for persona in personas %}
-                        <p class="fs-7 mb-0" style="color: #4e4d4d; text-align: left; padding-left: 15px;">{{ persona }}</p>
                     {% endfor %}
-                {% endfor %}
+    
+                </div>
             </div>
         </div>
-    </div>
-
-    <div class="col-md-4">
-        <div class="card shadow-sm h-100" style="background-color: #f1f1f1; border-radius: 15px;">
-            <div class="card-body text-center">
-                <h5 class="fw-bold" style="color: #4D78a2;">Nuestra Ubicación</h5>
-                <div class="container mt-3 p-2">
-                    <div class="embed-responsive embed-responsive-16by9">
+    
+        <!-- Authorities Card -->
+        <div class="col-12 col-lg-4 mb-3 mb-lg-0">
+            <div class="card shadow-sm h-100" style="background-color: #f1f1f1; border-radius: 15px;">
+                <div class="card-body">
+                    <h5 class="fw-bold text-center mb-4" style="color: #4D78a2;">Autoridades</h5>
+                    {% for rol, personas in autoridades_agrupadas.items() %}
+                        <h6 class="fw-bold mb-2 text-break" style="color: #4D78a2; word-wrap: break-word; overflow-wrap: break-word;">{{ rol }}</h6>
+                        {% for persona in personas %}
+                            <p class="small mb-1 ps-3 text-break" style="color: #4e4d4d; word-wrap: break-word; overflow-wrap: break-word;">{{ persona }}</p>
+                        {% endfor %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    
+        <!-- Location Card -->
+        <div class="col-12 col-lg-4">
+            <div class="card shadow-sm h-100" style="background-color: #f1f1f1; border-radius: 15px;">
+                <div class="card-body">
+                    <h5 class="fw-bold text-center mb-4" style="color: #4D78a2;">Nuestra Ubicación</h5>
+                    <div class="ratio ratio-16x9 mb-3">
                         <iframe
-                            class="embed-responsive-item"
                             src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3364.57393457143!2d-64.352455684824!3d-32.17647698118028!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95d2813a40a5a2f7%3A0x8d5c4b12a0f8b1e1!2sR%C3%ADo%20Cuarto%2C%20C%C3%B3rdoba!5e0!3m2!1ses-419!2sar!4v1668633333333!5m2!1ses-419!2sar"
-                            width="100%"
-                            height="250px"
                             style="border-radius: 15px;"
                             allowfullscreen=""
                             loading="lazy"
@@ -102,7 +103,7 @@
                         </iframe>
                     </div>
                     {% if ubicacion %}
-                    <p class="fs-7 fw-bold mt-2" style="color: #4e4d4d; text-align: center;">{{ ubicacion.nombre_localidad }}, {{ ubicacion.provincia }}.</p>
+                    <p class="small fw-bold text-center mb-0" style="color: #4e4d4d;">{{ ubicacion.nombre_localidad }}, {{ ubicacion.provincia }}.</p>
                     {% endif %}
                 </div>
             </div>
