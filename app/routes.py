@@ -321,15 +321,331 @@ def dashboard():
 def insertar_persona():
     return render_template('admin/insertar.html')
 
-@bp.route('/admin/eliminar')
+
+@bp.route('/admin/eliminar', methods=['GET'])
 @login_required
 def eliminar_persona():
-    return render_template('admin/eliminar.html')
+    conn = get_db()
+    cursor = conn.cursor(dictionary=True)
+    
+    # Query base
+    query = """
+        SELECT 
+            p.dni,
+            p.nombre,
+            p.apellido,
+            foto.ruta_foto
+        FROM persona p
+        JOIN veterano v ON p.dni = v.dni_veterano
+        LEFT JOIN foto ON v.dni_veterano = foto.dni_veterano
+        WHERE 1=1
+    """
+    
+    params = []
+    
+    dni = request.args.get("dni", "").strip()
+    nombre = request.args.get("nombre", "").strip()
+    apellido = request.args.get("apellido", "").strip()
+    
+    # Aplicar filtros
+    if dni:
+        query += " AND p.dni = %s"
+        params.append(dni)
+    
+    if nombre:
+        query += " AND LOWER(p.nombre) LIKE %s"
+        params.append("%" + nombre.lower() + "%")
+    
+    if apellido:
+        query += " AND LOWER(p.apellido) LIKE %s"
+        params.append("%" + apellido.lower() + "%")
+    
+    query += " ORDER BY p.apellido, p.nombre"
+    
+    cursor.execute(query, tuple(params))
+    veteranos = cursor.fetchall()
+    cursor.close()
+    
+    return render_template('admin/eliminar.html', veteranos=veteranos)
 
-@bp.route('/admin/modificar')
+
+@bp.route('/admin/eliminar/<string:dni>', methods=['POST'])
+@login_required
+def eliminar_persona_confirmado(dni):
+    conn = get_db()
+    cursor = conn.cursor(dictionary=True)
+    
+    try:
+        cursor.execute("""
+            SELECT p.nombre, p.apellido 
+            FROM persona p
+            JOIN veterano v ON p.dni = v.dni_veterano
+            WHERE p.dni = %s
+        """, (dni,))
+        
+        persona = cursor.fetchone()
+        
+        if not persona:
+            flash("No se encontró el veterano con el DNI especificado.", "danger")
+            return redirect(url_for('main.eliminar_persona'))
+        
+        cursor.execute("DELETE FROM persona WHERE dni = %s", (dni,))
+        conn.commit()
+        
+        flash(f"Se eliminó correctamente a {persona['nombre']} {persona['apellido']} (DNI: {dni}).", "success")
+        
+    except Exception as e:
+        conn.rollback()
+        flash(f"Error al eliminar la persona: {str(e)}", "danger")
+    
+    finally:
+        cursor.close()
+    
+    return redirect(url_for('main.eliminar_persona'), code=303)
+
+@bp.route('/admin/modificar', methods=['GET'])
 @login_required
 def modificar_datos():
-    return render_template('admin/modificar.html')
+    conn = get_db()
+    cursor = conn.cursor(dictionary=True)
+    
+    # Query base
+    query = """
+        SELECT 
+            p.dni,
+            p.nombre,
+            p.apellido,
+            foto.ruta_foto
+        FROM persona p
+        JOIN veterano v ON p.dni = v.dni_veterano
+        LEFT JOIN foto ON v.dni_veterano = foto.dni_veterano
+        WHERE 1=1
+    """
+    
+    params = []
+    
+    dni = request.args.get("dni", "").strip()
+    nombre = request.args.get("nombre", "").strip()
+    apellido = request.args.get("apellido", "").strip()
+    
+    # Aplicar filtros
+    if dni:
+        query += " AND p.dni = %s"
+        params.append(dni)
+    
+    if nombre:
+        query += " AND LOWER(p.nombre) LIKE %s"
+        params.append("%" + nombre.lower() + "%")
+    
+    if apellido:
+        query += " AND LOWER(p.apellido) LIKE %s"
+        params.append("%" + apellido.lower() + "%")
+    
+    query += " ORDER BY p.apellido, p.nombre"
+    
+    cursor.execute(query, tuple(params))
+    veteranos = cursor.fetchall()
+    cursor.close()
+    
+    return render_template('admin/modificar.html', veteranos=veteranos)
+
+
+@bp.route('/admin/modificar/<string:dni>', methods=['GET'])
+@login_required
+def modificar_persona_form(dni):
+    conn = get_db()
+    cursor = conn.cursor(dictionary=True)
+    
+    # Obtener datos completos del veterano
+    query = """
+        SELECT 
+            p.dni, p.nombre, p.apellido, p.genero,
+            v.fecha_nacimiento, v.direccion, v.mail, v.funcion, v.secuelas,
+            v.nro_beneficio_nacional, v.id_fuerza, v.id_grado,
+            v.localidad_nacimiento, v.localidad_residencia,
+            loc_nac.id_provincia as provincia_nacimiento,
+            loc_nac.departamento as departamento_nacimiento,
+            loc_res.id_provincia as provincia_residencia,
+            loc_res.departamento as departamento_residencia,
+            f.dni_veterano as es_fallecido,
+            f.fecha_fallecimiento,
+            f.id_causa
+        FROM persona p
+        JOIN veterano v ON p.dni = v.dni_veterano
+        LEFT JOIN localidad loc_nac ON v.localidad_nacimiento = loc_nac.id_localidad
+        LEFT JOIN localidad loc_res ON v.localidad_residencia = loc_res.id_localidad
+        LEFT JOIN fallecido f ON v.dni_veterano = f.dni_veterano
+        WHERE p.dni = %s
+    """
+    cursor.execute(query, (dni,))
+    veterano = cursor.fetchone()
+    
+    if not veterano:
+        flash("Veterano no encontrado", "danger")
+        return redirect(url_for('main.modificar_datos'))
+    
+    # Obtener teléfonos
+    cursor.execute("SELECT telefono FROM telefono_persona WHERE dni = %s", (dni,))
+    telefonos = cursor.fetchall()
+    
+    # Obtener listas para los dropdowns
+    cursor.execute("SELECT id_provincia, nombre FROM provincia ORDER BY nombre")
+    provincias = cursor.fetchall()
+    
+    cursor.execute("SELECT id_fuerza, nombre FROM fuerza ORDER BY nombre")
+    fuerzas = cursor.fetchall()
+    
+    cursor.execute("SELECT id_grado, nombre, id_fuerza FROM grado ORDER BY nombre")
+    grados = cursor.fetchall()
+    
+    cursor.execute("SELECT id_causa, descripcion FROM causa_fallecimiento")
+    causas = cursor.fetchall()
+    
+    cursor.close()
+    
+    return render_template('admin/modificar_veterano.html',
+                         veterano=veterano,
+                         telefonos=telefonos,
+                         provincias=provincias,
+                         fuerzas=fuerzas,
+                         grados=grados,
+                         causas=causas)
+
+
+@bp.route('/admin/modificar/<string:dni>', methods=['POST'])
+@login_required
+def modificar_persona_guardar(dni):
+    conn = get_db()
+    cursor = conn.cursor(dictionary=True)
+    
+    try:
+        # Obtener datos del formulario
+        nombre = request.form.get('nombre', '').strip()
+        apellido = request.form.get('apellido', '').strip()
+        genero = request.form.get('genero', 'no especificado')
+        fecha_nacimiento = request.form.get('fecha_nacimiento')
+        provincia_nac = request.form.get('provincia_nacimiento')
+        localidad_nac = request.form.get('localidad_nacimiento')
+        provincia_res = request.form.get('provincia_residencia')
+        localidad_res = request.form.get('localidad_residencia')
+        direccion = request.form.get('direccion', '').strip()
+        mail = request.form.get('mail', '').strip()
+        telefono = request.form.get('telefono', '').strip()
+        id_fuerza = request.form.get('fuerza')
+        id_grado = request.form.get('grado')
+        funcion = request.form.get('funcion', '').strip()
+        secuelas = request.form.get('secuelas', '').strip()
+        nro_beneficio = request.form.get('nro_beneficio_nacional', '').strip()
+        estado_vida = request.form.get('estado_vida', 'vivo')
+        fecha_fallecimiento = request.form.get('fecha_fallecimiento')
+        id_causa = request.form.get('causa_fallecimiento')
+        
+        # Validaciones
+        if not nombre or not apellido or not fecha_nacimiento:
+            flash("Nombre, apellido y fecha de nacimiento son obligatorios", "danger")
+            return redirect(url_for('main.modificar_persona_form', dni=dni))
+        
+        # Actualizar persona
+        cursor.execute("""
+            UPDATE persona 
+            SET nombre = %s, apellido = %s, genero = %s
+            WHERE dni = %s
+        """, (nombre, apellido, genero, dni))
+        
+        # Actualizar veterano
+        cursor.execute("""
+            UPDATE veterano 
+            SET fecha_nacimiento = %s,
+                localidad_nacimiento = %s,
+                localidad_residencia = %s,
+                direccion = %s,
+                mail = %s,
+                id_fuerza = %s,
+                id_grado = %s,
+                funcion = %s,
+                secuelas = %s,
+                nro_beneficio_nacional = %s
+            WHERE dni_veterano = %s
+        """, (fecha_nacimiento, localidad_nac or None, localidad_res or None,
+              direccion or None, mail or None, id_fuerza or None, id_grado or None,
+              funcion or None, secuelas or None, nro_beneficio or None, dni))
+        
+        # Actualizar teléfono
+        cursor.execute("DELETE FROM telefono_persona WHERE dni = %s", (dni,))
+        if telefono:
+            cursor.execute("INSERT INTO telefono_persona (dni, telefono) VALUES (%s, %s)", (dni, telefono))
+        
+        # Gestionar estado de fallecido
+        cursor.execute("SELECT dni_veterano FROM fallecido WHERE dni_veterano = %s", (dni,))
+        es_fallecido_actual = cursor.fetchone()
+        
+        if estado_vida == 'fallecido':
+            if not fecha_fallecimiento:
+                flash("Debe ingresar la fecha de fallecimiento", "danger")
+                conn.rollback()
+                return redirect(url_for('main.modificar_persona_form', dni=dni))
+            
+            if es_fallecido_actual:
+                cursor.execute("""
+                    UPDATE fallecido 
+                    SET fecha_fallecimiento = %s, id_causa = %s
+                    WHERE dni_veterano = %s
+                """, (fecha_fallecimiento, id_causa or None, dni))
+            else:
+                cursor.execute("""
+                    INSERT INTO fallecido (dni_veterano, fecha_fallecimiento, id_causa)
+                    VALUES (%s, %s, %s)
+                """, (dni, fecha_fallecimiento, id_causa or None))
+        else:
+            if es_fallecido_actual:
+                cursor.execute("DELETE FROM fallecido WHERE dni_veterano = %s", (dni,))
+        
+        conn.commit()
+        flash(f"Datos de {nombre} {apellido} actualizados correctamente", "success")
+        return redirect(url_for('main.modificar_datos'))
+        
+    except Exception as e:
+        conn.rollback()
+        flash(f"Error al actualizar: {str(e)}", "danger")
+        return redirect(url_for('main.modificar_persona_form', dni=dni))
+    
+    finally:
+        cursor.close()
+
+
+# API para obtener localidades por provincia
+@bp.route('/api/localidades/<int:provincia_id>')
+@login_required
+def get_localidades(provincia_id):
+    from flask import jsonify
+    conn = get_db()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT DISTINCT departamento 
+        FROM localidad 
+        WHERE id_provincia = %s AND departamento IS NOT NULL
+        ORDER BY departamento
+    """, (provincia_id,))
+    departamentos = cursor.fetchall()
+    cursor.close()
+    return jsonify([d['departamento'] for d in departamentos])
+
+
+@bp.route('/api/localidades/<int:provincia_id>/<string:departamento>')
+@login_required
+def get_localidades_por_depto(provincia_id, departamento):
+    from flask import jsonify
+    conn = get_db()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT id_localidad, nombre_localidad, codigo_postal
+        FROM localidad 
+        WHERE id_provincia = %s AND departamento = %s
+        ORDER BY nombre_localidad
+    """, (provincia_id, departamento))
+    localidades = cursor.fetchall()
+    cursor.close()
+    return jsonify(localidades)
 
 @bp.route('/admin/actualizar')
 @login_required

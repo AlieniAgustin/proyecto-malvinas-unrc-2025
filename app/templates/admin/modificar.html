@@ -1,8 +1,60 @@
 {% extends 'base_admin.html' %}
 
 {% block title %}Modificar Persona{% endblock %}
+{% block head %}
+    {{ super() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/crud_veterano.css') }}">
+{% endblock %}
 
 {% block content %}
-<h1 class="h2">Modificar Persona</h1>
-<p>Aquí irá el formulario para modificar una nueva persona.</p>
+<div class="container">
+    <h1 class="h2">Modificar Persona</h1>
+    <p>Ingrese los datos de la persona a modificar</p>
+    <hr>
+    
+    <!-- Formulario de búsqueda -->
+    <form method="get" class="mb-4">
+        <div class="form-group">
+            <input type="text" name="dni" placeholder="Ingrese el DNI" value="{{ request.args.get('dni', '') }}">
+            <input type="text" name="nombre" placeholder="Ingrese el nombre" value="{{ request.args.get('nombre', '') }}">
+            <input type="text" name="apellido" placeholder="Ingrese el apellido" value="{{ request.args.get('apellido', '') }}">
+            <button type="submit" class="btn btn-primary">Buscar</button>
+            <a href="{{ url_for('main.modificar_datos') }}" class="btn btn-secondary">Limpiar</a>
+        </div>
+    </form>
+    
+    <hr>
+    <h2 class="h4">REGISTROS ENCONTRADOS ({{ veteranos|length }})</h2>
+    
+    <div class="records">
+        {% if veteranos %}
+            {% for veterano in veteranos %}
+                <div class="record">
+                    <div class="record-info">
+                        <div class="avatar">
+                            {% if veterano.ruta_foto %}
+                                <img src="{{ url_for('static', filename=veterano.ruta_foto) }}" alt="Foto de {{ veterano.nombre }}">
+                            {% else %}
+                                <div class="avatar-placeholder"></div>
+                            {% endif %}
+                        </div>
+                        <div class="record-details">
+                            <strong>{{ veterano.nombre }} {{ veterano.apellido }}</strong>
+                            <span>DNI: {{ veterano.dni }}</span>
+                        </div>
+                    </div>
+                    <a href="{{ url_for('main.modificar_persona_form', dni=veterano.dni) }}" class="btn-modify">Modificar</a>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="alert alert-info">
+                {% if request.args.get('dni') or request.args.get('nombre') or request.args.get('apellido') %}
+                    No se encontraron veteranos con los criterios de búsqueda especificados.
+                {% else %}
+                    No hay veteranos registrados en la base de datos.
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+</div>
 {% endblock %}
