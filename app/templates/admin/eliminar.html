@@ -1,8 +1,107 @@
 {% extends 'base_admin.html' %}
 
 {% block title %}Eliminar Persona{% endblock %}
+{% block head %}
+    {{ super() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/crud_veterano.css') }}">
+{% endblock %}
 
 {% block content %}
-<h1 class="h2">Eliminar Persona</h1>
-<p>Aquí irá el formulario para eliminar una nueva persona.</p>
+<div class="container">
+    <h1 class="h2">Eliminar persona</h1>
+    <p>Ingrese los datos de la persona a eliminar</p>
+    <hr>
+
+    <!-- Formulario de búsqueda -->
+    <form method="get" class="mb-4">
+        <div class="form-group">
+            <input type="text" name="dni" placeholder="Ingrese el DNI" class="form-control" value="{{ request.args.get('dni', '') }}">
+            <input type="text" name="nombre" placeholder="Ingrese el nombre" class="form-control" value="{{ request.args.get('nombre', '') }}">
+            <input type="text" name="apellido" placeholder="Ingrese el apellido" class="form-control" value="{{ request.args.get('apellido', '') }}">
+            <button type="submit" class="btn btn-primary">Buscar</button>
+            <a href="{{ url_for('main.eliminar_persona') }}" class="btn btn-secondary">Limpiar</a>
+        </div>
+    </form>
+    <hr>
+      
+    <h2 class="h4">REGISTROS ENCONTRADOS ({{ veteranos|length }})</h2>
+     
+    <div class="records">
+        {% if veteranos %}
+            {% for veterano in veteranos %}
+                <div class="record">
+                    <div class="record-info">
+                        <div class="avatar">
+                            {% if veterano.ruta_foto %}
+                                <img src="{{ url_for('static', filename=veterano.ruta_foto) }}" alt="Foto de {{ veterano.nombre }}">
+                            {% else %}
+                                <div class="avatar-placeholder"></div>
+                            {% endif %}
+                        </div>
+                        <div class="record-details">
+                            <strong>{{ veterano.nombre }} {{ veterano.apellido }}</strong>
+                            <span>DNI: {{ veterano.dni }}</span>
+                        </div>
+                    </div>
+                    <button class="btn-delete" 
+                            data-bs-toggle="modal" 
+                            data-bs-target="#confirmModal"
+                            data-nombre="{{ veterano.nombre }} {{ veterano.apellido }}"
+                            data-dni="{{ veterano.dni }}">
+                        Eliminar
+                    </button>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="alert alert-info">
+                {% if request.args.get('dni') or request.args.get('nombre') or request.args.get('apellido') %}
+                    No se encontraron veteranos con los criterios de búsqueda especificados.
+                {% else %}
+                    No hay veteranos registrados en la base de datos.
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="confirmModalLabel">Confirmar eliminación</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        ¿Está seguro que desea eliminar a <strong><span id="modalNombre"></span></strong> (DNI <span id="modalDni"></span>)?
+        <br><br>
+        <div class="alert alert-warning">
+            <strong>⚠️ Advertencia:</strong> Esta acción eliminará permanentemente todos los datos asociados a esta persona.
+        </div>
+      </div>
+      <div class="modal-footer">
+        <form method="post" id="formEliminar">
+            <input type="hidden" name="dni" id="inputDni">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-danger">Confirmar Eliminación</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+var confirmModal = document.getElementById('confirmModal');
+confirmModal.addEventListener('show.bs.modal', function (event) {
+  var button = event.relatedTarget;
+  var nombre = button.getAttribute('data-nombre');
+  var dni = button.getAttribute('data-dni');
+  
+  document.getElementById('modalNombre').textContent = nombre;
+  document.getElementById('modalDni').textContent = dni;
+  document.getElementById('inputDni').value = dni;
+  
+  var form = document.getElementById('formEliminar');
+  form.action = "{{ url_for('main.eliminar_persona_confirmado', dni='PLACEHOLDER') }}".replace('PLACEHOLDER', dni);
+});
+</script>
 {% endblock %}

@@ -1,0 +1,59 @@
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    height: 100%;
+    overscroll-behavior: none;
+    font-family: 'Source Sans Pro', sans-serif;
+    
+}
+
+#main-navbar, #main-footer{
+    background-color: #4B9EE9;
+}
+
+.nav-link-active, .nav-link:hover {
+    background-color: #ffffff40;
+}
+
+/* Admin-specific styles */
+.sidebar {
+    background-color: #e7f3ff; 
+    border-right: 1px solid #dee2e6;
+}
+.sidebar .nav-link {
+    color: #333;
+    font-weight: 500;
+}
+.sidebar .nav-link.active,
+.sidebar .nav-link:hover {
+    background-color: #4B9EE9;
+    color: white;
+}
+.sidebar .nav-link .bi {
+    margin-right: 0.75rem;
+}
+
+/* Fix sidebar overflow issues */
+.sidebar .nav-item {
+    width: 100%;
+    overflow: hidden;
+}
+
+.sidebar .nav-link {
+    width: 100%;
+    min-width: 0;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
+}
+
+.sidebar .nav-link span {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
+}
