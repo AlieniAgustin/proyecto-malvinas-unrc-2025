@@ -1,5 +1,4 @@
 
-
 .cont {
   max-width: 950px;
   margin: 40px auto;
@@ -103,4 +102,15 @@ button {
 
 .guardar:hover {
   background-color: #4338ca;
+}
+
+.estado {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.estado label:first-child {
+  margin-bottom: 4px;
 }

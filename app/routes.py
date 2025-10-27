@@ -365,6 +365,7 @@ def eliminar_persona():
     cursor.execute(query, tuple(params))
     veteranos = cursor.fetchall()
     cursor.close()
+    conn.close() 
     
     return render_template('admin/eliminar.html', veteranos=veteranos)
 
@@ -376,6 +377,9 @@ def eliminar_persona_confirmado(dni):
     cursor = conn.cursor(dictionary=True)
     
     try:
+        print(dni)
+        dni = dni.strip()
+        print(dni)
         cursor.execute("""
             SELECT p.nombre, p.apellido 
             FROM persona p
@@ -389,7 +393,8 @@ def eliminar_persona_confirmado(dni):
             flash("No se encontró el veterano con el DNI especificado.", "danger")
             return redirect(url_for('main.eliminar_persona'))
         
-        cursor.execute("DELETE FROM persona WHERE dni = %s", (dni,))
+        cursor.execute("DELETE FROM persona WHERE dni = %s", (dni.strip(),))
+
         conn.commit()
         
         flash(f"Se eliminó correctamente a {persona['nombre']} {persona['apellido']} (DNI: {dni}).", "success")
@@ -399,8 +404,10 @@ def eliminar_persona_confirmado(dni):
         flash(f"Error al eliminar la persona: {str(e)}", "danger")
     
     finally:
-        cursor.close()
-    
+        cursor.close() 
+        print("Persona encontrada:", persona)
+        print("Filas afectadas:", cursor.rowcount)
+
     return redirect(url_for('main.eliminar_persona'), code=303)
 
 @bp.route('/admin/modificar', methods=['GET'])
@@ -446,6 +453,7 @@ def modificar_datos():
     cursor.execute(query, tuple(params))
     veteranos = cursor.fetchall()
     cursor.close()
+    
     
     return render_template('admin/modificar.html', veteranos=veteranos)
 
@@ -503,7 +511,7 @@ def modificar_persona_form(dni):
     
     cursor.close()
     
-    return render_template('admin/modificar_veterano.html',
+    return render_template('admin/modificar_veterano.html.jinja',
                          veterano=veterano,
                          telefonos=telefonos,
                          provincias=provincias,

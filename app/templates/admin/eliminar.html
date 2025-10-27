@@ -27,36 +27,40 @@
     <h2 class="h4">REGISTROS ENCONTRADOS ({{ veteranos|length }})</h2>
      
     <div class="records">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Avatar</th>
-                    <th>Nombre</th>
-                    <th>Apellido</th>
-                    <th>DNI</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% if veteranos %}
-                    {% for veterano in veteranos %}
-                    <tr>
-                        <td><img src="{{ url_for('static', filename='img/avatar.svg') }}" alt="avatar" width="40" height="40"></td>
-                        <td>{{ veterano.nombre }}</td>
-                        <td>{{ veterano.apellido }}</td>
-                        <td>{{ veterano.dni }}</td>
-                        <td>
-                            <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#confirmModal" data-nombre="{{ veterano.nombre }} {{ veterano.apellido }}" data-dni="{{ veterano.dni }}">Eliminar</button>
-                        </td>
-                    </tr>
-                    {% endfor %}
+        {% if veteranos %}
+            {% for veterano in veteranos %}
+                <div class="record">
+                    <div class="record-info">
+                        <div class="avatar">
+                            {% if veterano.ruta_foto %}
+                                <img src="{{ url_for('static', filename=veterano.ruta_foto) }}" alt="Foto de {{ veterano.nombre }}">
+                            {% else %}
+                                <div class="avatar-placeholder"></div>
+                            {% endif %}
+                        </div>
+                        <div class="record-details">
+                            <strong>{{ veterano.nombre }} {{ veterano.apellido }}</strong>
+                            <span>DNI: {{ veterano.dni }}</span>
+                        </div>
+                    </div>
+                    <button class="btn-delete" 
+                            data-bs-toggle="modal" 
+                            data-bs-target="#confirmModal"
+                            data-nombre="{{ veterano.nombre }} {{ veterano.apellido }}"
+                            data-dni="{{ veterano.dni }}">
+                        Eliminar
+                    </button>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="alert alert-info">
+                {% if request.args.get('dni') or request.args.get('nombre') or request.args.get('apellido') %}
+                    No se encontraron veteranos con los criterios de búsqueda especificados.
                 {% else %}
-                    <tr>
-                        <td colspan="5" class="text-center">No se encontraron resultados.</td>
-                    </tr>
+                    No hay veteranos registrados en la base de datos.
                 {% endif %}
-            </tbody>
-        </table>
+            </div>
+        {% endif %}
     </div>
 </div>
 
