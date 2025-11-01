@@ -316,12 +316,6 @@ def privacidad():
 def dashboard():
     return render_template('dashboard.html')
 
-@bp.route('/admin/insertar')
-@login_required
-def insertar_persona():
-    return render_template('admin/insertar.html')
-
-
 @bp.route('/admin/eliminar', methods=['GET'])
 @login_required
 def eliminar_persona():
@@ -409,6 +403,7 @@ def eliminar_persona_confirmado(dni):
         print("Filas afectadas:", cursor.rowcount)
 
     return redirect(url_for('main.eliminar_persona'), code=303)
+
 
 @bp.route('/admin/modificar', methods=['GET'])
 @login_required
@@ -619,8 +614,218 @@ def modificar_persona_guardar(dni):
     
     finally:
         cursor.close()
+        
+        
+# Funciones auxiliares para insertar persona
 
+# Obtiene las listas para los dropdowns de los formularios de inserción/modificación de personas
+def _get_form_context_data(cursor):
+    cursor.execute("SELECT id_provincia, nombre FROM provincia ORDER BY nombre")
+    provincias = cursor.fetchall()
+    cursor.execute("SELECT id_fuerza, nombre FROM fuerza ORDER BY nombre")
+    fuerzas = cursor.fetchall()
+    cursor.execute("SELECT id_grado, nombre, id_fuerza FROM grado ORDER BY nombre")
+    grados = cursor.fetchall()
+    cursor.execute("SELECT id_causa, descripcion FROM causa_fallecimiento")
+    causas = cursor.fetchall()
+    
+    # Devuelve un diccionario listo para pasar al template
+    return {
+        "provincias": provincias,
+        "fuerzas": fuerzas,
+        "grados": grados,
+        "causas": causas
+    }
+    
+# Función auxiliar para obtener o crear un grado
+def _get_or_create_grado(cursor, id_fuerza, id_grado_form, otro_grado_str):
+    if id_grado_form != 'otro':
+        return id_grado_form or None
 
+    if not id_fuerza or not otro_grado_str:
+        raise Exception("Si selecciona 'Otro' grado, debe completarlo y seleccionar una fuerza.")
+    
+    cursor.execute(
+        "SELECT id_grado FROM grado WHERE id_fuerza = %s AND nombre = %s",
+        (id_fuerza, otro_grado_str)
+    )
+    existente = cursor.fetchone()
+    if existente:
+        return existente['id_grado']
+    
+    cursor.execute(
+        "INSERT INTO grado (nombre, id_fuerza) VALUES (%s, %s)", 
+        (otro_grado_str, id_fuerza)
+    )
+    return cursor.lastrowid
+
+# Función auxiliar para obtener o crear una localidad
+def _get_or_create_localidad(cursor, id_provincia, depto_form_val, otro_depto_str, loc_id_form_val, otra_loc_str, cp_str=None):
+    if not id_provincia:
+        return None
+
+    if loc_id_form_val and loc_id_form_val != 'otra':
+        return loc_id_form_val
+    
+    if depto_form_val == 'otro':
+        departamento_final = otro_depto_str
+    else:
+        departamento_final = depto_form_val
+    
+    localidad_final = otra_loc_str
+    
+    if not departamento_final or not localidad_final:
+        raise Exception(f"Al crear una nueva localidad/departamento, debe completar ambos campos de texto (Depto: '{departamento_final}', Loc: '{localidad_final}').")
+    
+    cursor.execute(
+        "SELECT id_localidad FROM localidad WHERE id_provincia = %s AND departamento = %s AND nombre_localidad = %s",
+        (id_provincia, departamento_final, localidad_final)
+    )
+    existente = cursor.fetchone()
+    if existente:
+        return existente['id_localidad']
+
+    cursor.execute(
+        "INSERT INTO localidad (nombre_localidad, departamento, id_provincia, codigo_postal) VALUES (%s, %s, %s, %s)",
+        (localidad_final, departamento_final, id_provincia, cp_str or None) # cp_str solo se usa para residencia
+    )
+    return cursor.lastrowid
+
+@bp.route('/admin/insertar', methods=['GET', 'POST'])
+@login_required
+def insertar_persona():
+    
+    conn = get_db()
+    cursor = conn.cursor(dictionary=True)
+    form_context_data = _get_form_context_data(cursor)
+    
+    if request.method == 'POST':
+        try:
+            # Obtengo los datos del formulario
+            dni = request.form.get('dni', '').strip()
+            nombre = request.form.get('nombre', '').strip()
+            apellido = request.form.get('apellido', '').strip()
+            genero = request.form.get('genero', 'no especificado')
+            fecha_nacimiento = request.form.get('fecha_nacimiento')
+            
+            provincia_nac = request.form.get('provincia_nacimiento')
+            depto_nac = request.form.get('departamento_nacimiento')
+            localidad_nac_id = request.form.get('localidad_nacimiento')
+            otro_departamento_nac = request.form.get('otro_departamento_nacimiento', '').strip()
+            otra_localidad_nac = request.form.get('otra_localidad_nacimiento', '').strip()
+
+            provincia_res = request.form.get('provincia_residencia')
+            depto_res = request.form.get('departamento_residencia')
+            localidad_res_id = request.form.get('localidad_residencia')
+            otro_departamento_res = request.form.get('otro_departamento_residencia', '').strip()
+            otra_localidad_res = request.form.get('otra_localidad_residencia', '').strip()
+            codigo_postal_form = request.form.get('codigo_postal', '').strip()
+            
+            direccion = request.form.get('direccion', '').strip()
+            mail = request.form.get('mail', '').strip()
+            telefono = request.form.get('telefono', '').strip()
+            
+            id_fuerza = request.form.get('fuerza')
+            id_grado_form = request.form.get('grado')
+            otro_grado = request.form.get('otro_grado', '').strip()
+            funcion = request.form.get('funcion', '').strip()
+            secuelas = request.form.get('secuelas', '').strip()
+            nro_beneficio = request.form.get('nro_beneficio_nacional', '').strip()
+
+            estado_vida = request.form.get('estado_vida', 'vivo')
+            fecha_fallecimiento = request.form.get('fecha_fallecimiento')
+            id_causa = request.form.get('causa_fallecimiento')
+            
+            # Verifico que se hayan ingresado los datos obligatorios
+            if not dni or not nombre or not apellido or not fecha_nacimiento or not id_fuerza:
+                flash("DNI, nombre, apellido, fecha de nacimiento y fuerza son obligatorios", "danger")
+                return render_template('admin/insertar.html', **form_context_data)
+
+            # Validaciones sobre los datos ingresados
+            cursor.execute("SELECT dni FROM persona WHERE dni = %s", (dni,))
+            if cursor.fetchone():
+                flash("Ya existe un veterano con ese DNI", "danger")
+                return redirect(url_for('main.insertar_persona'))
+            
+            if estado_vida == 'fallecido' and not fecha_fallecimiento:
+                flash("Debe ingresar la fecha de fallecimiento", "danger")
+                return redirect(url_for('main.insertar_persona'))
+
+            # Para grados y localidades, manejo la creación si es necesario
+            id_grado_final = _get_or_create_grado(cursor, 
+                                                  id_fuerza, 
+                                                  id_grado_form, 
+                                                  otro_grado)
+            
+            id_localidad_nac_final = _get_or_create_localidad(cursor, 
+                                                              provincia_nac, 
+                                                              depto_nac, 
+                                                              otro_departamento_nac,
+                                                              localidad_nac_id, 
+                                                              otra_localidad_nac)
+            
+            id_localidad_res_final = _get_or_create_localidad(cursor,
+                                                              provincia_res, 
+                                                              depto_res, 
+                                                              otro_departamento_res,
+                                                              localidad_res_id, 
+                                                              otra_localidad_res,
+                                                              codigo_postal_form)
+            
+            # Inserto los datos en las tablas correspondientes
+            cursor.execute(
+                "INSERT INTO persona (dni, nombre, apellido, genero) VALUES (%s, %s, %s, %s)",
+                (dni, nombre, apellido, genero)
+            )
+            
+            cursor.execute("""
+                INSERT INTO veterano (
+                    dni_veterano, fecha_nacimiento, localidad_nacimiento, localidad_residencia,
+                    direccion, mail, id_fuerza, id_grado, funcion, secuelas, nro_beneficio_nacional
+                ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            """, (
+                dni, 
+                fecha_nacimiento,
+                id_localidad_nac_final,
+                id_localidad_res_final,
+                direccion or None,
+                mail or None,
+                id_fuerza or None,
+                id_grado_final,
+                funcion or None,
+                secuelas or None,
+                nro_beneficio or None
+            ))
+            
+            if telefono:
+                cursor.execute(
+                    "INSERT INTO telefono_persona (dni, telefono) VALUES (%s, %s)", 
+                    (dni, telefono)
+                )
+                
+            if estado_vida == 'fallecido':
+                cursor.execute(
+                    "INSERT INTO fallecido (dni_veterano, fecha_fallecimiento, id_causa) VALUES (%s, %s, %s)",
+                    (dni, fecha_fallecimiento, id_causa or None)
+                )
+                
+            conn.commit()
+            flash(f"Veterano {nombre} {apellido} insertado correctamente", "success")
+            return redirect(url_for('main.insertar_persona'))
+        
+        except Exception as e:
+            conn.rollback()
+            flash(f"Error al insertar el veterano: {str(e)}", "danger")
+            print(f"Error en insertar_persona [POST]: {e}")
+            return redirect(url_for('main.insertar_persona'))
+        
+        finally:
+            cursor.close()
+    
+    if request.method == 'GET':
+             cursor.close()
+             return render_template('admin/insertar.html', **form_context_data)
+             
 # API para obtener localidades por provincia
 @bp.route('/api/localidades/<int:provincia_id>')
 @login_required

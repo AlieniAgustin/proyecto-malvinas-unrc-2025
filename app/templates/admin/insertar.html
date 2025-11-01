@@ -2,7 +2,415 @@
 
 {% block title %}Insertar Persona{% endblock %}
 
+{% block head %}
+
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/modificar_veterano.css') }}">
+
+{% endblock %}
+
 {% block content %}
+
 <h1 class="h2">Insertar Persona</h1>
-<p>Aquí irá el formulario para insertar una nueva persona.</p>
+<p>Complete el formulario con los datos del veterano (los campos con * son obligatorios).</p>
+<hr>
+
+<div class="container">
+
+    <form class="formulario" method="POST" enctype="multipart/form-data" action="{{ url_for('main.insertar_persona') }}">
+
+        <section>
+            <h3 class="h4">Información personal</h3>
+            <div class="grid">
+                <div>
+                    <label>DNI*</label>
+                    <input type="text" name="dni" required>
+                </div>
+                <div>
+                    <label>Nombre*</label>
+                    <input type="text" name="nombre" required>
+                </div>
+                <div>
+                    <label>Apellido*</label>
+                    <input type="text" name="apellido" required>
+                </div>
+                <div>
+                    <label>Género</label>
+                    <select name="genero">
+                        <option value="no especificado" selected>No especificado</option>
+                        <option value="masculino">Masculino</option>
+                        <option value="femenino">Femenino</option>
+                        <option value="otro">Otro</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Fecha de nacimiento*</label>
+                    <input type="date" name="fecha_nacimiento" id="fecha_nacimiento" required>
+                </div>
+                <div>
+                    <label>Edad</label>
+                    <input type="text" id="edad" disabled placeholder="Calculado automáticamente">
+                </div>
+                <div>
+                    <label>Provincia de nacimiento</label>
+                    <select name="provincia_nacimiento" id="provincia_nacimiento">
+                        <option value="">Seleccione una provincia</option>
+                        {% for provincia in provincias %}
+                        <option value="{{ provincia.id_provincia }}">{{ provincia.nombre }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <label>Departamento de nacimiento</label>
+                    <select name="departamento_nacimiento" id="departamento_nacimiento" disabled>
+                        <option value="">Seleccione un departamento</option>
+                        <option value="otro">Otro</option>
+                    </select>
+                    <input type="text" id="otro_departamento_nacimiento" name="otro_departamento_nacimiento" style="display: none; margin-top: 5px;" placeholder="Ingrese el departamento">
+                </div>
+                <div>
+                    <label>Localidad de nacimiento</label>
+                    <select name="localidad_nacimiento" id="localidad_nacimiento" disabled>
+                        <option value="">Seleccione una localidad</option>
+                        <option value="otra">Otra</option>
+                    </select>
+                    <input type="text" id="otra_localidad_nacimiento" name="otra_localidad_nacimiento" style="display: none; margin-top: 5px;" placeholder="Ingrese la localidad">
+                </div>
+                 <div>
+                    <label>Foto/s</label>
+                    <input type="file" class="form-control" id="fotos" name="fotos" multiple accept="image/*" style="padding: 8px; border: 1px solid #ccc; border-radius: 4px; line-height: 1.5;">
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h3 class="h4">Información de contacto</h3>
+            <div class="grid">
+                <div>
+                    <label>Provincia de residencia</label>
+                    <select name="provincia_residencia" id="provincia_residencia">
+                        <option value="">Seleccione una provincia</option>
+                        {% for provincia in provincias %}
+                        <option value="{{ provincia.id_provincia }}">{{ provincia.nombre }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <label>Departamento de residencia</label>
+                    <select name="departamento_residencia" id="departamento_residencia" disabled>
+                        <option value="">Seleccione un departamento</option>
+                        <option value="otro">Otro</option>
+                    </select>
+                    <input type="text" id="otro_departamento_residencia" name="otro_departamento_residencia" style="display: none; margin-top: 5px;" placeholder="Ingrese el departamento">
+                </div>
+                <div>
+                    <label>Localidad de residencia</label>
+                    <select name="localidad_residencia" id="localidad_residencia" disabled>
+                        <option value="">Seleccione una localidad</option>
+                        <option value="otra">Otra</option>
+                    </select>
+                    <input type="text" id="otra_localidad_residencia" name="otra_localidad_residencia" style="display: none; margin-top: 5px;" placeholder="Ingrese la localidad">
+                </div>
+                <div>
+                    <label>Dirección postal</label>
+                    <input type="text" name="direccion" placeholder="Ingrese dirección">
+                </div>
+                <div>
+                    <label>Código postal</label>
+                    <input type="text" name="codigo_postal" id="codigo_postal" readonly placeholder="Se completa automáticamente">
+                </div>
+                <div>
+                    <label>Correo electrónico</label>
+                    <input type="email" name="mail" placeholder="Ingrese email">
+                </div>
+                <div>
+                    <label>Teléfono</label>
+                    <input type="tel" name="telefono" placeholder="Ingrese teléfono">
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h3 class="h4">Información militar</h3>
+            <div class="grid">
+                <div>
+                    <label>Fuerza*</label>
+                    <select name="fuerza" id="fuerza" required>
+                        <option value="">Seleccione una fuerza</option>
+                        {% for fuerza in fuerzas %}
+                        <option value="{{ fuerza.id_fuerza }}">{{ fuerza.nombre }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <label>Grado</label>
+                    <select name="grado" id="grado" disabled>
+                        <option value="">Seleccione un grado</option>
+                        <option value="otro">Otro</option>
+                    </select>
+                    <input type="text" id="otro_grado" name="otro_grado" style="display: none; margin-top: 5px;" placeholder="Ingrese el grado">
+                </div>
+                <div>
+                    <label>Función</label>
+                    <input type="text" name="funcion" placeholder="Ingrese función">
+                </div>
+                <div>
+                    <label>Secuelas</label>
+                    <input type="text" name="secuelas" placeholder="Describa las secuelas">
+                </div>
+                <div>
+                    <label>Número de Beneficio Nacional</label>
+                    <input type="text" name="nro_beneficio_nacional" placeholder="Ingrese número">
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h3 class="h4">Estado</h3>
+            <div class="grid">
+                <div class="estado">
+                    <label>Estado de vida*:</label>
+                    <div class="radio-group">
+                        <label>
+                            <input type="radio" name="estado_vida" id="vivo" value="vivo" checked> Vive
+                        </label>
+                        <label>
+                            <input type="radio" name="estado_vida" id="fallecido" value="fallecido"> Fallecido
+                        </label>
+                    </div>
+                </div>
+                <div class="estado" id="fecha_fallecido" style="display: none;">
+                    <label>Fecha de fallecimiento</label> <input type="date" name="fecha_fallecimiento">
+                </div>
+                <div id="causa_fallecido" class="estado" style="display: none;">
+                    <label>Causa de fallecimiento</label>
+                    <select name="causa_fallecimiento">
+                        <option value="">Seleccione una causa</option>
+                        {% for causa in causas %} 
+                            <option value="{{ causa.id_causa }}">{{ causa.descripcion }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </section>
+
+        <div class="acciones">
+            <button type="button" class="cancelar">Cancelar</button>
+            <button type="submit" class="guardar">Guardar</button>
+        </div>
+    </form>
+</div>
+
+
+<script>
+    const gradosData = {{ grados | tojson | safe }};
+        
+    function calcularEdad() {
+        const fechaNac = document.getElementById('fecha_nacimiento').value;
+        const edadInput = document.getElementById('edad');
+        if (fechaNac) {
+            const hoy = new Date();
+            const nacimiento = new Date(fechaNac);
+            let edad = hoy.getFullYear() - nacimiento.getFullYear();
+            const mes = hoy.getMonth() - nacimiento.getMonth();
+            if (mes < 0 || (mes === 0 && hoy.getDate() < nacimiento.getDate())) {
+                edad--;
+            }
+            edadInput.value = (edad >= 0) ? edad + ' años' : '';
+        } else {
+            edadInput.value = '';
+        }
+    }
+
+    async function cargarDepartamentos(provinciaId, deptoSelect, localidadSelect) {
+        deptoSelect.disabled = true;
+        deptoSelect.innerHTML = '<option value="">Cargando...</option>';
+        localidadSelect.disabled = true;
+        localidadSelect.innerHTML = '<option value="">Seleccione una localidad</option>';
+
+        const otroDeptoInputId = deptoSelect.id.replace('departamento_', 'otro_departamento_');
+        const otraLocInputId = localidadSelect.id.replace('localidad_', 'otra_localidad_');
+        document.getElementById(otroDeptoInputId).style.display = 'none';
+        document.getElementById(otraLocInputId).style.display = 'none';
+
+        if (!provinciaId) {
+            deptoSelect.innerHTML = '<option value="">Seleccione un departamento</option>';
+            deptoSelect.innerHTML += '<option value="otro">Otro</option>'; 
+            return;
+        }
+
+        try {
+            const response = await fetch(`/api/localidades/${provinciaId}`);
+            if (!response.ok) throw new Error('Error de red');
+            const departamentos = await response.json();
+
+            deptoSelect.innerHTML = '<option value="">Seleccione un departamento</option>';
+            departamentos.forEach(depto => {
+                deptoSelect.innerHTML += `<option value="${depto}">${depto}</option>`;
+            });
+            
+            deptoSelect.innerHTML += '<option value="otro">Otro</option>'; 
+            deptoSelect.disabled = false;
+        } catch (error) {
+            console.error('Error al cargar departamentos:', error);
+            deptoSelect.innerHTML = '<option value="">Error al cargar</option>';
+        }
+    }
+
+    async function cargarLocalidades(provinciaId, departamento, localidadSelect, cpInput = null) {
+        localidadSelect.disabled = true;
+        localidadSelect.innerHTML = '<option value="">Cargando...</option>';
+
+        const otraLocInputId = localidadSelect.id.replace('localidad_', 'otra_localidad_');
+        document.getElementById(otraLocInputId).style.display = 'none';
+
+        if (!provinciaId || !departamento) {
+            localidadSelect.innerHTML = '<option value="">Seleccione una localidad</option>';
+            localidadSelect.innerHTML += '<option value="otra">Otra</option>';
+            return;
+        }
+
+        try {
+            const response = await fetch(`/api/localidades/${provinciaId}/${encodeURIComponent(departamento)}`);
+            if (!response.ok) throw new Error('Error de red');
+            const localidades = await response.json();
+
+            localidadSelect.innerHTML = '<option value="">Seleccione una localidad</option>';
+            localidades.forEach(loc => {
+                const option = document.createElement('option');
+                option.value = loc.id_localidad;
+                option.textContent = loc.nombre_localidad;
+                option.setAttribute('data-codigo-postal', loc.codigo_postal || '');
+                localidadSelect.appendChild(option);
+            });
+            
+            const optionOtra = document.createElement('option');
+            optionOtra.value = 'otra';
+            optionOtra.textContent = 'Otra';
+            localidadSelect.appendChild(optionOtra);
+
+            localidadSelect.disabled = false;
+        } catch (error) {
+            console.error('Error al cargar localidades:', error);
+            localidadSelect.innerHTML = '<option value="">Error al cargar</option>';
+        }
+    }
+
+    function setupUbicacionHandlers(provinciaId, deptoId, localidadId, otroDeptoId, otraLocalidadId, cpId = null) {
+        
+        const provinciaSelect = document.getElementById(provinciaId);
+        const deptoSelect = document.getElementById(deptoId);
+        const localidadSelect = document.getElementById(localidadId);
+        const otroDeptoInput = document.getElementById(otroDeptoId);
+        const otraLocalidadInput = document.getElementById(otraLocalidadId);
+        
+        const cpInput = cpId ? document.getElementById(cpId) : null;
+
+        provinciaSelect.addEventListener('change', function () {
+            if (cpInput) {
+                cpInput.value = '';
+                cpInput.readOnly = true;
+                cpInput.placeholder = 'Se completa automáticamente';
+            }
+            cargarDepartamentos(this.value, deptoSelect, localidadSelect);
+        });
+
+        deptoSelect.addEventListener('change', function () {
+            if (this.value === 'otro') {
+                otroDeptoInput.style.display = 'block';
+                localidadSelect.disabled = true; 
+                localidadSelect.innerHTML = '<option value="otra" selected>Otra</option>'; 
+                otraLocalidadInput.style.display = 'block'; 
+                
+                if (cpInput) {
+                    cpInput.value = ''; 
+                    cpInput.readOnly = false; 
+                    cpInput.placeholder = 'Ingrese el C.P.';
+                }
+            } else {
+                otroDeptoInput.style.display = 'none';
+                if (cpInput) {
+                    cpInput.value = '';
+                }
+                cargarLocalidades(provinciaSelect.value, this.value, localidadSelect, cpInput);
+            }
+        });
+        
+        localidadSelect.addEventListener('change', function () {
+            const selectedOption = this.options[this.selectedIndex];
+            
+            if (this.value === 'otra') {
+                otraLocalidadInput.style.display = 'block';
+                if (cpInput) {
+                    cpInput.value = '';
+                    cpInput.readOnly = false;
+                    cpInput.placeholder = 'Ingrese el C.P.';
+                }
+            } else {
+                otraLocalidadInput.style.display = 'none';
+                if (cpInput) {
+                    cpInput.value = selectedOption.getAttribute('data-codigo-postal') || '';
+                    cpInput.readOnly = true; 
+                    cpInput.placeholder = 'Se completa automáticamente';
+                }
+            }
+        });
+    }
+
+    window.addEventListener('DOMContentLoaded', function () {
+        setupUbicacionHandlers(
+            'provincia_nacimiento',
+            'departamento_nacimiento',
+            'localidad_nacimiento',
+            'otro_departamento_nacimiento',
+            'otra_localidad_nacimiento'
+        );
+
+        setupUbicacionHandlers(
+            'provincia_residencia',
+            'departamento_residencia',
+            'localidad_residencia',
+            'otro_departamento_residencia',
+            'otra_localidad_residencia',
+            'codigo_postal' 
+        );
+
+        calcularEdad();
+        document.getElementById('fecha_nacimiento').addEventListener('change', calcularEdad);
+
+        document.querySelectorAll('input[name="estado_vida"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                const display = this.value === 'fallecido' ? 'block' : 'none';
+                document.getElementById('fecha_fallecido').style.display = display;
+                document.getElementById('causa_fallecido').style.display = display;
+            });
+        });
+
+        document.getElementById('fuerza').addEventListener('change', function () {
+            const fuerzaId = this.value;
+            const gradoSelect = document.getElementById('grado');
+            gradoSelect.innerHTML = '<option value="">Seleccione un grado</option><option value="otro">Otro</option>';
+
+            document.getElementById('otro_grado').style.display = 'none';
+
+            if (fuerzaId) {
+                gradosData.filter(g => g.id_fuerza == fuerzaId).forEach(grado => {
+                    const option = document.createElement('option');
+                    option.value = grado.id_grado;
+                    option.textContent = grado.nombre;
+                    gradoSelect.insertBefore(option, gradoSelect.lastChild); 
+                });
+                gradoSelect.disabled = false;
+            } else {
+                gradoSelect.disabled = true; 
+            }
+        });
+
+        document.getElementById('grado').addEventListener('change', function() {
+            const otroGrado = document.getElementById('otro_grado');
+            otroGrado.style.display = this.value === 'otro' ? 'block' : 'none';
+        });
+    });
+</script>
+
 {% endblock %}
