@@ -90,18 +90,18 @@
 </div>
 
 <script>
-var confirmModal = document.getElementById('confirmModal');
-confirmModal.addEventListener('show.bs.modal', function (event) {
-  var button = event.relatedTarget;
-  var nombre = button.getAttribute('data-nombre');
-  var dni = button.getAttribute('data-dni');
-  
-  document.getElementById('modalNombre').textContent = nombre;
-  document.getElementById('modalDni').textContent = dni;
-  document.getElementById('inputDni').value = dni;
-  
-  var form = document.getElementById('formEliminar');
-  form.action = "{{ url_for('main.eliminar_persona_confirmado', dni='PLACEHOLDER') }}".replace('PLACEHOLDER', dni);
-});
+    var confirmModal = document.getElementById('confirmModal');
+    confirmModal.addEventListener('show.bs.modal', function (event) {
+    var button = event.relatedTarget;
+    var nombre = button.getAttribute('data-nombre');
+    var dni = button.getAttribute('data-dni');
+    
+    document.getElementById('modalNombre').textContent = nombre;
+    document.getElementById('modalDni').textContent = dni;
+    document.getElementById('inputDni').value = dni;
+    
+    var form = document.getElementById('formEliminar');
+    form.action = "{{ url_for('main.eliminar_persona_confirmado', dni='PLACEHOLDER') }}".replace('PLACEHOLDER', dni);
+    });
 </script>
 {% endblock %}

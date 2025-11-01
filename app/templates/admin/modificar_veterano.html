@@ -1,51 +1,47 @@
 {% extends 'base_admin.html' %}
 
-{% block title %}Insertar Persona{% endblock %}
+{% block title %}Modificar Persona{% endblock %}
 
 {% block head %}
-
 {{ super() }}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/modificar_veterano.css') }}">
-
 {% endblock %}
 
 {% block content %}
 
+<h1 class="h2">Modificar Persona</h1>
+<p>Actualice el formulario con los datos del veterano (los campos con * son obligatorios).</p>
+<hr>
 
 <div class="container">
-    <h1 class="h2">Insertar Persona</h1>
-    <p>Complete el formulario con los datos del veterano (los campos con * son obligatorios).</p>
-    <hr>
-
-    <form class="formulario" method="POST" enctype="multipart/form-data" action="{{ url_for('main.insertar_persona') }}">
-
+        <form class="formulario" method="POST" enctype="multipart/form-data" action="{{ url_for('main.modificar_persona_guardar', dni=veterano.dni) }}">
         <section>
             <h3 class="h4">Información personal</h3>
             <div class="grid">
                 <div>
                     <label>DNI*</label>
-                    <input type="text" name="dni" required>
+                    <input type="text" name="dni" value="{{ veterano.dni }}" disabled>
                 </div>
                 <div>
                     <label>Nombre*</label>
-                    <input type="text" name="nombre" required>
+                    <input type="text" name="nombre" value="{{ veterano.nombre or '' }}" required>
                 </div>
                 <div>
                     <label>Apellido*</label>
-                    <input type="text" name="apellido" required>
+                    <input type="text" name="apellido" value="{{ veterano.apellido or '' }}" required>
                 </div>
                 <div>
                     <label>Género</label>
                     <select name="genero">
-                        <option value="no especificado" selected>No especificado</option>
-                        <option value="masculino">Masculino</option>
-                        <option value="femenino">Femenino</option>
-                        <option value="otro">Otro</option>
+                        <option value="no especificado" {% if veterano.genero == 'no especificado' %}selected{% endif %}>No especificado</option>
+                        <option value="masculino" {% if veterano.genero == 'masculino' %}selected{% endif %}>Masculino</option>
+                        <option value="femenino" {% if veterano.genero == 'femenino' %}selected{% endif %}>Femenino</option>
+                        <option value="otro" {% if veterano.genero == 'otro' %}selected{% endif %}>Otro</option>
                     </select>
                 </div>
                 <div>
                     <label>Fecha de nacimiento*</label>
-                    <input type="date" name="fecha_nacimiento" id="fecha_nacimiento" required>
+                    <input type="date" name="fecha_nacimiento" id="fecha_nacimiento" value="{{ veterano.fecha_nacimiento.strftime('%Y-%m-%d') if veterano.fecha_nacimiento else '' }}" required>
                 </div>
                 <div>
                     <label>Edad</label>
@@ -56,7 +52,7 @@
                     <select name="provincia_nacimiento" id="provincia_nacimiento">
                         <option value="">Seleccione una provincia</option>
                         {% for provincia in provincias %}
-                        <option value="{{ provincia.id_provincia }}">{{ provincia.nombre }}</option>
+                        <option value="{{ provincia.id_provincia }}" {% if veterano.provincia_nacimiento == provincia.id_provincia %}selected{% endif %}>{{ provincia.nombre }}</option>
                         {% endfor %}
                     </select>
                 </div>
@@ -91,7 +87,7 @@
                     <select name="provincia_residencia" id="provincia_residencia">
                         <option value="">Seleccione una provincia</option>
                         {% for provincia in provincias %}
-                        <option value="{{ provincia.id_provincia }}">{{ provincia.nombre }}</option>
+                        <option value="{{ provincia.id_provincia }}" {% if veterano.provincia_residencia == provincia.id_provincia %}selected{% endif %}>{{ provincia.nombre }}</option>
                         {% endfor %}
                     </select>
                 </div>
@@ -113,19 +109,19 @@
                 </div>
                 <div>
                     <label>Dirección postal</label>
-                    <input type="text" name="direccion" placeholder="Ingrese dirección">
+                    <input type="text" name="direccion" value="{{ veterano.direccion or '' }}" placeholder="Ingrese dirección">
                 </div>
                 <div>
                     <label>Código postal</label>
-                    <input type="text" name="codigo_postal" id="codigo_postal" readonly placeholder="Se completa automáticamente">
+                    <input type="text" name="codigo_postal" id="codigo_postal" value="{{ veterano.codigo_postal_residencia or '' }}" readonly placeholder="Se completa automáticamente">
                 </div>
                 <div>
                     <label>Correo electrónico</label>
-                    <input type="email" name="mail" placeholder="Ingrese email">
+                    <input type="email" name="mail" value="{{ veterano.mail or '' }}" placeholder="Ingrese email">
                 </div>
                 <div>
                     <label>Teléfono</label>
-                    <input type="tel" name="telefono" placeholder="Ingrese teléfono">
+                    <input type="tel" name="telefono" value="{{ telefono.telefono or '' }}" placeholder="Ingrese teléfono">
                 </div>
             </div>
         </section>
@@ -138,7 +134,7 @@
                     <select name="fuerza" id="fuerza" required>
                         <option value="">Seleccione una fuerza</option>
                         {% for fuerza in fuerzas %}
-                        <option value="{{ fuerza.id_fuerza }}">{{ fuerza.nombre }}</option>
+                        <option value="{{ fuerza.id_fuerza }}" {% if veterano.id_fuerza == fuerza.id_fuerza %}selected{% endif %}>{{ fuerza.nombre }}</option>
                         {% endfor %}
                     </select>
                 </div>
@@ -152,15 +148,15 @@
                 </div>
                 <div>
                     <label>Función</label>
-                    <input type="text" name="funcion" placeholder="Ingrese función">
+                    <input type="text" name="funcion" value="{{ veterano.funcion or '' }}" placeholder="Ingrese función">
                 </div>
                 <div>
                     <label>Secuelas</label>
-                    <input type="text" name="secuelas" placeholder="Describa las secuelas">
+                    <input type="text" name="secuelas" value="{{ veterano.secuelas or '' }}" placeholder="Describa las secuelas">
                 </div>
                 <div>
                     <label>Número de Beneficio Nacional</label>
-                    <input type="text" name="nro_beneficio_nacional" placeholder="Ingrese número">
+                    <input type="text" name="nro_beneficio_nacional" value="{{ veterano.nro_beneficio_nacional or '' }}" placeholder="Ingrese número">
                 </div>
             </div>
         </section>
@@ -172,22 +168,22 @@
                     <label>Estado de vida*:</label>
                     <div class="radio-group">
                         <label>
-                            <input type="radio" name="estado_vida" id="vivo" value="vivo" checked> Vive
+                            <input type="radio" name="estado_vida" id="vivo" value="vivo" {% if not veterano.es_fallecido %}checked{% endif %}> Vive
                         </label>
                         <label>
-                            <input type="radio" name="estado_vida" id="fallecido" value="fallecido"> Fallecido
+                            <input type="radio" name="estado_vida" id="fallecido" value="fallecido" {% if veterano.es_fallecido %}checked{% endif %}> Fallecido
                         </label>
                     </div>
                 </div>
-                <div class="estado" id="fecha_fallecido" style="display: none;">
-                    <label>Fecha de fallecimiento</label> <input type="date" name="fecha_fallecimiento">
-                </div>
-                <div id="causa_fallecido" class="estado" style="display: none;">
+                    <div class="estado" id="fecha_fallecido" style="{% if not veterano.es_fallecido %}display: none;{% endif %}">
+                    <label>Fecha de fallecimiento</label> 
+                    <input type="date" name="fecha_fallecimiento" value="{{ veterano.fecha_fallecimiento.strftime('%Y-%m-%d') if veterano.fecha_fallecimiento else '' }}">                </div>
+                <div id="causa_fallecido" class="estado" style="{% if not veterano.es_fallecido %}display: none;{% endif %}">
                     <label>Causa de fallecimiento</label>
                     <select name="causa_fallecimiento">
                         <option value="">Seleccione una causa</option>
                         {% for causa in causas %} 
-                            <option value="{{ causa.id_causa }}">{{ causa.descripcion }}</option>
+                        <option value="{{ causa.id_causa }}" {% if veterano.id_causa == causa.id_causa %}selected{% endif %}>{{ causa.descripcion }}</option>
                         {% endfor %}
                     </select>
                 </div>
@@ -195,8 +191,8 @@
         </section>
 
         <div class="acciones">
-            <button type="button" class="cancelar">Cancelar</button>
-            <button type="submit" class="guardar">Guardar</button>
+            <button type="button" class="cancelar" onclick="window.location.href='{{ url_for('main.modificar_datos') }}'">Cancelar</button>
+            <button type="submit" class="guardar">Guardar Cambios</button>
         </div>
     </form>
 </div>
@@ -204,7 +200,17 @@
 <script>
     // Inyecta los datos necesarios para el script externo
     window.APP_DATA = {
-        grados: {{ grados | tojson | safe }}
+        grados: {{ grados | tojson | safe }},
+        veterano: {
+            provinciaNacimiento: {{ veterano.provincia_nacimiento or 'null' }},
+            departamentoNacimiento: {{ veterano.departamento_nacimiento | tojson | safe }},
+            localidadNacimiento: {{ veterano.localidad_nacimiento or 'null' }},
+            provinciaResidencia: {{ veterano.provincia_residencia or 'null' }},
+            departamentoResidencia: {{ veterano.departamento_residencia | tojson | safe }},
+            localidadResidencia: {{ veterano.localidad_residencia or 'null' }},
+            idFuerza: {{ veterano.id_fuerza or 'null' }},
+            idGrado: {{ veterano.id_grado or 'null' }}
+        }
     };
 </script>
 <script src="{{ url_for('static', filename='js/form_veterano.js') }}"></script>
