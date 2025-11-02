@@ -1,31 +1,42 @@
 {% extends 'base_admin.html' if is_admin_view else 'base.html' %}
 
 {% block title %}Buscar y ver datos{% endblock %}
+{% block head %}
+    {{ super() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/crud_veterano.css') }}">
+{% endblock %}
 
 {% block content %}
-<div class="container-fluid">
+
+<div class="container">
     <div class="row">
-        <div class="col-md-8 col-lg-9 px-5 py-3">
+        <div class="col-md-8 col-lg-9 py-3">
             <h3 class="text-center fw-bold mb-3">Búsqueda de personas</h3>
 
             {% if resultados %}
+                <div class="records">
                 {% for persona in resultados %}
-                <div class="card shadow p-2 d-flex flex-row align-items-center justify-content-between mb-1">
-                    <div class="d-flex align-items-center">
-                        <img src="{{ url_for('static', filename='img/avatar.svg') }}" alt="Avatar" width="70" height="70" class="me-3">
-                        <div class="d-flex flex-column">
-                            <span class="fw-bold">{{ persona.apellido }}, {{ persona.nombre }}</span>
-                            {% if current_user.is_authenticated %}
-                                <span>DNI: {{ persona.dni }}</span> 
-                            {% endif %}
-                            <span>{{ persona.fuerza or 'Fuerza no especificada' }}</span>
+                    <div class="record">
+                        <div class="record-info">
+                            <div class="avatar rounded-circle">
+                                {% if persona.ruta_foto %}
+                                    <img src="{{ url_for('static', filename=persona.ruta_foto) }}" alt="Foto de {{ persona.nombre }}">
+                                {% else %}
+                                    <img src="{{ url_for('static', filename='img/avatar.svg') }}" alt="Avatar" style="width: 100%;" class="rounded-circle">
+                                {% endif %}
+                            </div>
+                            <div class="record-details">
+                                <strong>{{ persona.apellido }}, {{ persona.nombre }}</strong>
+                                {% if current_user.is_authenticated %}
+                                    <span>DNI: {{ persona.dni }}</span>
+                                {% endif %}
+                                <span>{{ persona.fuerza or 'Fuerza no especificada' }}</span>
+                            </div>
                         </div>
+                        <a href="{{ url_for('main.ver_perfil', dni=persona.dni) }}" class="btn-modify">Ver perfil</a>
                     </div>
-                    <div class="d-flex align-items-center">
-                        <a href="{{ url_for('main.ver_perfil', dni=persona.dni) }}" class="btn btn-primary fw-bold">Ver perfil</a>
-                    </div>
-                </div>
                 {% endfor %}
+                </div>
             {% else %}
                 <div class="alert alert-info text-center" role="alert">
                     No se encontraron resultados para los filtros aplicados.
@@ -33,7 +44,7 @@
             {% endif %}
         </div>
 
-        <div class="col-md-4 col-lg-3 bg-secondary bg-opacity-10 p-3">
+        <div class="col-md-4 col-lg-3 p-3 rounded bg-body-secondary">
             <h3 class="text-center fw-bold mb-3">Filtros</h3>
             <form id="filtrosForm" method="GET" action="{{ url_for('main.buscar') }}">
 
@@ -55,11 +66,6 @@
                             <option value="{{ provincia.id_provincia }}">{{ provincia.nombre }}</option>
                         {% endfor %}
                     </select>
-                </div>
-
-                <div class="mb-3">
-                    <label for="departamento_nacimiento" class="form-label fw-bold">Departamento</label>
-                    <input type="text" class="form-control" id="departamento_nacimiento" name="departamento_nacimiento" placeholder="Ingrese departamento">
                 </div>
 
                 <div class="mb-3">
@@ -92,9 +98,8 @@
                     <hr>
                     <h5 class="text-center fw-bold mb-3">Filtros de Administrador</h5>
 
-                    <div class="mb-3">
-                        <label for="dni" class="form-label fw-bold">DNI</label>
-                        <input type="text" class="form-control" id="dni" name="dni" placeholder="Ingrese DNI exacto">
+                    <div class="mb-3 form-group">
+                        <input type="text" name="dni" placeholder="Ingrese DNI exacto" class="form-control" id="dni" name="dni">
                     </div>
                     
                     <div class="mb-3">
@@ -117,9 +122,12 @@
 
                 {% endif %}
                 <button type="submit" class="btn btn-primary w-100 fw-bold mb-2">Aplicar filtros</button>
-                <a href="{{ url_for('main.buscar') }}" class="btn btn-danger w-100 fw-bold">Borrar filtros</a>
+                <a href="{{ url_for('main.buscar') }}" class="btn btn-secondary w-100 fw-bold">Borrar filtros</a>
             </form>
         </div>
     </div>
 </div>
+
+<script src="{{ url_for('static', filename='js/form_veterano.js') }}"></script>
+
 {% endblock %}

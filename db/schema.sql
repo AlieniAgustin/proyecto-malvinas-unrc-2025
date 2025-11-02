@@ -1,9 +1,30 @@
 SET sql_mode = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION';
- 
+SET FOREIGN_KEY_CHECKS = 0; -- Desactiva la revisión de dependencias
+
 CREATE DATABASE IF NOT EXISTS malvinas_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE malvinas_db;
 
+-- Borra todas las tablas sin importar el orden
+DROP TABLE IF EXISTS familiar_veterano;
+DROP TABLE IF EXISTS familiar;
+DROP TABLE IF EXISTS fallecido;
+DROP TABLE IF EXISTS causa_fallecimiento;
+DROP TABLE IF EXISTS autoridad;
+DROP TABLE IF EXISTS rol;
+DROP TABLE IF EXISTS foto;
+DROP TABLE IF EXISTS administrador;
+DROP TABLE IF EXISTS documento;
+DROP TABLE IF EXISTS veterano;
+DROP TABLE IF EXISTS grado;
+DROP TABLE IF EXISTS telefono_agrupacion;
+DROP TABLE IF EXISTS agrupacion;
+DROP TABLE IF EXISTS localidad;
+DROP TABLE IF EXISTS provincia;
+DROP TABLE IF EXISTS fuerza;
+DROP TABLE IF EXISTS telefono_persona;
 DROP TABLE IF EXISTS persona;
+DROP TABLE IF EXISTS red_social;
+
 CREATE TABLE persona(
   dni VARCHAR(8) NOT NULL,
   nombre VARCHAR(50) NOT NULL,
@@ -12,7 +33,6 @@ CREATE TABLE persona(
   CONSTRAINT pk_persona PRIMARY KEY(dni)
 );
 
-DROP TABLE IF EXISTS telefono_persona;
 CREATE TABLE telefono_persona(
   dni VARCHAR(8) NOT NULL,
   telefono VARCHAR(30) NOT NULL,
@@ -21,54 +41,39 @@ CREATE TABLE telefono_persona(
     REFERENCES persona(dni) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-DROP TABLE IF EXISTS fuerza;
 CREATE TABLE fuerza(
   id_fuerza INT AUTO_INCREMENT NOT NULL,
-  nombre ENUM ('Ejercito', 'Fuerza Aerea', 'Gendarmeria', 'Marina') NOT NULL UNIQUE, -- revisar si eran estas las fuerzas
+  nombre ENUM ('Ejercito', 'Fuerza Aerea', 'Gendarmeria', 'Marina') NOT NULL UNIQUE,
   CONSTRAINT pk_fuerza PRIMARY KEY(id_fuerza)
 );
 
-DROP TABLE IF EXISTS provincia;
 CREATE TABLE provincia(
-  id_provincia INT AUTO_INCREMENT NOT NULL,
+  id_provincia INT NOT NULL, -- ID de la API Georef
   nombre VARCHAR(100) NOT NULL,
-  CONSTRAINT pk_provincia PRIMARY KEY(id_provincia),
-  CONSTRAINT uq_provincia_nombre UNIQUE(nombre)
+  CONSTRAINT pk_provincia PRIMARY KEY(id_provincia)
 );
 
-INSERT INTO provincia (nombre) VALUES
-('Buenos Aires'), ('Catamarca'), ('Chaco'), ('Chubut'), ('Córdoba'), 
-('Corrientes'), ('Entre Ríos'), ('Formosa'), ('Jujuy'), ('La Pampa'), 
-('La Rioja'), ('Mendoza'), ('Misiones'), ('Neuquén'), ('Río Negro'), 
-('Salta'), ('San Juan'), ('San Luis'), ('Santa Cruz'), ('Santa Fe'), 
-('Santiago del Estero'), ('Tierra del Fuego'), ('Tucumán'), 
-('Ciudad Autónoma de Buenos Aires');
-
-DROP TABLE IF EXISTS localidad;
 CREATE TABLE localidad(
-  id_localidad INT AUTO_INCREMENT NOT NULL,
+  id_localidad VARCHAR(11) NOT NULL, -- ID de la API Georef
   nombre_localidad VARCHAR(100) NOT NULL,
   departamento VARCHAR(100),
   id_provincia INT NOT NULL,
-  codigo_postal VARCHAR(20),
   CONSTRAINT pk_localidad PRIMARY KEY(id_localidad),
   CONSTRAINT fk_provincia FOREIGN KEY(id_provincia)
     REFERENCES provincia(id_provincia)
 );
 
-DROP TABLE IF EXISTS agrupacion;
 CREATE TABLE agrupacion(
   id_agrupacion INT NOT NULL,
   nombre_agrupacion VARCHAR(100) NOT NULL,
   direccion VARCHAR(255),
   mail VARCHAR(100),
-  localidad_agrupacion INT NOT NULL,
+  localidad_agrupacion VARCHAR(11) NOT NULL,
   CONSTRAINT pk_agrupacion PRIMARY KEY(id_agrupacion),
   CONSTRAINT fk_localidad FOREIGN KEY(localidad_agrupacion)
     REFERENCES localidad(id_localidad)
 );
 
-DROP TABLE IF EXISTS telefono_agrupacion;
 CREATE TABLE telefono_agrupacion(
   id_agrupacion INT NOT NULL, 
   telefono VARCHAR(30) NOT NULL, 
@@ -77,7 +82,6 @@ CREATE TABLE telefono_agrupacion(
       REFERENCES agrupacion(id_agrupacion)
 );
 
-DROP TABLE IF EXISTS grado;
 CREATE TABLE grado(
   id_grado INT AUTO_INCREMENT PRIMARY KEY,
   nombre VARCHAR(100) NOT NULL,
@@ -86,17 +90,17 @@ CREATE TABLE grado(
     REFERENCES fuerza(id_fuerza) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-DROP TABLE IF EXISTS veterano;
 CREATE TABLE veterano(
   dni_veterano VARCHAR(8) NOT NULL,
   direccion VARCHAR(255),
+  codigo_postal_residencia VARCHAR(20),
   nro_beneficio_nacional VARCHAR(50),
   funcion VARCHAR(100),
   secuelas TEXT,
   fecha_nacimiento DATE,
   mail VARCHAR(100),
-  localidad_nacimiento INT,
-  localidad_residencia INT,
+  localidad_nacimiento VARCHAR(11),
+  localidad_residencia VARCHAR(11),
   id_agrupacion INT,
   id_grado INT,
   id_fuerza INT,
@@ -116,7 +120,6 @@ CREATE TABLE veterano(
     REFERENCES fuerza(id_fuerza) ON DELETE SET NULL ON UPDATE CASCADE
 );
 
-DROP TABLE IF EXISTS documento;
 CREATE TABLE documento(
   id_documento INT AUTO_INCREMENT NOT NULL,
   nombre VARCHAR(255) NOT NULL,
@@ -128,18 +131,16 @@ CREATE TABLE documento(
 INSERT INTO documento (nombre, descripcion, ruta_archivo) VALUES
 ('Prueba de PDF', 'Documento para probar como se ve el PDF', 'static/docs/der.png');
 
-DROP TABLE IF EXISTS administrador;
 CREATE TABLE administrador(
-	agrupacion INT NOT NULL,
-	email VARCHAR(255) NOT NULL,
+  agrupacion INT NOT NULL,
+  email VARCHAR(255) NOT NULL,
     psswd VARCHAR(50) NOT NULL,
     CONSTRAINT pk_administrador PRIMARY KEY(agrupacion),
     CONSTRAINT ck_password_length CHECK(LENGTH(psswd) >= 8),
     CONSTRAINT fk_agrupacion FOREIGN KEY (agrupacion) 
-		REFERENCES agrupacion(id_agrupacion) ON DELETE CASCADE ON UPDATE CASCADE
+    REFERENCES agrupacion(id_agrupacion) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-DROP TABLE IF EXISTS foto;
 CREATE TABLE foto(
   id_foto INT AUTO_INCREMENT PRIMARY KEY,
   dni_veterano VARCHAR(8) NOT NULL,
@@ -148,7 +149,6 @@ CREATE TABLE foto(
     REFERENCES veterano(dni_veterano) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-DROP TABLE IF EXISTS rol;
 CREATE TABLE rol (
   id_rol INT AUTO_INCREMENT PRIMARY KEY,
   nombre_rol ENUM(
@@ -163,7 +163,6 @@ CREATE TABLE rol (
   ) NOT NULL UNIQUE
 );
 
-DROP TABLE IF EXISTS autoridad;
 CREATE TABLE autoridad (
   dni_autoridad VARCHAR(8) NOT NULL,
   id_rol INT NOT NULL,
@@ -174,7 +173,6 @@ CREATE TABLE autoridad (
     REFERENCES rol(id_rol) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-DROP TABLE IF EXISTS causa_fallecimiento;
 CREATE TABLE causa_fallecimiento (
   id_causa INT AUTO_INCREMENT PRIMARY KEY,
   descripcion ENUM(
@@ -184,7 +182,6 @@ CREATE TABLE causa_fallecimiento (
   ) NOT NULL UNIQUE
 );
 
-DROP TABLE IF EXISTS fallecido;
 CREATE TABLE fallecido (
   dni_veterano VARCHAR(8) NOT NULL,
   fecha_fallecimiento DATE NOT NULL,
@@ -196,7 +193,6 @@ CREATE TABLE fallecido (
     REFERENCES causa_fallecimiento(id_causa) ON DELETE SET NULL ON UPDATE CASCADE
 );
 
-DROP TABLE IF EXISTS familiar;
 CREATE TABLE familiar(
   dni_familiar VARCHAR(8) NOT NULL,
   CONSTRAINT pk_familiar PRIMARY KEY(dni_familiar),
@@ -204,7 +200,6 @@ CREATE TABLE familiar(
     REFERENCES persona(dni) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-DROP TABLE IF EXISTS familiar_veterano;
 CREATE TABLE familiar_veterano(
   dni_familiar VARCHAR(8) NOT NULL,
   dni_veterano VARCHAR(8) NOT NULL,
@@ -215,7 +210,6 @@ CREATE TABLE familiar_veterano(
     REFERENCES persona(dni) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-DROP TABLE IF EXISTS red_social;
 CREATE TABLE red_social(
   id_red_social INT AUTO_INCREMENT PRIMARY KEY,
   nombre VARCHAR(100) NOT NULL,
@@ -225,4 +219,4 @@ CREATE TABLE red_social(
     REFERENCES agrupacion(id_agrupacion) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-
+SET FOREIGN_KEY_CHECKS = 1; -- Reactiva la revisión de dependencias

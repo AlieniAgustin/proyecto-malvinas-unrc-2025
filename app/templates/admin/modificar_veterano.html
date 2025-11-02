@@ -57,20 +57,10 @@
                     </select>
                 </div>
                 <div>
-                    <label>Departamento de nacimiento</label>
-                    <select name="departamento_nacimiento" id="departamento_nacimiento" disabled>
-                        <option value="">Seleccione un departamento</option>
-                        <option value="otro">Otro</option>
-                    </select>
-                    <input type="text" id="otro_departamento_nacimiento" name="otro_departamento_nacimiento" style="display: none; margin-top: 5px;" placeholder="Ingrese el departamento">
-                </div>
-                <div>
                     <label>Localidad de nacimiento</label>
                     <select name="localidad_nacimiento" id="localidad_nacimiento" disabled>
                         <option value="">Seleccione una localidad</option>
-                        <option value="otra">Otra</option>
                     </select>
-                    <input type="text" id="otra_localidad_nacimiento" name="otra_localidad_nacimiento" style="display: none; margin-top: 5px;" placeholder="Ingrese la localidad">
                 </div>
                  <div>
                     <label>Foto/s</label>
@@ -92,20 +82,10 @@
                     </select>
                 </div>
                 <div>
-                    <label>Departamento de residencia</label>
-                    <select name="departamento_residencia" id="departamento_residencia" disabled>
-                        <option value="">Seleccione un departamento</option>
-                        <option value="otro">Otro</option>
-                    </select>
-                    <input type="text" id="otro_departamento_residencia" name="otro_departamento_residencia" style="display: none; margin-top: 5px;" placeholder="Ingrese el departamento">
-                </div>
-                <div>
                     <label>Localidad de residencia</label>
                     <select name="localidad_residencia" id="localidad_residencia" disabled>
                         <option value="">Seleccione una localidad</option>
-                        <option value="otra">Otra</option>
                     </select>
-                    <input type="text" id="otra_localidad_residencia" name="otra_localidad_residencia" style="display: none; margin-top: 5px;" placeholder="Ingrese la localidad">
                 </div>
                 <div>
                     <label>Dirección postal</label>
@@ -113,7 +93,7 @@
                 </div>
                 <div>
                     <label>Código postal</label>
-                    <input type="text" name="codigo_postal" id="codigo_postal" value="{{ veterano.codigo_postal_residencia or '' }}" readonly placeholder="Se completa automáticamente">
+                    <input type="text" name="codigo_postal" id="codigo_postal" value="{{ veterano.codigo_postal_residencia or '' }}" placeholder="Ingrese el código postal">
                 </div>
                 <div>
                     <label>Correo electrónico</label>

@@ -3,3 +3,4 @@ mysql-connector-python
 flask-mysqldb
 flask-login
 werkzeug
+requests

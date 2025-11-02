@@ -1,16 +1,17 @@
 <!-- templates/base.html -->
 <!DOCTYPE html>
 <html lang="es">
+{% block head %}
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{% block title %}Proyecto Malvinas{% endblock %}</title>
-    <!-- Bootstrap CSS CDN -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <!-- Bootstrap Icons CDN -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
-    <!-- Fuente Source Sans Pro -->
     <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro&display=swap" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base_admin.css') }}">
 
     <style>
         * {
@@ -41,6 +42,9 @@
         }
     </style>
 </head>
+{% endblock %}
+
+{% block body %}
 
 <body class="bg-white d-flex flex-column min-vh-100">
 
@@ -80,19 +84,20 @@
     </nav>
 
     <main>
-        {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-        <div class="mb-3">
-            {% for category, message in messages %}
-            <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
-                {{ message }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-            {% endfor %}
+        <div class="pt-3 pb-3 flex-grow-1">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                {% endfor %}
+            {% endif %}
+            {% endwith %}
+            
+            {% block content %}{% endblock %}
         </div>
-        {% endif %}
-        {% endwith %}
-        {% block content %}{% endblock %}
     </main>
 
     <footer class="text-white py-3 mt-auto" id="main-footer">
@@ -113,7 +118,12 @@
 
     <!-- Bootstrap JS Bundle CDN -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
 </body>
 
 </html>
 
+{% endblock %}
