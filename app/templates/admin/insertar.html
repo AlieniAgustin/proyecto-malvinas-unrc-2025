@@ -3,6 +3,216 @@
 {% block title %}Insertar Persona{% endblock %}
 
 {% block content %}
-<h1 class="h2">Insertar Persona</h1>
-<p>Aquí irá el formulario para insertar una nueva persona.</p>
+<div class="container-fluid">
+    <div class="row">
+            <h1 class="h2">Insertar Persona</h1>
+            <div class="d-flex align-items-center mb-4">
+                <h>Completa el formulario con los datos del veterano, los campos con * son obligatorios.</h>
+            </div>
+            <hr style="height:0.5vh;background: #000000;">
+            <h1 class="h4 mb-3">Información personal</h1>
+            <!-- primera linea -->
+            <div class="hstack gap-3 justify-content-center mb-5">
+                <div class="me-5">
+                    <label for="dni" class="form-label fw-bold">DNI *</label>
+                    <input type="text" class="form-control" id="dni" name="dni" placeholder="Ingrese el DNI">
+                </div>
+                <div class="me-5">
+                    <label for="nombre" class="form-label fw-bold">Nombre *</label>
+                    <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Ingrese el nombre">
+                </div>
+                <div class="me-5">
+                    <label for="apellido" class="form-label fw-bold">apellido *</label>
+                    <input type="text" class="form-control" id="apellido" name="apellido" placeholder="Ingrese el apellido">
+                </div>
+            </div>
+
+            <!-- segunda linea -->
+            <div class="hstack gap-3 justify-content-center mb-5">
+                <!-- falta ver el formato de fechas-->
+                <div class="me-5">
+                    <label for="fecha_nacimiento" class="form-label fw-bold">Fecha de nacimiento</label>
+                    <input type="date" class="form-control" id="fecha_nacimiento" name="fecha_nacimiento">
+                </div>
+                <!-- calcularlo ?-->
+                <div class="me-5">
+                    <label for="edad" class="form-label fw-bold">Edad</label>
+                    <input type="text" class="form-control" id="Edad" name="Edad" placeholder="Calculado automáticaticamente" disabled>
+                </div>
+                <div class="me-5">
+                    <label for="provincia_nacimiento" class="form-label fw-bold">Provincia de nacimiento</label>
+                    <select class="form-select" id="provincia_nacimiento" name="provincia_nacimiento" placeholder="Seleccione un departamento">
+                        <option value="">Seleccione la provincia</option>
+                        {% for id, nombre in causas %}
+                            <option value="{{ id }}">{{ nombre }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+        </div>
+            <!-- Tercera linea -->
+             <!-- Tengo que hacer un script para esto-->
+            <div class="hstack gap-3 justify-content-center mb-5">
+                <div class="me-5">
+                    <label for="departamento_nacimiento" class="form-label fw-bold">Departamento de nacimiento</label>
+                    <select class="form-select" id="departamento_nacimiento" name="departamento_nacimiento" placeholder="Seleccione un departamento">
+                        <option value="">Seleccione el departamento</option>
+                        {% for id, nombre in causas %}
+                            <option value="{{ id }}">{{ nombre }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="me-5">
+                    <label for="localidad_nacimiento" class="form-label fw-bold">Localidad de nacimiento</label>
+                    <select class="form-select" id="localidad_nacimiento" name="localidad_nacimiento" placeholder="Seleccione una provincia">
+                        <option value="">Seleccione una provincia</option>dni
+                        {% for id, nombre in causas %}
+                            <option value="{{ id }}">{{ nombre }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="me-5">
+                    <label for="foto_archivo" class="form-label fw-bold">foto/s</label>
+                    <input class="form-control" type="file" id="foto_archivo" name="foto_archivo" placeholder="Seleccionar archivos">
+                </div>
+            </div>
+
+            <hr style="height:0.5vh;background: #000000;">
+            <h1 class="h4 mb-3">Información de contacto</h1>
+
+            <!-- primera linea -->
+            <div class="hstack gap-3 justify-content-center mb-5">
+                <div class="me-5">
+                    <label for="provincia_residencia" class="form-label fw-bold">Provincia de residencia</label>
+                    <select class="form-select" id="provincia_residencia" name="provincia_residencia" placeholder="Seleccione una departamento">
+                        <option value="">Seleccione una departamento</option>
+                        {% for id, nombre in causas %}
+                            <option value="{{ id }}">{{ nombre }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="me-5">
+                    <label for="departamento_residencia" class="form-label fw-bold">Departamento de residencia</label>
+                    <select class="form-select" id="departamento_residencia" name="departamento_residencia" placeholder="Seleccione una departamento">
+                        <option value="">Seleccione una departamento</option>
+                        {% for id, nombre in causas %}
+                            <option value="{{ id }}">{{ nombre }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="me-5">
+                    <label for="Localidad_residencia" class="form-label fw-bold">Localidad de residencia</label>
+                    <select class="form-select" id="Localidad_residencia" name="Localidad_residencia" placeholder="Seleccione una Localidad">
+                        <option value="">Seleccione una localidad</option>
+                        {% for id, nombre in causas %}
+                            <option value="{{ id }}">{{ nombre }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <!-- segunda linea -->
+            <div class="hstack gap-3 justify-content-center mb-5">
+                <div class="me-5">
+                    <label for="dir_postal" class="form-label fw-bold">Dirección postal</label>
+                    <input type="text" class="form-control" id="dir_postal" name="dir_postal" placeholder="Ingrese la dirección">
+                </div>
+                <div class="me-5">
+                    <label for="cod_postal" class="form-label fw-bold">Código postal</label>
+                    <input type="text" class="form-control" id="cod_postal" name="cod_postal" placeholder="Ingrese el código">
+                </div>
+                <div class="me-5">
+                    <label for="correo_electronico" class="form-label fw-bold">Correo electrónico</label>
+                    <input type="text" class="form-control" id="correo_electronico" name="correo_electronico" placeholder="Ingrese email">
+                </div>
+            </div>
+
+            <!-- tercera linea -->
+            <div class="hstack gap-3 justify-content-center mb-5">
+                <div class="me-5">
+                    <label for="telefono" class="form-label fw-bold">Teléfono</label>
+                    <input type="text" class="form-control" id="telefono" name="telefono" placeholder="Ingrese el teléfono">
+                </div>
+                <div class="me-5">
+                    <label for="contacto_familiar" class="form-label fw-bold">Contacto de familiar</label>
+                    <input type="text" class="form-control" id="contacto_familiar" name="contacto_familiar" placeholder="Nombre y teléfono">
+                </div>
+                
+            </div>
+        
+        
+            <hr style="height:0.5vh;background: #000000;">
+            <h1 class="h4 mb-3">Información de militar</h1>
+
+            <!-- tercera linea -->
+            <div class="hstack gap-3 justify-content-center mb-5">
+                <div class="me-5">
+                    <label for="fuerza" class="form-label fw-bold">Fuerza *</label>
+                    <select class="form-select" id="fuerza" name="fuerza" placeholder="Seleccione una fuerza">
+                        <option value="">Seleccione una fuerza</option>
+                        {% for id, nombre in causas %}
+                            <option value="{{ id }}">{{ nombre }}</option>
+                        {% endfor %}
+                    </select>
+                </div>            
+                <div class="me-5">
+                    <label for="grado" class="form-label fw-bold">Grado</label>
+                    <input type="text" class="form-control" id="grado" name="grado" placeholder="Ingrese grado">
+                </div>
+                <div class="me-5">
+                    <label for="destino_malvinas" class="form-label fw-bold">Destino de malvinas</label>
+                    <input type="text" class="form-control" id="destino_malvinas" name="destino_malvinas" placeholder="Ingrese el código">
+                </div>
+            </div>
+
+            <!-- tercera linea -->
+            <div class="hstack gap-3 justify-content-center mb-5">
+                <div class="me-5">
+                    <label for="funcion" class="form-label fw-bold">Función</label>
+                    <input type="text" class="form-control" id="funcion" name="funcion" placeholder="Ingrese función">
+                </div>
+                <div class="me-5">
+                    <label for="secuelas" class="form-label fw-bold">Secuelas</label>
+                    <textarea class="form-control" id="secuelas" name="secuelas" rows="4" placeholder="Describa las secuelas"></textarea>
+                </div>
+                <div class="me-5">
+                    <label for="nro_beneficio" class="form-label fw-bold">Número de beneficio nacional</label>
+                    <input type="text" class="form-control" id="nro_beneficio" name="nro_beneficio" placeholder="Ingrese el número">
+                </div>
+            </div>
+
+
+            <hr style="height:0.5vh;background: #000000;">
+            <h1 class="h4 mb-3">Estado</h1>
+
+            <div class="hstack gap-3 justify-content-center mb-5">
+                <div class="me-5">
+                    <label for="nombre" class="form-label fw-bold d-block"">Estado de vida *</label>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="opcion" id="opcion1" value="1">
+                        <label class="form-check-label" for="opcion1">Vive</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="opcion" id="opcion2" value="2">
+                        <label class="form-check-label" for="opcion2">Fallecido</label>
+                    </div>
+                </div>
+                <div class="me-5">
+                    <label for="nombre" class="form-label fw-bold">Fecha de fallecimiento</label>
+                    <input type="date" class="form-control" id="nombre" name="nombre" placeholder="Ingrese el DNI">
+                </div>
+                <div class="me-5">
+                    <label for="nombre" class="form-label fw-bold">Causas de fallecimiento</label>
+                    <select class="form-select" id="Causa_fallecimiento" name="Causa_fallecimiento" placeholder="Seleccione un departamento">
+                        <option value="">Seleccione una causa</option>
+                        {% for id, nombre in causas %}
+                            <option value="{{ id }}">{{ nombre }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+            </div>
+                        <hr style="height:0.5vh;background: #000000;">
+        </div>
+    </div>
+</div>
 {% endblock %}
