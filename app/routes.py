@@ -32,6 +32,8 @@ def start():
 
     return render_template('start.html',total_veteranos = total_veteranos, total_fuerzas = total_fuerzas, documentos = documentos, anos_historia = anos_historia)
 
+
+
 @bp.route('/buscar')
 def buscar():
     conn = get_db()

@@ -6,12 +6,28 @@
 <!-- solo esta hecha la base -->
 <div class="container-fluid">
     <div class="row">
-            <h1 class="h2">Insertar Persona</h1>
-            <div class="d-flex align-items-center mb-4">
-                <h>Completa el formulario con los datos del veterano, los campos con * son obligatorios.</h>
-            </div>
+        <h1 class="h2">Insertar Persona</h1>
+        <div class="d-flex align-items-center mb-4">
+            <h>Completa el formulario con los datos del veterano, los campos con * son obligatorios.</h>
+        </div>
+        <hr style="height:0.5vh;background: #000000;">
+        <h1 class="h4 mb-3">Información personal</h1>
+        <form action="" method="POST" >
+        
+
+
+
             <hr style="height:0.5vh;background: #000000;">
-            <h1 class="h4 mb-3">Información personal</h1>
+            <div class="hstack gap-3 justify-content-end mt-2 mb-3">
+                <a href="{{ url_for('main.dashboard') }}" class="btn btn-secondary w-25 fw-bold mb-2">Cancelar</a>
+                <button type="submit" class="btn btn-primary w-25 fw-bold mb-2">Guardar</button>
+            </div>
+        </form>
+
+
+
+
+
             <!-- primera linea -->
             <div class="hstack gap-3 justify-content-center mb-5">
                 <div class="me-5">
@@ -84,7 +100,7 @@
             <div class="hstack gap-3 justify-content-center mb-5">
                 <div class="me-5">
                     <label for="provincia_residencia" class="form-label fw-bold">Provincia de residencia</label>
-                    <select class="form-select" id="provincia_residencia" name="provincia_residencia" placeholder="Seleccione una departamento">
+                    <select container p-4class="form-select" id="provincia_residencia" name="provincia_residencia" placeholder="Seleccione una departamento">
                         <option value="">Seleccione una departamento</option>
                         {% for id, nombre in causas %}
                             <option value="{{ id }}">{{ nombre }}</option>
@@ -197,6 +213,7 @@
                         <label class="form-check-label" for="opcion2">Fallecido</label>
                     </div>
                 </div>
+                <!--hacer que esto no aparesca al poner que esta vivo-->
                 <div class="me-5">
                     <label for="nombre" class="form-label fw-bold">Fecha de fallecimiento</label>
                     <input type="date" class="form-control" id="nombre" name="nombre" placeholder="Ingrese el DNI">
@@ -212,11 +229,13 @@
                 </div>
 
             </div>
-                        <hr style="height:0.5vh;background: #000000;">
-            <div class="hstack gap-3 justify-content-end mt-2 mb-3">
-                <button type="submit" class="btn btn-secondary w-25 fw-bold mb-2">Cancelar</button>
-                <button type="submit" class="btn btn-primary w-25 fw-bold mb-2">Guardar</button>
-            </div>
+
+
+
+
+
+
+
         </div>
     </div>
 </div>
