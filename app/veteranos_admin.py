@@ -3,6 +3,47 @@ from flask_login import login_required
 from app.db import get_db
 from .routes import bp 
 
+# API para buscar códigos postales por localidad (Select2)
+@bp.route('/api/codigos_postales')
+@login_required
+def buscar_codigos_postales():
+    localidad_id = request.args.get('localidad_id')
+    query = request.args.get('q', '').strip()
+
+    if not localidad_id:
+        return jsonify({"items": []})
+
+    conn = get_db()
+    cursor = conn.cursor(dictionary=True)
+    try:
+        # Buscar códigos postales asociados a la localidad
+        sql_query = """
+            SELECT DISTINCT codigo_postal_residencia as codigo_postal
+            FROM veterano
+            WHERE localidad_residencia = %s 
+              AND codigo_postal_residencia IS NOT NULL
+              AND codigo_postal_residencia LIKE %s
+            ORDER BY codigo_postal_residencia
+            LIMIT 50
+        """
+        cursor.execute(sql_query, (localidad_id, f"%{query}%"))
+        codigos = cursor.fetchall()
+    except Exception as e:
+        print(f"Error en buscar_codigos_postales: {e}")
+        codigos = []
+    finally:
+        cursor.close()
+
+    resultados = [
+        {"id": c['codigo_postal'], "text": c['codigo_postal']}
+        for c in codigos
+    ]
+
+    # Agregar "Otro" al final
+    resultados.append({"id": "otro", "text": "Otro"})
+    return jsonify({"items": resultados})
+
+
 # API para obtener departamentos por provincia
 @bp.route('/api/localidades/<int:provincia_id>')
 @login_required
@@ -182,7 +223,14 @@ def insertar_persona():
             localidad_res_id = request.form.get('localidad_residencia')
             
             direccion = request.form.get('direccion', '').strip()
+
             codigo_postal_residencia = request.form.get('codigo_postal_residencia', '').strip()
+            otro_codigo_postal = request.form.get('otro_codigo_postal', '').strip()
+            if codigo_postal_residencia == 'otro':
+                codigo_postal_residencia = otro_codigo_postal if otro_codigo_postal else None
+            elif not codigo_postal_residencia:
+                codigo_postal_residencia = None
+
             mail = request.form.get('mail', '').strip()
             telefono = request.form.get('telefono', '').strip()
             
@@ -346,7 +394,7 @@ def modificar_persona_form(dni):
         cursor.execute("SELECT telefono FROM telefono_persona WHERE dni = %s", (dni,))
         telefono = cursor.fetchone()
 
-        form_context_data = _get_form_context_data(cursor)      
+        form_context_data = _get_form_context_data(cursor)   
         
         return render_template('admin/modificar_veterano.html',
                                 veterano=veterano,
@@ -375,7 +423,14 @@ def modificar_persona_guardar(dni):
         localidad_res_id = request.form.get('localidad_residencia')
         
         direccion = request.form.get('direccion', '').strip()
+
         codigo_postal_residencia = request.form.get('codigo_postal_residencia', '').strip()
+        otro_codigo_postal = request.form.get('otro_codigo_postal', '').strip()
+        if codigo_postal_residencia == 'otro':
+            codigo_postal_residencia = otro_codigo_postal if otro_codigo_postal else None
+        elif not codigo_postal_residencia:
+            codigo_postal_residencia = None
+
         mail = request.form.get('mail', '').strip()
         telefono = request.form.get('telefono', '').strip()
         

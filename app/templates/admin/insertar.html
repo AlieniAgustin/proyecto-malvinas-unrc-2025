@@ -97,7 +97,12 @@
                 </div>
                 <div>
                     <label>Código postal</label>
-                    <input type="text" name="codigo_postal" id="codigo_postal" placeholder="Ingrese el código postal">
+                    <select name="codigo_postal_residencia" id="codigo_postal" disabled>
+                        <option value="">Seleccione un código postal</option>
+                    </select>
+                    <input type="text" id="otro_codigo_postal" name="otro_codigo_postal" 
+                        style="display:none; margin-top:5px;" 
+                        placeholder="Ingrese código postal">
                 </div>
                 <div>
                     <label>Correo electrónico</label>

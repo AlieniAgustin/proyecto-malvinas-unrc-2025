@@ -5,6 +5,57 @@ const gradosData = (window.APP_DATA && window.APP_DATA.grados) ? window.APP_DATA
 const veteranoData = (window.APP_DATA && window.APP_DATA.veterano) ? window.APP_DATA.veterano : null;
 
 /**
+ * Configura el dropdown Select2 para códigos postales según la localidad
+ */
+function setupCodigoPostalHandler(localidadSelectId, codigoPostalSelectId, otroInputId = null) {
+    const $localidadSelect = $(`#${localidadSelectId}`);
+    const $codigoSelect = $(`#${codigoPostalSelectId}`);
+    const $otroInput = otroInputId ? $(`#${otroInputId}`) : null;
+
+    // Inicializa Select2
+    $codigoSelect.select2({
+        theme: "bootstrap-5",
+        placeholder: "Seleccione un código postal",
+        ajax: {
+            url: "/api/codigos_postales",
+            dataType: 'json',
+            delay: 50,
+            data: function (params) {
+                return {
+                    q: params.term,
+                    localidad_id: $localidadSelect.val()
+                };
+            },
+            processResults: function (data) {
+                return { results: data.items };
+            },
+            cache: true
+        }
+    });
+
+    // Cuando cambia la localidad, limpiamos el código postal
+    $localidadSelect.on('change', function() {
+        $codigoSelect.val(null).trigger('change');
+        if ($localidadSelect.val()) {
+            $codigoSelect.prop("disabled", false);
+            $codigoSelect.select2('open');
+        } else {
+            $codigoSelect.prop("disabled", true);
+        }
+        if ($otroInput) $otroInput.hide().val('');
+    });
+
+    // Mostrar campo "Otro" cuando se selecciona “otro”
+    $codigoSelect.on('change', function() {
+        if ($codigoSelect.val() === 'otro') {
+            if ($otroInput) $otroInput.show();
+        } else {
+            if ($otroInput) $otroInput.hide().val('');
+        }
+    });
+}
+
+/**
  * Calcula y muestra la edad basada en la fecha de nacimiento.
  */
 function calcularEdad() {
@@ -129,6 +180,18 @@ async function initModificarForm(veteranoData) {
             gradoSelect.value = veteranoData.idGrado;
         }
     }
+
+    // --- Precargar código postal ---
+    if (veteranoData.codigoPostal) {
+        const $cpSelect = $('#codigo_postal');
+        try {
+            // Agrega la opción actual como seleccionada
+            const option = new Option(veteranoData.codigoPostal, veteranoData.codigoPostal, true, true);
+            $cpSelect.append(option).trigger('change');
+            $cpSelect.prop("disabled", false);
+        } catch (e) { console.error("Error cargando código postal:", e); }
+    }
+
 }
 
 // --- EJECUCIÓN PRINCIPAL ---
@@ -144,6 +207,8 @@ window.addEventListener('DOMContentLoaded', function () {
         'localidad_residencia',
         'codigo_postal'
     );
+
+    setupCodigoPostalHandler('localidad_residencia', 'codigo_postal', 'otro_codigo_postal');
 
     // Configurar listener de edad
     calcularEdad();
