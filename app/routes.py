@@ -19,7 +19,7 @@ def start():
     cursor.execute("SELECT COUNT(id_fuerza) AS total_fuerzas FROM fuerza")
     total_fuerzas = cursor.fetchone()['total_fuerzas']
 
-    cursor.execute("SELECT nombre, descripcion, ruta_archivo FROM documento")
+    cursor.execute("SELECT nombre, descripcion, ruta_archivo FROM documento ORDER BY id_documento DESC")
     documentos = cursor.fetchall()
 
     inicio_guerra = date(1982,4,2)
@@ -321,10 +321,6 @@ def dashboard():
 def actualizar_info():
     return render_template('admin/actualizar.html')
 
-@bp.route('/admin/documentacion')
-@login_required
-def gestion_documentacion():
-    return render_template('admin/documentacion.html')
-
-# IMPORTAR EL MODULO DE MANEJO DE VETERANOS
+# IMPORTAR EL MODULO DE MANEJO DE VETERANOS Y DE DOCUMENTACION
 from . import veteranos_admin
+from . import gestion_documentos

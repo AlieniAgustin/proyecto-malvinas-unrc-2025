@@ -1,8 +1,119 @@
 {% extends 'base_admin.html' %}
 
-{% block title %}Documentacion{% endblock %}
+{% block title %}Gestión de Documentos{% endblock %}
+
+{% block head %}
+{{ super() }}
+{% endblock %}
 
 {% block content %}
-<h1 class="h2">Documentacion</h1>
-<p>to do</p>
+<div class="container-lg"> <h1 class="h2">Gestión de Documentos</h1>
+    <p class="text-muted mb-4">Administre los documentos disponibles para los visitantes del sitio</p>
+    
+    <ul class="nav nav-tabs mb-3" id="documentoTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="listar-tab" data-bs-toggle="tab" data-bs-target="#tab-listar" type="button" role="tab" aria-controls="tab-listar" aria-selected="true">Ver Documentos</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="insertar-tab" data-bs-toggle="tab" data-bs-target="#tab-insertar" type="button" role="tab" aria-controls="tab-insertar" aria-selected="false">Insertar Documento</button>
+        </li>
+    </ul>
+    
+    <div class="tab-content" id="documentoTabsContent">
+        
+        <div class="tab-pane fade show active" id="tab-listar" role="tabpanel" aria-labelledby="listar-tab">
+            
+            <form class="gap-2 mb-4" onsubmit="buscarDocumentos(event)">
+                <div class="input-group">
+                    <input type="text" id="buscar-nombre" placeholder="Buscar por nombre..." class="form-control" style="width: 250px;">
+                    <button class="btn btn-primary" type="submit">Buscar</button>
+                </div>
+            </form>
+
+            <div class="bg-light p-4 rounded-3">
+                <h3 class="fw-bold mb-4">Documentación disponible</h3>
+                <div class="row g-4">
+                {% if documentos %}
+                    {% for doc in documentos %}
+                    <div class="col-md-4">
+                        <div class="card h-100 shadow-sm">
+                            <div class="card-body d-flex flex-column">
+                                <div class="d-flex align-items-center mb-2">
+                                    <img src="{{ url_for('static', filename='img/pdf_icon.png') }}" 
+                                         alt="PDF" width="24" height="24" class="me-2">
+                                    <h5 class="card-title fw-bold mb-0">{{ doc.nombre }}</h5>
+                                </div>
+                                <p class="card-text text-muted small flex-grow-1" style="min-height:45px;">
+                                    {{ doc.descripcion or 'Sin descripción disponible' }}
+                                </p>
+                                <div class="d-flex gap-2 mt-auto">
+                                    <a href="{{ url_for('static', filename=doc.ruta_archivo.replace('static/', '')) }}"
+                                       target="_blank"
+                                       class="btn btn-primary btn-sm flex-grow-1">
+                                        Ver
+                                    </a>
+                                    
+                                    <button class="btn btn-secondary btn-sm flex-grow-1"
+                                            onclick="editarDocumento(
+                                                '{{ url_for('main.obtener_documento', id=doc.id_documento) }}',
+                                                '{{ url_for('main.modificar_documento', id=doc.id_documento) }}'
+                                            )">
+                                        Editar
+                                    </button>
+                                    
+                                    <form method="POST" 
+                                          action="{{ url_for('main.eliminar_documento', id=doc.id_documento) }}"
+                                          onsubmit="return confirm('¿Está seguro de eliminar este documento?');"
+                                          class="flex-grow-1">
+                                        <button type="submit" class="btn btn-danger btn-sm w-100">
+                                            Eliminar
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <p class="text-center text-secondary py-5">
+                        No hay documentos registrados.
+                    </p>
+                {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="tab-pane fade" id="tab-insertar" role="tabpanel" aria-labelledby="insertar-tab">
+            <div class="row">
+                <div class="col-lg-8 col-xl-6">
+                    <form class="form-upload" method="POST" enctype="multipart/form-data" 
+                          action="{{ url_for('main.insertar_documento') }}">
+                        <div class="mb-3">
+                            <label for="insert-nombre" class="form-label">Nombre del documento*</label>
+                            <input type="text" name="nombre" id="insert-nombre" class="form-control" required placeholder="Ej: Acta de asamblea 2024">
+                        </div>
+                        <div class="mb-3">
+                            <label for="insert-descripcion" class="form-label">Descripción</label>
+                            <textarea name="descripcion" id="insert-descripcion" class="form-control" placeholder="Breve descripción del documento" rows="3"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="insert-archivo" class="form-label">Archivo*</label>
+                            <input type="file" name="archivo" id="insert-archivo" class="form-control" required accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
+                            <div class="form-text">Formatos permitidos: PDF, Word, imágenes (máx. 10MB)</div>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <button type="button" class="btn btn-outline-secondary" onclick="showTab('listar-tab')">Cancelar</button>
+                            <button type="submit" class="btn btn-primary">Guardar Documento</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tab-pane fade" id="tab-editar" role="tabpanel" aria-labelledby="editar-tab">
+            </div>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/gestion_documentos.js') }}"></script>
 {% endblock %}

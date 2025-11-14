@@ -128,9 +128,6 @@ CREATE TABLE documento(
   CONSTRAINT pk_documento PRIMARY KEY(id_documento)
 );
 
-INSERT INTO documento (nombre, descripcion, ruta_archivo) VALUES
-('Prueba de PDF', 'Documento para probar como se ve el PDF', 'static/docs/der.png');
-
 CREATE TABLE administrador(
   agrupacion INT NOT NULL,
   email VARCHAR(255) NOT NULL,
