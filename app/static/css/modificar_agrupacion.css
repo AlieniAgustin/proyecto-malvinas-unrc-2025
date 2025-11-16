@@ -1,0 +1,22 @@
+.btn-eliminar-autoridad {
+    background: none;
+    border: none;
+    padding: 0 5px; 
+    margin-left: 5px;
+    color: #dc3545;  
+    cursor: pointer;
+    vertical-align: middle; 
+    font-size: 1rem;
+}
+
+.btn-eliminar-autoridad:hover {
+    color: #b02a37; 
+}
+
+.autoridad-input-group {
+    display: flex;
+    align-items: center;
+}
+.autoridad-input-group input[disabled] {
+    flex-grow: 1;
+}

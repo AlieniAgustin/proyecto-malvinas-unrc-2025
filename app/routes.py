@@ -1,5 +1,5 @@
 from collections import defaultdict
-from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify
 from flask_login import login_user, logout_user, login_required, current_user
 from .models.administrador import Administrador
 from werkzeug.security import check_password_hash
@@ -316,11 +316,8 @@ def privacidad():
 def dashboard():
     return render_template('dashboard.html')
 
-@bp.route('/admin/actualizar')
-@login_required
-def actualizar_info():
-    return render_template('admin/actualizar.html')
-
-# IMPORTAR EL MODULO DE MANEJO DE VETERANOS Y DE DOCUMENTACION
+# Importar otros modulos
+from . import apis
 from . import veteranos_admin
 from . import gestion_documentos
+from . import gestion_agrupacion

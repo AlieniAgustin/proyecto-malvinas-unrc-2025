@@ -1,8 +1,144 @@
 {% extends 'base_admin.html' %}
 
-{% block title %}Actualizar informacion{% endblock %}
+{% block title %}Actualizar Información{% endblock %}
+
+{% block head %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/modificar_veterano.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/modificar_agrupacion.css') }}">
+{% endblock %}
 
 {% block content %}
-<h1 class="h2">Actualizar informacion</h1>
-<p>to do</p>
+<div class="container">
+    <h1 class="h2">Actualizar información de la agrupación</h1>
+    <p>Actualice la información de contacto y las autoridades.</p>
+    <hr>
+
+    <form class="formulario" method="POST" action="{{ url_for('main.actualizar_info_agrupacion')}}">
+        <section>
+            <h3 class="h4">Información de Contacto</h3>
+            <div class="grid">
+                <div>
+                    <label>Nombre de la Agrupación</label>
+                    <input type="text" name="nombre_agrupacion" value="{{ agrupacion.nombre_agrupacion or ''}}" required>
+                </div>
+                <div>
+                    <label>Correo electrónico</label>
+                    <input type="email" name="email" value="{{ agrupacion.mail or ''}}" required>
+                </div>
+                <div>
+                    <label>Dirección</label>
+                    <input type="text" name="direccion" value="{{ agrupacion.direccion or ''}}">
+                </div>
+                <div>
+                    <label>Provincia</label>
+                    <select id="provincia_agrupacion" name="provincia_agrupacion">
+                        <option value="">Seleccione una provincia</option>
+                        {% for prov in provincias %}
+                        <option value="{{ prov.id_provincia }}" {% if agrupacion.id_provincia == prov.id_provincia %}selected{% endif %}>
+                            {{ prov.nombre }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <label>Localidad</label>
+                    <select id="localidad_agrupacion" name="localidad_agrupacion" disabled>
+                         <option value="">Seleccione una localidad</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Teléfono/s</label>
+                    <select id="telefonos" name="telefonos[]" multiple="multiple">
+                        {% for tel in telefonos %}
+                        <option value="{{ tel }}" selected>{{ tel }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <label>Enlace a Facebook</label>
+                    <input type="url" name="facebook" value="{{ redes.facebook or ''}}">
+                </div>
+                <div>
+                    <label>Enlace a Instagram</label>
+                    <input type="url" name="instagram" value="{{ redes.instagram or ''}}">
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h3 class="h4">Autoridades</h3>
+            <div class="grid" id="autoridades-grid">
+                {% for aut in autoridades %}
+                <div data-dni="{{ aut.dni_autoridad }}">
+                    <div class="autoridad-item">
+                        <label>{{ aut.nombre_rol }}</label>
+                        <div class="autoridad-input-group">
+                            <input type="text" value="{{ aut.nombre }} {{ aut.apellido }} (DNI: {{ aut.dni_autoridad }})" disabled>
+                            <button class="btn-eliminar-autoridad" type="button">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                            <input type="hidden" name="autoridad_rol[]" value="{{ aut.id_rol }}">
+                            <input type="hidden" name="autoridad_dni[]" value="{{ aut.dni_autoridad }}">
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                <div style="grid-column: 1 / -1;">
+                    <button type="button" class="btn-agregar-autoridad" data-bs-toggle="modal" data-bs-target="#modalAgregarAutoridad">
+                        <i class="bi bi-plus-lg"></i> Agregar Autoridad
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <div class="acciones">
+            <button type="submit" class="guardar">Guardar Cambios</button>
+        </div>
+    </form>
+</div>
+
+<div class="modal fade" id="modalAgregarAutoridad" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalLabel">Agregar Nueva Autoridad</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="select-rol-modal" class="form-label">Rol</label>
+                    <select class="form-select" id="select-rol-modal">
+                        <option value="">Seleccione un rol...</option>
+                        {% for rol in roles %}
+                        <option value="{{ rol.id_rol }}">{{ rol.nombre_rol }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="select-veterano-modal" class="form-label">Veterano</label>
+                    <select class="form-control" id="select-veterano-modal" style="width: 100%;">
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="btn-guardar-autoridad-modal" data-bs-dismiss="modal">Agregar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Inyeccion de datos para el script externo
+    window.APP_DATA = {
+        agrupacion: {
+            // Pasamos los IDs actuales de la agrupación
+            provinciaAgrupacion: {{ agrupacion.id_provincia | tojson | safe }},
+            localidadAgrupacion: {{ agrupacion.localidad_agrupacion | tojson | safe }}
+        }
+    };
+</script>
+
+<script src="{{ url_for('static', filename='js/form_agrupacion.js') }}"></script>
 {% endblock %}
