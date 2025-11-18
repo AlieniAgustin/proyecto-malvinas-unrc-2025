@@ -1,21 +1,28 @@
 import requests
 
-# URL base de la API Georef v2.0
-GEOREF_API_URL = "https://apis.datos.gob.ar/georef/api/v2.0" 
+# URL base de la API Georef (probamos con diferentes versiones)
+GEOREF_API_URLS = [
+    "https://apis.datos.gob.ar/georef/api",  # Sin versión
+    "https://apis.datos.gob.ar/georef/api/v2.0",
+    "https://georef-ar-api.datosgobar.gob.ar/api"  # Alternativa
+]
 
 def fetch_from_api(endpoint, params=None):
     """Función auxiliar para llamar a la API de Georef."""
-    url = f"{GEOREF_API_URL}/{endpoint}"
-    print(f"  -> Llamando API: {url} (Prov: {params.get('provincia') or 'N/A'})")
-    try:
-        response = requests.get(url, params=params)
-        response.raise_for_status() # Lanza un error si la petición falla (ej. 400, 404, 500)
-        return response.json()
-    except requests.exceptions.RequestException as e:
-        print(f"Error al conectar con la API Georef: {e}")
-        if e.response is not None:
-            print(f"Detalle del error: {e.response.text}")
-        return None
+    # Intentar con diferentes URLs
+    for base_url in GEOREF_API_URLS:
+        url = f"{base_url}/{endpoint}"
+        print(f"  -> Intentando API: {url}")
+        try:
+            response = requests.get(url, params=params, timeout=10)
+            response.raise_for_status()
+            return response.json()
+        except requests.exceptions.RequestException as e:
+            print(f"     Falló: {e}")
+            continue
+    
+    print("Error: No se pudo conectar con ninguna versión de la API Georef")
+    return None
             
 def populate_provincias(cursor):
     """Puebla la tabla de provincias."""
