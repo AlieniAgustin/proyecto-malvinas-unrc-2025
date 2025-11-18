@@ -162,14 +162,15 @@ def buscar_veteranos_api():
     conn = get_db()
     cursor = conn.cursor(dictionary=True)
     
-    # Buscamos por DNI, nombre o apellido
+    # Buscamos por DNI, nombre o apellido solo de veteranos de la agrupación 1
     sql_query = """
         SELECT p.dni, p.nombre, p.apellido 
         FROM persona p
         JOIN veterano v ON p.dni = v.dni_veterano
-        WHERE p.dni LIKE %s 
+        WHERE v.id_agrupacion = 1
+          AND (p.dni LIKE %s 
            OR p.nombre LIKE %s 
-           OR p.apellido LIKE %s
+           OR p.apellido LIKE %s)
         ORDER BY p.apellido, p.nombre
         LIMIT 20
     """
