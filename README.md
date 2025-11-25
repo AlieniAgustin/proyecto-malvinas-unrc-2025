@@ -66,35 +66,74 @@ La cantidad **máxima de personas** que se podrá almacenar será **X veteranos*
 
 ---
 
+# Cómo correr el proyecto con Docker
 
-## Cómo correr el proyecto con Docker
+## 1. Instalar Docker y Docker Compose
 
-1. **Instalar Docker y Docker Compose**  
-   Asegurate de tener Docker y Docker Compose instalados en tu máquina.
+Asegúrate de tener **Docker** y **Docker Compose** instalados en tu
+máquina.
 
-2. **Construir las imágenes**  
-   ```bash
-   sudo docker-compose build
-   ```
+------------------------------------------------------------------------
 
-3. **Levantar los servicios en segundo plano**  
-   ```bash
-   sudo docker-compose up -d
-   ```
+## 2. Levantar el proyecto
 
-4. **Verificar que los servicios estén corriendo**  
-   ```bash
-   sudo docker ps
-   ```
+Este comando construye las imágenes y levanta los contenedores en
+segundo plano.\
+Úsalo cada vez que quieras iniciar la aplicación:
 
-5. **Parar el proyecto cuando ya no lo necesiten**  
-   ```bash
-   sudo docker-compose down -v
-   ```
-6. **Visualizar la pagina en**
-   ```bash
-   localhost:5000
-   ```
+``` bash
+sudo docker-compose up -d --build
+```
+
+------------------------------------------------------------------------
+
+## 3. Poblar datos geográficos *(solo la primera vez)*
+
+Este comando descarga y carga las **provincias y localidades
+argentinas** desde la API del gobierno.\
+Solo es necesario ejecutarlo una vez al instalar el proyecto:
+
+``` bash
+sudo docker-compose exec web flask db-populate-geo
+```
+
+------------------------------------------------------------------------
+
+## 4. Cargar datos iniciales *(solo la primera vez)*
+
+Este comando carga las fuerzas, roles, la agrupación y el usuario
+administrador.\
+Se usa `--force` para asegurar que se cargue todo incluso si hay datos
+parciales:
+
+``` bash
+sudo docker-compose exec -T db mysql -u root -pMalvinas2025! --force malvinas_db < db/seed.sql
+```
+
+------------------------------------------------------------------------
+
+## 5. Visualizar la página
+
+Abrí tu navegador y andá a:
+
+**http://localhost:5000**
+
+------------------------------------------------------------------------
+
+## 6. Credenciales de Administrador
+
+-   **Email:** `veteranos@virgendelrosario.admin`\
+-   **Contraseña:** `veteranos@admin`
+
+------------------------------------------------------------------------
+
+## 7. Parar el proyecto
+
+Cuando termines de trabajar:
+
+``` bash
+sudo docker-compose down
+```
 
 ## 📁 Estructura del Proyecto
 
