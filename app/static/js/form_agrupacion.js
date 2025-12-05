@@ -187,6 +187,34 @@ function addAutoridadToDOM(data) {
 }
 
 
+function setupTelefonoHandlers() {
+    const container = document.getElementById('telefonos-container');
+    const btnAgregar = document.getElementById('btn-agregar-telefono');
+    const template = document.getElementById('telefono-template');
+
+    // Función para agregar un nuevo input de teléfono
+    function agregarTelefono() {
+        const newGroup = template.cloneNode(true);
+        newGroup.id = '';
+        newGroup.style.display = 'flex';
+        container.insertBefore(newGroup, template);
+        // Agregar listener al botón eliminar
+        newGroup.querySelector('.btn-eliminar-telefono').addEventListener('click', function() {
+            newGroup.remove();
+        });
+    }
+
+    // Agregar listener al botón de agregar
+    btnAgregar.addEventListener('click', agregarTelefono);
+
+    // Agregar listeners a los botones eliminar existentes
+    document.querySelectorAll('.btn-eliminar-telefono').forEach(btn => {
+        btn.addEventListener('click', function() {
+            this.closest('.telefono-input-group').remove();
+        });
+    });
+}
+
 // --- EJECUCIÓN PRINCIPAL ---
 window.addEventListener('DOMContentLoaded', function () {
     
@@ -196,14 +224,8 @@ window.addEventListener('DOMContentLoaded', function () {
         'localidad_agrupacion'
     );
 
-    // 2. Configurar Select2 para Teléfonos (con tags para añadir nuevos)
-    $('#telefonos').select2({
-        theme: "bootstrap-5",
-        width: '100%',
-        tags: true, // Permite crear nuevas etiquetas (números)
-        placeholder: "Ingrese teléfonos (presione Enter)",
-        tokenSeparators: [',']
-    });
+    // 2. Configurar handlers para teléfonos
+    setupTelefonoHandlers();
 
     // 3. Configurar el modal de búsqueda de veteranos
     setupVeteranoSearchModal();

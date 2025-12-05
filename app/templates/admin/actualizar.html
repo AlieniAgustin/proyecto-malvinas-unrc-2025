@@ -48,12 +48,35 @@
                     </select>
                 </div>
                 <div>
-                    <label>Teléfono/s</label>
-                    <select id="telefonos" name="telefonos[]" multiple="multiple">
+                    <label>Teléfonos</label>
+                    <div id="telefonos-container">
+                        {% if telefonos %}
                         {% for tel in telefonos %}
-                        <option value="{{ tel }}" selected>{{ tel }}</option>
+                        <div class="telefono-input-group">
+                            <input type="text" name="telefonos[]" value="{{ tel }}" placeholder="Ingrese un teléfono">
+                            <button type="button" class="btn-eliminar-telefono">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </div>
                         {% endfor %}
-                    </select>
+                        {% else %}
+                        <div class="telefono-input-group">
+                            <input type="text" name="telefonos[]" placeholder="Ingrese un teléfono">
+                            <button type="button" class="btn-eliminar-telefono">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </div>
+                        {% endif %}
+                        <div class="telefono-input-group" id="telefono-template" style="display: none;">
+                            <input type="text" name="telefonos[]" placeholder="Ingrese un teléfono">
+                            <button type="button" class="btn-eliminar-telefono">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <button type="button" id="btn-agregar-telefono" class="btn btn-secondary mt-2">
+                        <i class="bi bi-plus-lg"></i> Agregar Teléfono
+                    </button>
                 </div>
                 <div>
                     <label>Enlace a Facebook</label>

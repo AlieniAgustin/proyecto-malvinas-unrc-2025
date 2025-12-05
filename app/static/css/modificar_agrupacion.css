@@ -1,3 +1,39 @@
+/* Telefono input group */
+.telefono-input-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.telefono-input-group input {
+    flex: 1;
+    margin-right: 0.5rem;
+}
+
+.btn-eliminar-telefono {
+    background: none;
+    border: none;
+    padding: 0.25rem 0.5rem;
+    color: #dc3545;
+    cursor: pointer;
+    font-size: 1.1rem;
+    transition: color 0.2s ease-in-out;
+    min-width: 44px;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-eliminar-telefono:hover {
+    color: #b02a37;
+}
+
+.btn-eliminar-telefono:focus {
+    outline: 2px solid #0066CC;
+    outline-offset: 2px;
+}
+
 /* Button styles - responsive and accessible */
 .btn-eliminar-autoridad {
     background: none;
