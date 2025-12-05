@@ -5,7 +5,6 @@ from .routes import bp
 
 # API para buscar códigos postales por localidad (Select2)
 @bp.route('/api/codigos_postales')
-@login_required
 def buscar_codigos_postales():
     localidad_id = request.args.get('localidad_id')
     query = request.args.get('q', '').strip()
@@ -41,12 +40,12 @@ def buscar_codigos_postales():
 
     # Agregar "Otro" al final
     resultados.append({"id": "otro", "text": "Otro"})
+    print(f"[API] /api/codigos_postales localidad_id={localidad_id!r} q={query!r} -> {len(resultados)} items")
     return jsonify({"items": resultados})
 
 
 # API para obtener departamentos por provincia
 @bp.route('/api/localidades/<int:provincia_id>')
-@login_required
 def get_localidades(provincia_id):
     conn = get_db()
     cursor = conn.cursor(dictionary=True)
@@ -63,7 +62,6 @@ def get_localidades(provincia_id):
 
 # API para obtener localidades por departamento y provincia
 @bp.route('/api/localidades/<int:provincia_id>/<string:departamento>')
-@login_required
 def get_localidades_por_depto(provincia_id, departamento):
     conn = get_db()
     cursor = conn.cursor(dictionary=True)
@@ -79,7 +77,6 @@ def get_localidades_por_depto(provincia_id, departamento):
 
 # API para Select2. Busca localidades por nombre dentro de una provincia. Recibe provincia_id y q (query)
 @bp.route('/api/localidades/buscar')
-@login_required
 def buscar_localidades_api():
     provincia_id = request.args.get('provincia_id')
     query = request.args.get('q', '').strip()
@@ -116,13 +113,11 @@ def buscar_localidades_api():
         {"id": loc['id_localidad'], "text": f"{loc['nombre_localidad']} ({loc['departamento']})"}
         for loc in localidades
     ]
-    
     return jsonify({"items": resultados})
 
 
 # API para obtener una localidad por su ID (para Select2 inicial)
 @bp.route('/api/localidad/<string:localidad_id>')
-@login_required
 def get_localidad_por_id(localidad_id):
     conn = get_db()
     cursor = conn.cursor(dictionary=True)
@@ -151,7 +146,6 @@ def get_localidad_por_id(localidad_id):
 
 # Api para buscar veteranos por nombre o dni
 @bp.route('/api/veteranos/buscar')
-@login_required
 def buscar_veteranos_api():
     query = request.args.get('q', '').strip()
     
@@ -196,5 +190,4 @@ def buscar_veteranos_api():
         }
         for v in veteranos
     ]
-    
     return jsonify({"items": resultados})
