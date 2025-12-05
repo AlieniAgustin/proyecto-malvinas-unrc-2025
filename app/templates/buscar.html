@@ -8,11 +8,17 @@
 
 {% block content %}
 
-<div class="container-fluid px-3 px-md-4">
+<div class="container-fluid {% if is_admin_view %}px-3{% else %}px-3 px-md-4{% endif %}">
     <div class="row g-3 g-md-4">
         <!-- Results Section - Full width on mobile, 8 cols on tablet+ -->
         <div class="col-12 col-md-8 order-2 order-md-1">
-            <h2 class="h3 text-center fw-bold mb-3 mb-md-4">Búsqueda de personas</h2>
+            {% if is_admin_view %}
+                <h1 class="h2 mb-3">Búsqueda de personas</h1>
+                <p class="text-muted">Resultados y filtros para la gestión de veteranos.</p>
+                <hr class="my-4">
+            {% else %}
+                <h2 class="h3 text-center mb-3 mb-md-4">Búsqueda de personas</h2>
+            {% endif %}
 
             {% if resultados %}
                 <div class="records">
@@ -52,7 +58,11 @@
         <!-- Filters Section - Full width on mobile, 4 cols on tablet+ -->
         <aside class="col-12 col-md-4 order-1 order-md-2">
             <div class="p-3 rounded bg-light sticky-md-top" style="top: 1rem;">
-                <h2 class="h3 text-center fw-bold mb-3 mb-md-4">Filtros</h2>
+                {% if is_admin_view %}
+                    <h2 class="h3 mb-3">Filtros</h2>
+                {% else %}
+                    <h2 class="h3 text-center mb-3 mb-md-4">Filtros</h2>
+                {% endif %}
                 <form id="filtrosForm" method="GET" action="{{ url_for('main.buscar') }}">
 
                     <div class="mb-3">
@@ -103,7 +113,11 @@
                     
                     {% if current_user.is_authenticated %}
                         <hr class="my-4">
-                        <h3 class="h5 text-center fw-bold mb-3">Filtros de Administrador</h3>
+                        {% if is_admin_view %}
+                            <h3 class="h5 mb-3">Filtros de Administrador</h3>
+                        {% else %}
+                            <h3 class="h5 text-center mb-3">Filtros de Administrador</h3>
+                        {% endif %}
 
                         <div class="mb-3">
                             <label for="dni" class="form-label fw-semibold">DNI</label>

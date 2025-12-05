@@ -3,7 +3,7 @@
 
 {% block content %}
 <div class="container px-3 px-md-4 py-4">
-  <h1 class="text-dark fw-bold mb-3 text-center">Sistema de Gestión de Veteranos de Guerra de Malvinas</h1>
+  <h1 class="text-dark mb-3 text-center">Sistema de Gestión de Veteranos de Guerra de Malvinas</h1>
   
   <p class="text-secondary mb-3">
     La Agrupación Veteranos de Guerra de Malvinas "Operativo Virgen del Rosario", con sede en la ciudad de Río Cuarto, trabaja activamente en la preservación de la memoria histórica del conflicto del Atlántico Sur de 1982. Su labor se centra en brindar contención, asesoramiento y acompañamiento a los veteranos y a sus familias, así como en promover actividades conmemorativas, educativas y de concientización en la comunidad.
@@ -14,14 +14,14 @@
   
   <!-- Estadísticas -->
   <section class="p-3 p-md-4 my-4 rounded-3" style="background-color: #f0f0f0;" aria-labelledby="estadisticas-heading">   
-    <h2 id="estadisticas-heading" class="h3 fw-bold mb-4">Estadísticas</h2>
+    <h2 id="estadisticas-heading" class="h3 mb-4">Estadísticas</h2>
     
     <div class="row g-3 g-md-4">
       <!-- Card 1 -->
       <div class="col-12 col-sm-6 col-lg-4">
         <div class="card shadow-sm h-100 border-0">
           <div class="card-body text-center p-4">
-            <h3 class="h5 fw-bold mb-3">Veteranos registrados</h3>
+            <h3 class="h5 mb-3">Veteranos registrados</h3>
             <p class="display-4 fw-bold text-primary mb-0" style="color: #0066CC !important;">{{ total_veteranos }}</p>
           </div>
         </div>
@@ -31,7 +31,7 @@
       <div class="col-12 col-sm-6 col-lg-4">
         <div class="card shadow-sm h-100 border-0">
           <div class="card-body text-center p-4">
-            <h3 class="h5 fw-bold mb-3">Fuerzas representadas</h3>
+            <h3 class="h5 mb-3">Fuerzas representadas</h3>
             <p class="display-4 fw-bold text-primary mb-0" style="color: #0066CC !important;">{{ total_fuerzas }}</p>
           </div>
         </div>
@@ -41,7 +41,7 @@
       <div class="col-12 col-sm-6 col-lg-4">
         <div class="card shadow-sm h-100 border-0">
           <div class="card-body text-center p-4">
-            <h3 class="h5 fw-bold mb-3">Años de historia</h3>
+            <h3 class="h5 mb-3">Años de historia</h3>
             <p class="display-4 fw-bold text-primary mb-0" style="color: #0066CC !important;">{{anos_historia}}</p>
           </div>
         </div>
@@ -51,7 +51,7 @@
 
   <!-- Documentación -->
   <section class="p-3 p-md-4 my-4 rounded-3" style="background-color: #f0f0f0;" aria-labelledby="documentacion-heading">
-    <h2 id="documentacion-heading" class="h3 fw-bold mb-4">Documentación relevante</h2>
+    <h2 id="documentacion-heading" class="h3 mb-4">Documentación relevante</h2>
     
     <div class="row g-3 g-md-4">
       {% if documentos %}
@@ -61,7 +61,7 @@
             <div class="card-body d-flex flex-column p-4">
               <div class="d-flex align-items-center mb-3">
                 <img src="{{ url_for('static', filename='img/pdf_icon.png') }}" alt="" width="24" height="24" class="me-2" aria-hidden="true">
-                <h3 class="h5 fw-bold mb-0">{{ doc.nombre }}</h3>
+                <h3 class="h5 mb-0">{{ doc.nombre }}</h3>
               </div>
               <p class="text-secondary flex-grow-1 mb-3">{{ doc.descripcion }}</p> 
               <a href="{{ url_for('static', filename=doc.ruta_archivo|replace('static/', '')) }}" 

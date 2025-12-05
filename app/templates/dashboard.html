@@ -4,18 +4,11 @@
 
 {% block content %}
 <div class="container-fluid px-3">
-    <div class="row">
-        <div class="col-12">
-            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-3 mb-3 border-bottom">
-                <h1 class="h2 fw-bold mb-0">Panel de Administración</h1>
-            </div>
-        
-            <div class="alert alert-success" role="alert">
-                <h2 class="h5 alert-heading">¡Bienvenido!</h2>
-                <p class="mb-0">Has iniciado sesión correctamente. Selecciona una opción de la barra lateral para comenzar a gestionar el contenido del sitio web.</p>
-            </div>
-            
-            <div class="row g-3 g-md-4 mt-2">
+    <h1 class="h2 mb-3">Panel de Administración</h1>
+    <p class="text-muted">Has iniciado sesión correctamente. Selecciona una opción de la barra lateral para comenzar a gestionar el contenido del sitio web.</p>
+    <hr class="my-4">
+
+    <div class="row g-3 g-md-4 mt-2">
                 <div class="col-12 col-sm-6 col-lg-3">
                     <div class="card border-0 shadow-sm h-100" style="background-color: #e7f3ff;">
                         <div class="card-body text-center p-4">
@@ -41,7 +34,7 @@
                 <div class="col-12 col-sm-6 col-lg-3">
                     <div class="card border-0 shadow-sm h-100" style="background-color: #e7f3ff;">
                         <div class="card-body text-center p-4">
-                            <i class="bi bi-trash display-4 mb-3" style="color: #0066CC;"></i>
+                            <i class="bi bi-person-dash display-4 mb-3" style="color: #0066CC;"></i>
                             <h3 class="h6 fw-bold">Eliminar Persona</h3>
                             <p class="small text-muted mb-3">Eliminar registros del sistema</p>
                             <a href="{{ url_for('main.eliminar_persona') }}" class="btn btn-sm btn-primary" style="min-width: 80px;">Ir</a>
@@ -74,9 +67,9 @@
                 <div class="col-12 col-sm-6 col-lg-3">
                     <div class="card border-0 shadow-sm h-100" style="background-color: #e7f3ff;">
                         <div class="card-body text-center p-4">
-                            <i class="bi bi-arrow-clockwise display-4 mb-3" style="color: #0066CC;"></i>
+                            <i class="bi bi-info-circle display-4 mb-3" style="color: #0066CC;"></i>
                             <h3 class="h6 fw-bold">Actualizar Información</h3>
-                            <p class="small text-muted mb-3">Refrescar datos del sistema</p>
+                            <p class="small text-muted mb-3">Actualizar informacion de la agrupacion</p>
                             <a href="{{ url_for('main.actualizar_info_agrupacion') }}" class="btn btn-sm btn-primary" style="min-width: 80px;">Ir</a>
                         </div>
                     </div>

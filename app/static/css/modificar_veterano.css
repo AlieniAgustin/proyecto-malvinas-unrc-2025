@@ -105,10 +105,6 @@ input:disabled, select:disabled {
   justify-content: flex-start;
 }
 
-.estado label:first-child {
-  margin-bottom: 0.5rem;
-}
-
 /* Radio group */
 .radio-group {
   display: flex;
