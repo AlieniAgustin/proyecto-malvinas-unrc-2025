@@ -28,18 +28,82 @@
         }
 
         #main-navbar, #main-footer{
-            background-color: #4B9EE9;
+            background-color: #0066CC;
         }
 
-        .nav-link-active, .nav-link:hover {
-            background-color: #ffffff40;
+        .nav-link-active {
+            background-color: rgba(255, 255, 255, 0.25) !important;
+            border-radius: 0.375rem;
+        }
+        
+        .nav-link:hover {
+            background-color: rgba(255, 255, 255, 0.15) !important;
+            border-radius: 0.375rem;
         }
 
-        /* Force text wrapping in navbar brand */
+        /* Responsive navbar brand */
         .navbar-brand {
             white-space: normal !important;
             word-wrap: break-word;
-            max-width: calc(100% - 100px); /* Leave space for hamburger menu */
+            max-width: calc(100% - 60px);
+        }
+
+        /* Improve navbar toggler visibility */
+        .navbar-toggler {
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            padding: 0.5rem;
+        }
+
+        .navbar-toggler:focus {
+            box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.3);
+        }
+
+        /* Better spacing for navbar items on mobile */
+        @media (max-width: 991.98px) {
+            .navbar-nav {
+                margin-top: 1rem;
+            }
+            
+            .navbar-nav .nav-link {
+                padding: 0.75rem 1rem !important;
+                margin: 0.25rem 0 !important;
+            }
+        }
+
+        /* Improve footer links on mobile */
+        @media (max-width: 575.98px) {
+            footer .nav-item {
+                margin: 0.25rem 0;
+            }
+            
+            footer .nav-link {
+                padding: 0.5rem 0 !important;
+            }
+        }
+
+        /* Ensure alerts are visible on mobile */
+        .alert {
+            margin: 1rem;
+            word-wrap: break-word;
+        }
+
+        /* Improve button sizing on mobile */
+        @media (max-width: 767.98px) {
+            .btn {
+                font-size: 0.9rem;
+                padding: 0.5rem 1rem;
+            }
+        }
+        
+        /* Fix Select2 width on mobile */
+        .select2-container {
+            max-width: 100% !important;
+            width: 100% !important;
+        }
+        
+        .select2-container .select2-selection--single,
+        .select2-container .select2-selection--multiple {
+            width: 100% !important;
         }
     </style>
 </head>
@@ -49,49 +113,49 @@
 
 <body class="bg-white d-flex flex-column min-vh-100">
 
-    <nav class="navbar navbar-expand-lg navbar-dark px-3" id="main-navbar">
+    <nav class="navbar navbar-expand-lg navbar-dark px-2 px-md-3" id="main-navbar">
         <!-- Logo - Responsive -->
         <a class="navbar-brand d-flex align-items-center" href="/">
-            <img class="me-2 rounded-circle flex-shrink-0" src="{{url_for('static', filename='img/logo.png')}}" alt="Logo de la agrupacion" width="50px" height="50px">
-            <div class="d-none d-md-flex flex-column align-items-start fw-bold">
-                <span class="d-block small">Agrupación Veteranos de Guerra de Malvinas</span>
-                <span class="d-block small">"Operativo Virgen del Rosario"</span>
+            <img class="me-2 rounded-circle flex-shrink-0" src="{{url_for('static', filename='img/logo.png')}}" alt="Logo de la agrupacion" width="50" height="50">
+            <div class="d-none d-md-flex flex-column align-items-start fw-bold lh-sm">
+                <span class="d-block" style="font-size: 0.9rem;">Agrupación Veteranos de Guerra de Malvinas</span>
+                <span class="d-block" style="font-size: 0.9rem;">"Operativo Virgen del Rosario"</span>
             </div>
             <div class="d-md-none fw-bold">
-                <span class="small">Veteranos de Malvinas</span>
+                <span style="font-size: 0.95rem;">Veteranos de Malvinas</span>
             </div>
        </a> 
 
        <!-- Boton para desplegar el menu -->
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Abrir menú de navegación">
             <span class="navbar-toggler-icon"></span>
         </button>
 
         <!-- Links --> 
         <div class="collapse navbar-collapse" id="navbarNav">
             <div class="navbar-nav ms-auto">
-                <a class="nav-link d-flex align-items-center text-white mx-1 p-2 {% if request.path == '/' %}nav-link-active{% endif %}" href="/">
+                <a class="nav-link d-flex align-items-center text-white mx-1 p-2 {% if request.path == '/' %}nav-link-active{% endif %}" href="/" aria-label="Ir a inicio">
                     <i class="bi bi-house me-2"></i> Inicio
                 </a>
-                <a class="nav-link d-flex align-items-center text-white mx-1 p-2 {% if request.path.startswith('/buscar') %}nav-link-active{% endif %}" href="/buscar">
+                <a class="nav-link d-flex align-items-center text-white mx-1 p-2 {% if request.path.startswith('/buscar') %}nav-link-active{% endif %}" href="/buscar" aria-label="Buscar veteranos">
                     <i class="bi bi-search me-2"></i> Buscar y ver datos
                 </a>
-                <a class="nav-link d-flex align-items-center text-white mx-1 p-2 {% if request.path.startswith('/admin') %}nav-link-active{% endif %}" href="/admin">
+                <a class="nav-link d-flex align-items-center text-white mx-1 p-2 {% if request.path.startswith('/admin') %}nav-link-active{% endif %}" href="/admin" aria-label="Panel de administrador">
                     <i class="bi bi-box-arrow-in-right me-2"></i> Administrador
                 </a>
             </div>
         </div>
     </nav>
 
-    <main>
-        <div class="pt-3 pb-3 flex-grow-1">
+    <main class="flex-grow-1">
+        <div class="py-3">
             {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 {% for category, message in messages %}
-                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                <div class="alert alert-{{ category }} alert-dismissible fade show mx-2 mx-md-3" role="alert">
                     {{ message }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
                 </div>
                 {% endfor %}
             {% endif %}
@@ -101,28 +165,51 @@
         </div>
     </main>
 
-    <footer class="text-white py-3 mt-auto" id="main-footer">
-        <div class="container text-center">
-            <ul class="d-flex flex-column d-sm-flex flex-sm-row nav justify-content-center mb-2">
-                <li class="nav-item"><a href="/contacto" class="nav-link px-3 mx-2 text-white {% if request.path.startswith('/contacto') %}nav-link-active{% endif %}">Contacto</a></li>
-                <li class="nav-item"><a href="/terminos" class="nav-link px-3 mx-2 text-white {% if request.path.startswith('/terminos') %}nav-link-active{% endif %}">Términos</a></li>
-                <li class="nav-item"><a href="/privacidad" class="nav-link px-3 mx-2 text-white {% if request.path.startswith('/privacidad') %}nav-link-active{% endif %}">Privacidad</a></li>
-            </ul>
-            <p class="small mb-1">
-                Desarrollado en el marco de un proyecto de extensión de la Universidad Nacional de Río Cuarto en colaboración con la Agrupación Veteranos de Guerra de Malvinas "Operativo Virgen del Rosario".
-            </p>
-            <p class="small">
-                Honrando a nuestros héroes desde 1982
-            </p>
+    <footer class="text-white py-3 py-md-4 mt-auto" id="main-footer">
+        <div class="container">
+            <nav class="text-center" aria-label="Enlaces del pie de página">
+                <ul class="nav flex-column flex-sm-row justify-content-center mb-3 gap-2 gap-sm-3">
+                    <li class="nav-item">
+                        <a href="/contacto" class="nav-link px-3 text-white {% if request.path.startswith('/contacto') %}nav-link-active{% endif %}" aria-label="Ir a contacto">
+                            Contacto
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/terminos-privacidad" class="nav-link px-3 text-white {% if request.path.startswith('/terminos-privacidad') %}nav-link-active{% endif %}" aria-label="Ver términos y privacidad">
+                            Términos y Privacidad
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            <div class="text-center px-3">
+                <p class="small mb-2">
+                    Desarrollado en el marco de un proyecto de extensión de la Universidad Nacional de Río Cuarto en colaboración con la Agrupación Veteranos de Guerra de Malvinas "Operativo Virgen del Rosario".
+                </p>
+                <p class="small mb-0">
+                    Honrando a nuestros héroes desde 1982
+                </p>
+            </div>
         </div>
     </footer>
 
     <!-- Bootstrap JS Bundle CDN -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-
+    
+    <script>
+        // Close navbar when clicking outside
+        document.addEventListener('click', function(event) {
+            const navbar = document.getElementById('navbarNav');
+            const toggler = document.querySelector('.navbar-toggler');
+            const isClickInsideNav = navbar?.contains(event.target);
+            const isClickOnToggler = toggler?.contains(event.target);
+            
+            if (!isClickInsideNav && !isClickOnToggler && navbar?.classList.contains('show')) {
+                bootstrap.Collapse.getInstance(navbar)?.hide();
+            }
+        });
+    </script>
 </body>
 
 </html>

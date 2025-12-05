@@ -2,78 +2,87 @@
 {% block title %}Inicio{% endblock %}
 
 {% block content %}
-<div class="container p-4">
-  <h1 class="text-black fw-bold mb-3">Sistema de Gestión de Veteranos de Guerra de Malvinas</h1>
+<div class="container px-3 px-md-4 py-4">
+  <h1 class="text-dark fw-bold mb-3 text-center">Sistema de Gestión de Veteranos de Guerra de Malvinas</h1>
   
-  <p class="text-secondary">
+  <p class="text-secondary mb-3">
     La Agrupación Veteranos de Guerra de Malvinas "Operativo Virgen del Rosario", con sede en la ciudad de Río Cuarto, trabaja activamente en la preservación de la memoria histórica del conflicto del Atlántico Sur de 1982. Su labor se centra en brindar contención, asesoramiento y acompañamiento a los veteranos y a sus familias, así como en promover actividades conmemorativas, educativas y de concientización en la comunidad.
   </p>
-  <p class="text-secondary">
+  <p class="text-secondary mb-4">
     Este sistema ha sido desarrollado para mejorar la comunicación entre los veteranos, permitiendo realizar consultas y mantenernos conectados, fortaleciendo así los lazos de compañerismo y apoyo mutuo. Porque Malvinas nos une, y solo unidos podemos seguir malvinizando y honrando la memoria de quienes dieron todo por nuestra Patria.
   </p>
   
-  <!-- Contenedor gris -->
-  <div class="p-4 my-5" style="background-color: #f1f1f1; border-radius: 10px;">
-    <h3 class="fw-bold mb-4">Estadísticas</h3>
+  <!-- Estadísticas -->
+  <section class="p-3 p-md-4 my-4 rounded-3" style="background-color: #f0f0f0;" aria-labelledby="estadisticas-heading">   
+    <h2 id="estadisticas-heading" class="h3 fw-bold mb-4">Estadísticas</h2>
     
-    <div class="row g-4">
+    <div class="row g-3 g-md-4">
       <!-- Card 1 -->
-      <div class="col-md-4">
-        <div class="card shadow-sm h-100">
-          <div class="card-body text-center">
-            <h5 class="fw-bold">Veteranos registrados</h5>
-            <p class="fs-3 fw-bold" style="color: #4B9EE9;">{{ total_veteranos }}</p>
+      <div class="col-12 col-sm-6 col-lg-4">
+        <div class="card shadow-sm h-100 border-0">
+          <div class="card-body text-center p-4">
+            <h3 class="h5 fw-bold mb-3">Veteranos registrados</h3>
+            <p class="display-4 fw-bold text-primary mb-0" style="color: #0066CC !important;">{{ total_veteranos }}</p>
           </div>
         </div>
       </div>
       
       <!-- Card 2 -->
-      <div class="col-md-4">
-        <div class="card shadow-sm h-100">
-          <div class="card-body text-center">
-            <h5 class="fw-bold">Fuerzas representadas</h5>
-            <p class="fs-3 fw-bold" style="color: #4B9EE9;">{{ total_fuerzas }}</p>
+      <div class="col-12 col-sm-6 col-lg-4">
+        <div class="card shadow-sm h-100 border-0">
+          <div class="card-body text-center p-4">
+            <h3 class="h5 fw-bold mb-3">Fuerzas representadas</h3>
+            <p class="display-4 fw-bold text-primary mb-0" style="color: #0066CC !important;">{{ total_fuerzas }}</p>
           </div>
         </div>
       </div>
       
       <!-- Card 3 -->
-      <div class="col-md-4">
-        <div class="card shadow-sm h-100">
-          <div class="card-body text-center">
-            <h5 class="fw-bold">Años de historia</h5>
-            <p class="fs-3 fw-bold" style="color: #4B9EE9;">{{anos_historia}}</p>
+      <div class="col-12 col-sm-6 col-lg-4">
+        <div class="card shadow-sm h-100 border-0">
+          <div class="card-body text-center p-4">
+            <h3 class="h5 fw-bold mb-3">Años de historia</h3>
+            <p class="display-4 fw-bold text-primary mb-0" style="color: #0066CC !important;">{{anos_historia}}</p>
           </div>
         </div>
       </div>
     </div>
-  </div>
+  </section>
 
-      
   <!-- Documentación -->
-  <div class="p-4 my-5" style="background-color: #f1f1f1; border-radius: 10px;">
-    <h3 class="fw-bold mb-4">Documentación relevante</h3>
+  <section class="p-3 p-md-4 my-4 rounded-3" style="background-color: #f0f0f0;" aria-labelledby="documentacion-heading">
+    <h2 id="documentacion-heading" class="h3 fw-bold mb-4">Documentación relevante</h2>
     
-    <div class="row g-4">
-      {% for doc in documentos %}
-      <div class="col-md-4">
-        <div class="card h-100 shadow-sm">
-          <div class="card-body">
-            <div class="d-flex align-items-center mb-2">
-              <img src="{{ url_for('static', filename='img/pdf_icon.png') }}" alt="PDF" style="width: 24px; height: 24px;" class="me-2">
-              <h5 class="fw-bold mb-0">{{ doc.nombre }}</h5>
+    <div class="row g-3 g-md-4">
+      {% if documentos %}
+        {% for doc in documentos %}
+        <div class="col-12 col-sm-6 col-lg-4">
+          <article class="card h-100 shadow-sm border-0">
+            <div class="card-body d-flex flex-column p-4">
+              <div class="d-flex align-items-center mb-3">
+                <img src="{{ url_for('static', filename='img/pdf_icon.png') }}" alt="" width="24" height="24" class="me-2" aria-hidden="true">
+                <h3 class="h5 fw-bold mb-0">{{ doc.nombre }}</h3>
+              </div>
+              <p class="text-secondary flex-grow-1 mb-3">{{ doc.descripcion }}</p> 
+              <a href="{{ url_for('static', filename=doc.ruta_archivo|replace('static/', '')) }}" 
+                 class="btn btn-primary mt-auto" 
+                 target="_blank"
+                 rel="noopener noreferrer"
+                 aria-label="Descargar {{ doc.nombre }}">
+                Descargar PDF
+              </a>
             </div>
-            <p class="text-secondary">{{ doc.descripcion }}</p> 
-            <a href="{{ url_for('static', filename=doc.ruta_archivo|replace('static/', '')) }}" class="btn btn-primary mt-2">
-              Descargar PDF
-            </a>
-          </div>
+          </article>
         </div>
-      </div>
-      {% endfor %}
+        {% endfor %}
+      {% else %}
+        <div class="col-12">
+          <p class="text-center text-muted py-4">No hay documentación disponible en este momento.</p>
+        </div>
+      {% endif %}
     </div>
-  </div>
+  </section>
 </div>
-  {% endblock %}
+{% endblock %}
   
   

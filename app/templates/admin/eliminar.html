@@ -7,10 +7,10 @@
 {% endblock %}
 
 {% block content %}
-<div class="container">
-    <h1 class="h2">Eliminar persona</h1>
-    <p>Ingrese los datos de la persona a eliminar</p>
-    <hr>
+<div class="container-fluid px-3">
+    <h1 class="h2 mb-3">Eliminar persona</h1>
+    <p class="text-muted">Ingrese los datos de la persona a eliminar</p>
+    <hr class="my-4">
 
     <!-- Formulario de búsqueda -->
     <form method="get" class="mb-4">
@@ -22,9 +22,9 @@
             <a href="{{ url_for('main.eliminar_persona') }}" class="btn btn-secondary">Limpiar</a>
         </div>
     </form>
-    <hr>
+    <hr class="my-4">
       
-    <h2 class="h4">REGISTROS ENCONTRADOS ({{ veteranos|length }})</h2>
+    <h2 class="h4 mb-3">REGISTROS ENCONTRADOS ({{ veteranos|length }})</h2>
      
     <div class="records">
         {% if veteranos %}
@@ -35,7 +35,7 @@
                             {% if veterano.ruta_foto %}
                                 <img src="{{ url_for('static', filename=veterano.ruta_foto) }}" alt="Foto de {{ veterano.nombre }}">
                             {% else %}
-                                <div class="avatar-placeholder"></div>
+                                <img src="{{ url_for('static', filename='img/avatar.svg') }}" alt="Avatar default">
                             {% endif %}
                         </div>
                         <div class="record-details">

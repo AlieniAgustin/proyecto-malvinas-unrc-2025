@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Página no encontrada{% endblock %}
+
+{% block content %}
+<div class="container px-3 px-md-4 py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-xl-6">
+            <div class="text-center">
+                <div class="mb-4">
+                    <i class="bi bi-exclamation-triangle display-1" style="color: #0066CC;"></i>
+                </div>
+                <h1 class="display-4 fw-bold mb-3">404</h1>
+                <h2 class="h3 mb-4">Página no encontrada</h2>
+                <p class="lead text-muted mb-4">
+                    Lo sentimos, la página que estás buscando no existe o ha sido movida.
+                </p>
+                
+                <div class="d-flex flex-column flex-sm-row gap-2 justify-content-center mt-4">
+                    <a href="{{ url_for('main.start') }}" class="btn btn-primary">
+                        <i class="bi bi-house-door me-2"></i>Volver al inicio
+                    </a>
+                    <a href="{{ url_for('main.buscar') }}" class="btn btn-outline-primary">
+                        <i class="bi bi-search me-2"></i>Buscar veteranos
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

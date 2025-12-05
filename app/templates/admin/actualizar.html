@@ -9,10 +9,10 @@
 {% endblock %}
 
 {% block content %}
-<div class="container">
-    <h1 class="h2">Actualizar información de la agrupación</h1>
-    <p>Actualice la información de contacto y las autoridades.</p>
-    <hr>
+<div class="container-fluid px-3">
+    <h1 class="h2 mb-3">Actualizar información de la agrupación</h1>
+    <p class="text-muted">Actualice la información de contacto y las autoridades.</p>
+    <hr class="my-4">
 
     <form class="formulario" method="POST" action="{{ url_for('main.actualizar_info_agrupacion')}}">
         <section>

@@ -11,11 +11,10 @@
 
 {% block content %}
 
-
-<div class="container">
-    <h1 class="h2">Insertar Persona</h1>
-    <p>Complete el formulario con los datos del veterano (los campos con * son obligatorios).</p>
-    <hr>
+<div class="container-fluid px-3">
+    <h1 class="h2 mb-3">Insertar Persona</h1>
+    <p class="text-muted">Complete el formulario con los datos del veterano (los campos con * son obligatorios).</p>
+    <hr class="my-4">
 
     <form class="formulario" method="POST" enctype="multipart/form-data" action="{{ url_for('main.insertar_persona') }}">
 
@@ -24,15 +23,15 @@
             <div class="grid">
                 <div>
                     <label>DNI*</label>
-                    <input type="text" name="dni" required>
+                    <input type="text" name="dni" required placeholder="Ej: 12345678">
                 </div>
                 <div>
                     <label>Nombre*</label>
-                    <input type="text" name="nombre" required>
+                    <input type="text" name="nombre" required placeholder="Ej: Juan Carlos">
                 </div>
                 <div>
                     <label>Apellido*</label>
-                    <input type="text" name="apellido" required>
+                    <input type="text" name="apellido" required placeholder="Ej: Pérez">
                 </div>
                 <div>
                     <label>Género</label>
@@ -93,7 +92,7 @@
                 </div>
                 <div>
                     <label>Dirección postal</label>
-                    <input type="text" name="direccion" placeholder="Ingrese dirección">
+                    <input type="text" name="direccion" placeholder="Ej: Av. Sabattini 2750">
                 </div>
                 <div>
                     <label>Código postal</label>
@@ -106,11 +105,11 @@
                 </div>
                 <div>
                     <label>Correo electrónico</label>
-                    <input type="email" name="mail" placeholder="Ingrese email">
+                    <input type="email" name="mail" placeholder="Ej: ejemplo@mail.com">
                 </div>
                 <div>
                     <label>Teléfono</label>
-                    <input type="tel" name="telefono" placeholder="Ingrese teléfono">
+                    <input type="tel" name="telefono" placeholder="Ej: 0358-1234567">
                 </div>
             </div>
         </section>
@@ -137,15 +136,15 @@
                 </div>
                 <div>
                     <label>Función</label>
-                    <input type="text" name="funcion" placeholder="Ingrese función">
+                    <input type="text" name="funcion" placeholder="Ej: Soldado de infantería">
                 </div>
                 <div>
                     <label>Secuelas</label>
-                    <input type="text" name="secuelas" placeholder="Describa las secuelas">
+                    <input type="text" name="secuelas" placeholder="Ej: Pérdida auditiva parcial">
                 </div>
                 <div>
                     <label>Número de Beneficio Nacional</label>
-                    <input type="text" name="nro_beneficio_nacional" placeholder="Ingrese número">
+                    <input type="text" name="nro_beneficio_nacional" placeholder="Ej: 12345">
                 </div>
             </div>
         </section>

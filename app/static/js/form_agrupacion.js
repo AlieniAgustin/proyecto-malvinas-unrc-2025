@@ -12,12 +12,14 @@ function setupUbicacionHandlers(provinciaSelectId, localidadSelectId, cpInputId 
     // Inicializa Select2 en la provincia (para que sea buscable)
     $provinciaSelect.select2({ 
         theme: "bootstrap-5",
+        width: '100%',
         placeholder: "Seleccione una provincia"
     });
 
     // Inicializa Select2 en la localidad (configuración AJAX)
     $localidadSelect.select2({
         theme: "bootstrap-5",
+        width: '100%',
         placeholder: '(Seleccione una provincia primero)',
         ajax: {
             url: "/api/localidades/buscar",
@@ -97,6 +99,7 @@ function setupVeteranoSearchModal() {
 
     $selectVeterano.select2({
         theme: "bootstrap-5",
+        width: '100%',
         placeholder: 'Buscar veterano por DNI, nombre o apellido...',
         dropdownParent: $modal, // para que el buscador funcione dentro del modal
         ajax: {
@@ -196,6 +199,7 @@ window.addEventListener('DOMContentLoaded', function () {
     // 2. Configurar Select2 para Teléfonos (con tags para añadir nuevos)
     $('#telefonos').select2({
         theme: "bootstrap-5",
+        width: '100%',
         tags: true, // Permite crear nuevas etiquetas (números)
         placeholder: "Ingrese teléfonos (presione Enter)",
         tokenSeparators: [',']

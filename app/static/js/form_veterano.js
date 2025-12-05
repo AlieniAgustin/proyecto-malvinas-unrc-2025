@@ -15,6 +15,7 @@ function setupCodigoPostalHandler(localidadSelectId, codigoPostalSelectId, otroI
     // Inicializa Select2
     $codigoSelect.select2({
         theme: "bootstrap-5",
+        width: '100%',
         placeholder: "Seleccione un código postal",
         ajax: {
             url: "/api/codigos_postales",
@@ -87,12 +88,14 @@ function setupUbicacionHandlers(provinciaSelectId, localidadSelectId, cpInputId 
     // Inicializa Select2 en la provincia (para que sea buscable)
     $provinciaSelect.select2({ 
         theme: "bootstrap-5",
+        width: '100%',
         placeholder: "Seleccione una provincia"
     });
 
     // Inicializa Select2 en la localidad (configuración AJAX)
     $localidadSelect.select2({
         theme: "bootstrap-5",
+        width: '100%',
         placeholder: '(Seleccione una provincia primero)',
         ajax: {
             url: "/api/localidades/buscar",

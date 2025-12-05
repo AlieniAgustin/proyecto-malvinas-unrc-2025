@@ -9,11 +9,10 @@
 
 {% block content %}
 
-<h1 class="h2">Modificar Persona</h1>
-<p>Actualice el formulario con los datos del veterano (los campos con * son obligatorios).</p>
-<hr>
-
-<div class="container">
+<div class="container-fluid px-3">
+    <h1 class="h2 mb-3">Modificar Persona</h1>
+    <p class="text-muted">Actualice el formulario con los datos del veterano (los campos con * son obligatorios).</p>
+    <hr class="my-4">
         <form class="formulario" method="POST" enctype="multipart/form-data" action="{{ url_for('main.modificar_persona_guardar', dni=veterano.dni) }}">
         <section>
             <h3 class="h4">Información personal</h3>
@@ -89,7 +88,7 @@
                 </div>
                 <div>
                     <label>Dirección postal</label>
-                    <input type="text" name="direccion" value="{{ veterano.direccion or '' }}" placeholder="Ingrese dirección">
+                    <input type="text" name="direccion" value="{{ veterano.direccion or '' }}" placeholder="Ej: Av. Sabattini 2750">
                 </div>
                 <div>
                     <label>Código postal</label>
@@ -102,11 +101,11 @@
                 </div>
                 <div>
                     <label>Correo electrónico</label>
-                    <input type="email" name="mail" value="{{ veterano.mail or '' }}" placeholder="Ingrese email">
+                    <input type="email" name="mail" value="{{ veterano.mail or '' }}" placeholder="Ej: ejemplo@mail.com">
                 </div>
                 <div>
                     <label>Teléfono</label>
-                    <input type="tel" name="telefono" value="{{ telefono.telefono or '' }}" placeholder="Ingrese teléfono">
+                    <input type="tel" name="telefono" value="{{ telefono.telefono or '' }}" placeholder="Ej: 0358-1234567">
                 </div>
             </div>
         </section>
@@ -133,15 +132,15 @@
                 </div>
                 <div>
                     <label>Función</label>
-                    <input type="text" name="funcion" value="{{ veterano.funcion or '' }}" placeholder="Ingrese función">
+                    <input type="text" name="funcion" value="{{ veterano.funcion or '' }}" placeholder="Ej: Soldado de infantería">
                 </div>
                 <div>
                     <label>Secuelas</label>
-                    <input type="text" name="secuelas" value="{{ veterano.secuelas or '' }}" placeholder="Describa las secuelas">
+                    <input type="text" name="secuelas" value="{{ veterano.secuelas or '' }}" placeholder="Ej: Pérdida auditiva parcial">
                 </div>
                 <div>
                     <label>Número de Beneficio Nacional</label>
-                    <input type="text" name="nro_beneficio_nacional" value="{{ veterano.nro_beneficio_nacional or '' }}" placeholder="Ingrese número">
+                    <input type="text" name="nro_beneficio_nacional" value="{{ veterano.nro_beneficio_nacional or '' }}" placeholder="Ej: 12345">
                 </div>
             </div>
         </section>

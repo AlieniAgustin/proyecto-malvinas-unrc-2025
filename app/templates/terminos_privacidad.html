@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block title %}Términos y Privacidad{% endblock %}
+
+{% block content %}
+<div class="container px-3 px-md-4 py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-10 col-xl-9">
+            <h1 class="text-center mb-4 mb-md-5 h2">Términos y Privacidad</h1>
+            
+            <!-- Combined Content -->
+            <article class="card shadow-sm border-0 mb-4">
+                <div class="card-header text-white py-3" style="background-color: #0066CC;">
+                    <h2 class="h4 mb-0">Información General</h2>
+                </div>
+                <div class="card-body p-3 p-md-4">
+                    <div class="mb-4">
+                        <h3 class="h5 fw-bold mb-3" style="color: #0066CC;">Origen y Fuente de la Información</h3>
+                        <p>
+                            Los datos almacenados y mostrados en esta página fueron provistos por los dirigentes de la Agrupación Veteranos de Guerra de Malvinas "Operativo Virgen del Rosario".
+                        </p>
+                        <p>
+                            Esta información fue almacenada con el propósito de dar a conocer los ex-combatientes oriundos 
+                            de la Ciudad de Río Cuarto que estuvieron dispuestos a dar su vida por el país en la Guerra de Malvinas.
+                        </p>
+                        <p>
+                            La información es de carácter público y puede ser consultada por cualquier persona interesada.
+                        </p>
+                    </div>
+
+                    <div class="mb-4">
+                        <h3 class="h5 fw-bold mb-3" style="color: #0066CC;">Uso Autorizado</h3>
+                        <p>
+                            El uso de la información contenida en este sitio web está <strong>únicamente autorizado</strong> 
+                            para fines educativos, informativos y/o divulgativos referidos a la Guerra de Malvinas.
+                        </p>
+                    </div>
+
+                    
+                    <div class="mb-4">
+                        <h3 class="h5 fw-bold mb-3" style="color: #0066CC;">Atribución de Créditos</h3>
+                        <p>
+                            Cualquiera sea el uso que se dé a esta información, deben atribuirse los correspondientes 
+                            créditos a la <strong>Agrupación Veteranos de Guerra de Malvinas "Operativo Virgen del Rosario"</strong>.
+                        </p>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <h3 class="h5 fw-bold mb-3" style="color: #0066CC;">Acceso a la Información</h3>
+                        <p>
+                            Para agregar o rectificar información sobre algún veterano, se deberá contactar a los dirigentes 
+                            de la asociación para la revisión de la información provista y, en caso de que se corrobore, 
+                            se pueda agregar al sistema.
+                        </p>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <h3 class="h5 fw-bold mb-3 text-danger">Prohibiciones</h3>
+                        <div class="alert alert-warning" role="alert">
+                            <strong>¡Importante!</strong> Cualquier uso con fines malintencionados o con intenciones 
+                            de comercialización respecto a estos datos está <strong>totalmente prohibido</strong>.
+                        </div>
+                    </div>
+                </div>
+
+            </article>
+
+            <div class="text-center mt-4">
+                <a href="{{ url_for('main.start') }}" class="btn btn-primary">
+                    <i class="bi bi-arrow-left me-2"></i>Volver al inicio
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

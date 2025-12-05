@@ -178,7 +178,10 @@ def ver_perfil(dni):
     veterano = cursor.fetchone()
 
     if not veterano:
-        return "Veterano no encontrado", 404
+        # Render the perfil page with no veterano so the site layout is preserved
+        # and return a 404 status code so clients know it's not found.
+        cursor.close()
+        return render_template('perfil.html', veterano=None, veterano_admin=None, telefonos=None), 404
 
     # Variables para los datos de administrador
     veterano_admin = None
@@ -303,18 +306,18 @@ def contacto():
         ubicacion=ubicacion,
         autoridades_agrupadas=autoridades_agrupadas)
 
-@bp.route('/terminos')
-def terminos():
-    return render_template('terminos.html')
-
-@bp.route('/privacidad')
-def privacidad():
-    return render_template('privacidad.html')
+@bp.route('/terminos-privacidad')
+def terminos_privacidad():
+    return render_template('terminos_privacidad.html')
 
 @bp.route('/dashboard')
 @login_required
 def dashboard():
     return render_template('dashboard.html')
+
+@bp.app_errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
 
 # Importar otros modulos
 from . import apis

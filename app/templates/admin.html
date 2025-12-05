@@ -3,54 +3,70 @@
 {% block title %}Administrador{% endblock %}
 
 {% block content %}
-<!-- Centrado vertical y horizontal usando flex -->
-<div class="container d-flex justify-content-center my-5">
-    <div class="card shadow rounded-4 bg-light" id="login-card" style="width: 400px;">
-        <div class="card-body p-4">
-            <h4 class="text-center mb-4 fw-bold">Iniciar Sesión</h4>
+<div class="container d-flex justify-content-center align-items-center py-5" style="min-height: 60vh;">
+    <div class="card shadow-sm border-0 rounded-3 bg-light" style="width: 100%; max-width: 420px;">
+        <div class="card-body p-4 p-md-5">
+            <h1 class="h4 text-center mb-4 fw-bold">Iniciar Sesión</h1>
             <form method="POST" action="{{ url_for('main.login') }}">
                 <!-- Campo de correo electrónico -->
-                <div class="mb-3 text-start">
-                    <label for="login-email" class="form-label">Correo Electrónico</label>
-                    <input type="email" name="email" class="form-control" id="login-email" placeholder="Ingrese su correo electrónico">
+                <div class="mb-3">
+                    <label for="login-email" class="form-label fw-semibold">Correo Electrónico</label>
+                    <input type="email" 
+                           name="email" 
+                           class="form-control" 
+                           id="login-email" 
+                           placeholder="correo@ejemplo.com"
+                           required
+                           autocomplete="email"
+                           aria-describedby="emailHelp">
                 </div>
 
                 <!-- Campo de contraseña con botón para mostrar/ocultar -->
-                <div class="mb-2 text-start">
-                    <label for="login-psswd" class="form-label">Contraseña</label>
+                <div class="mb-3">
+                    <label for="login-psswd" class="form-label fw-semibold">Contraseña</label>
                     <div class="input-group">
-                        <input type="password" name="password" class="form-control" id="login-psswd" placeholder="Ingrese su contraseña">
-                        <!-- Ícono para mostrar/ocultar contraseña integrado al input -->
-                        <span class="input-group-text bg-white border-start-0" id="togglePassword" style="cursor:pointer;">
-                            <i class="bi bi-eye" id="eyeIcon"></i>
-                        </span>
+                        <input type="password" 
+                               name="password" 
+                               class="form-control border-end-0" 
+                               id="login-psswd" 
+                               placeholder="Ingrese su contraseña"
+                               required
+                               autocomplete="current-password"
+                               aria-label="Contraseña">
+                        <button class="btn btn-outline-secondary bg-white border-start-0" 
+                                type="button" 
+                                id="togglePassword" 
+                                aria-label="Mostrar u ocultar contraseña"
+                                style="border-color: #ced4da;">
+                            <i class="bi bi-eye" id="eyeIcon" aria-hidden="true"></i>
+                        </button>
                     </div>
                     <!-- Link para recuperar contraseña -->
-                    <div class="d-flex justify-content-end">
-                        <!--- TODO: Definir que vamos a hacer en este caso, redireccionar a un medio de contacto? Permitirles cambiar la contraseña?-->
-                        <a href="#" class="small mt-1 text-decoration-none">Olvidé mi contraseña</a>
+                    <div class="text-end mt-2">
+                        <a href="#" class="small text-decoration-none" style="color: #0066CC;">¿Olvidó su contraseña?</a>
                     </div>
                 </div>
 
-                <!-- Script para mostrar/ocultar la contraseña -->
-                <script>
-                    // Referencias a los elementos del DOM
-                    const passwordInput = document.getElementById('login-psswd');
-                    const togglePassword = document.getElementById('togglePassword');
-                    const eyeIcon = document.getElementById('eyeIcon');
-
-                    // Alterna el tipo de input y el icono al hacer click
-                    togglePassword.addEventListener('click', () => {
-                        const isPassword = passwordInput.type === 'password';
-                        passwordInput.type = isPassword ? 'text' : 'password';
-                        eyeIcon.classList.toggle('bi-eye');
-                        eyeIcon.classList.toggle('bi-eye-slash');
-                    });
-                </script>
-
-                <button type="submit" class="btn btn-primary w-100 mt-3">Iniciar sesión</button>
+                <button type="submit" class="btn btn-primary w-100 mt-3 py-2 fw-semibold" style="background-color: #0066CC; border-color: #0066CC;">
+                    Iniciar sesión
+                </button>
             </form>
         </div>
     </div>
 </div>
+
+<!-- Script para mostrar/ocultar la contraseña -->
+<script>
+    const passwordInput = document.getElementById('login-psswd');
+    const togglePassword = document.getElementById('togglePassword');
+    const eyeIcon = document.getElementById('eyeIcon');
+
+    togglePassword.addEventListener('click', () => {
+        const isPassword = passwordInput.type === 'password';
+        passwordInput.type = isPassword ? 'text' : 'password';
+        eyeIcon.classList.toggle('bi-eye');
+        eyeIcon.classList.toggle('bi-eye-slash');
+        togglePassword.setAttribute('aria-label', isPassword ? 'Ocultar contraseña' : 'Mostrar contraseña');
+    });
+</script>
 {% endblock %}
