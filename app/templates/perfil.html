@@ -13,17 +13,10 @@
             <div class="row g-3 g-md-4">
                 <!-- Profile Image -->
                 <div class="col-12 col-md-3 text-center">
-                    {% if veterano.ruta_foto %}
-                        <img src="{{ url_for('static', filename=veterano.ruta_foto) }}" 
-                             class="img-fluid rounded-circle shadow-sm" 
-                             alt="Foto de {{ veterano.nombre }} {{ veterano.apellido }}"
-                             style="max-width: 200px; width: 100%; height: auto; aspect-ratio: 1/1; object-fit: cover;">
-                    {% else %}
-                        <img src="{{ url_for('static', filename='img/avatar.svg') }}" 
-                             class="img-fluid rounded-circle shadow-sm" 
-                             alt="Avatar por defecto"
-                             style="max-width: 200px; width: 100%; height: auto; aspect-ratio: 1/1; object-fit: cover;">
-                    {% endif %}
+                    <img src="{{ url_for('static', filename='img/avatar.svg') }}" 
+                          class="img-fluid rounded-circle shadow-sm" 
+                          alt="Avatar por defecto"
+                          style="max-width: 200px; width: 100%; height: auto; aspect-ratio: 1/1; object-fit: cover;">
                 </div>
 
                 <!-- Profile Info -->

@@ -163,14 +163,12 @@ def ver_perfil(dni):
             fza.nombre AS fuerza,
             loc.nombre_localidad, loc.departamento,
             prov.nombre AS provincia_nacimiento,
-            foto.ruta_foto,
             fallecido.fecha_fallecimiento
         FROM persona p
         JOIN veterano v ON p.dni = v.dni_veterano
         LEFT JOIN fuerza fza ON v.id_fuerza = fza.id_fuerza
         LEFT JOIN localidad loc ON v.localidad_nacimiento = loc.id_localidad
         LEFT JOIN provincia prov ON loc.id_provincia = prov.id_provincia
-        LEFT JOIN foto ON v.dni_veterano = foto.dni_veterano
         LEFT JOIN fallecido ON v.dni_veterano = fallecido.dni_veterano
         WHERE p.dni = %s
     """

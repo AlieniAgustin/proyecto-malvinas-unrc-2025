@@ -11,7 +11,6 @@ DROP TABLE IF EXISTS fallecido;
 DROP TABLE IF EXISTS causa_fallecimiento;
 DROP TABLE IF EXISTS autoridad;
 DROP TABLE IF EXISTS rol;
-DROP TABLE IF EXISTS foto;
 DROP TABLE IF EXISTS administrador;
 DROP TABLE IF EXISTS documento;
 DROP TABLE IF EXISTS veterano;
@@ -136,14 +135,6 @@ CREATE TABLE administrador(
     CONSTRAINT ck_password_length CHECK(LENGTH(psswd) >= 8),
     CONSTRAINT fk_agrupacion FOREIGN KEY (agrupacion) 
     REFERENCES agrupacion(id_agrupacion) ON DELETE CASCADE ON UPDATE CASCADE
-);
-
-CREATE TABLE foto(
-  id_foto INT AUTO_INCREMENT PRIMARY KEY,
-  dni_veterano VARCHAR(8) NOT NULL,
-  ruta_foto VARCHAR(255) NOT NULL,
-  CONSTRAINT fk_dni_veterano FOREIGN KEY (dni_veterano)
-    REFERENCES veterano(dni_veterano) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE rol (

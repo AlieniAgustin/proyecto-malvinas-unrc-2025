@@ -26,11 +26,7 @@
                     <article class="record">
                         <div class="record-info">
                             <div class="avatar rounded-circle">
-                                {% if persona.ruta_foto %}
-                                    <img src="{{ url_for('static', filename=persona.ruta_foto) }}" alt="Foto de {{ persona.nombre }} {{ persona.apellido }}">
-                                {% else %}
-                                    <img src="{{ url_for('static', filename='img/avatar.svg') }}" alt="Avatar por defecto" class="rounded-circle">
-                                {% endif %}
+                                <img src="{{ url_for('static', filename='img/avatar.svg') }}" alt="Avatar por defecto" class="rounded-circle">
                             </div>
                             <div class="record-details">
                                 <strong class="d-block">{{ persona.apellido }}, {{ persona.nombre }}</strong>

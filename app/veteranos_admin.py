@@ -187,10 +187,9 @@ def modificar_datos():
     try:
         query = """
             SELECT 
-                p.dni, p.nombre, p.apellido, foto.ruta_foto
+                p.dni, p.nombre, p.apellido
             FROM persona p
             JOIN veterano v ON p.dni = v.dni_veterano
-            LEFT JOIN foto ON v.dni_veterano = foto.dni_veterano
             WHERE 1=1
         """
         params = []
@@ -397,10 +396,9 @@ def eliminar_persona():
     try:
         query = """
             SELECT 
-                p.dni, p.nombre, p.apellido, foto.ruta_foto
+                p.dni, p.nombre, p.apellido
             FROM persona p
             JOIN veterano v ON p.dni = v.dni_veterano
-            LEFT JOIN foto ON v.dni_veterano = foto.dni_veterano
             WHERE 1=1
         """
         params = []

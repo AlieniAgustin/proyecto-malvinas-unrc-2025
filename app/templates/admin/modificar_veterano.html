@@ -13,7 +13,7 @@
     <h1 class="h2 mb-3">Modificar Persona</h1>
     <p class="text-muted">Actualice el formulario con los datos del veterano (los campos con * son obligatorios).</p>
     <hr class="my-4">
-        <form class="formulario" method="POST" enctype="multipart/form-data" action="{{ url_for('main.modificar_persona_guardar', dni=veterano.dni) }}">
+        <form class="formulario" method="POST" action="{{ url_for('main.modificar_persona_guardar', dni=veterano.dni) }}">
         <section>
             <h3 class="h4">Información personal</h3>
             <div class="grid">
@@ -60,10 +60,6 @@
                     <select name="localidad_nacimiento" id="localidad_nacimiento" disabled>
                         <option value="">Seleccione una localidad</option>
                     </select>
-                </div>
-                 <div>
-                    <label>Foto/s</label>
-                    <input type="file" class="form-control" id="fotos" name="fotos" multiple accept="image/*" style="padding: 8px; border: 1px solid #ccc; border-radius: 4px; line-height: 1.5;">
                 </div>
             </div>
         </section>

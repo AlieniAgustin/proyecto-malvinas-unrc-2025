@@ -32,11 +32,7 @@
                 <div class="record">
                     <div class="record-info">
                         <div class="avatar">
-                            {% if veterano.ruta_foto %}
-                                <img src="{{ url_for('static', filename=veterano.ruta_foto) }}" alt="Foto de {{ veterano.nombre }}">
-                            {% else %}
-                                <img src="{{ url_for('static', filename='img/avatar.svg') }}" alt="Avatar default">
-                            {% endif %}
+                            <img src="{{ url_for('static', filename='img/avatar.svg') }}" alt="Avatar default">
                         </div>
                         <div class="record-details">
                             <strong>{{ veterano.nombre }} {{ veterano.apellido }}</strong>
