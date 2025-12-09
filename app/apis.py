@@ -23,7 +23,6 @@ def buscar_codigos_postales():
               AND codigo_postal_residencia IS NOT NULL
               AND codigo_postal_residencia LIKE %s
             ORDER BY codigo_postal_residencia
-            LIMIT 50
         """
         cursor.execute(sql_query, (localidad_id, f"%{query}%"))
         codigos = cursor.fetchall()
@@ -88,13 +87,12 @@ def buscar_localidades_api():
     conn = get_db()
     cursor = conn.cursor(dictionary=True)
     
-    # Buscamos coincidencias con LIKE y limitamos la muestra a solo 50 resultados
+    # Buscamos coincidencias con LIKE
     sql_query = """
         SELECT id_localidad, nombre_localidad, departamento 
         FROM localidad 
         WHERE id_provincia = %s AND nombre_localidad LIKE %s
         ORDER BY nombre_localidad
-        LIMIT 50
     """
     params = (provincia_id, f"%{query}%")
     
@@ -166,7 +164,6 @@ def buscar_veteranos_api():
            OR p.nombre LIKE %s 
            OR p.apellido LIKE %s)
         ORDER BY p.apellido, p.nombre
-        LIMIT 20
     """
     like_query = f"%{query}%"
     params = (like_query, like_query, like_query)
