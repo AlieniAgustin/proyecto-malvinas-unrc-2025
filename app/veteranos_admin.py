@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash,
 from flask_login import login_required
 from app.db import get_db
 from .routes import bp 
+from datetime import datetime, date
 
 # Obtiene las listas para los dropdowns de los formularios de inserción/modificación de personas
 def _get_form_context_data(cursor):
@@ -94,6 +95,16 @@ def insertar_persona():
             secuelas = request.form.get('secuelas', '').strip()
             nro_beneficio = request.form.get('nro_beneficio_nacional', '').strip()
 
+            if fecha_nacimiento:
+                try:
+                    fecha_nac_obj = datetime.strptime(fecha_nacimiento, '%Y-%m-%d').date()
+                    if fecha_nac_obj > date.today():
+                        flash("La fecha de nacimiento no puede ser futura", "danger")
+                        return render_template('admin/insertar.html', **form_context_data)
+                except ValueError:
+                    flash("Formato de fecha de nacimiento inválido", "danger")
+                    return render_template('admin/insertar.html', **form_context_data)
+
             estado_vida = request.form.get('estado_vida', 'vivo')
             fecha_fallecimiento = request.form.get('fecha_fallecimiento')
             id_causa = request.form.get('causa_fallecimiento')
@@ -113,7 +124,6 @@ def insertar_persona():
             
             # Validaciones de fechas si es fallecido
             if estado_vida == 'fallecido' and fecha_fallecimiento:
-                from datetime import datetime
                 try:
                     fecha_fall = datetime.strptime(fecha_fallecimiento, '%Y-%m-%d').date()
                     hoy = date.today()
@@ -324,14 +334,22 @@ def modificar_persona_guardar(dni):
         if not nombre or not apellido or not fecha_nacimiento or not id_fuerza:
             flash("Nombre, apellido, fecha de nacimiento y fuerza son obligatorios", "danger")
             return redirect(url_for('main.modificar_persona_form', dni=dni))
-        
+
+        try:
+            fecha_nac_obj = datetime.strptime(fecha_nacimiento, '%Y-%m-%d').date()
+            if fecha_nac_obj > date.today():
+                flash("La fecha de nacimiento no puede ser futura", "danger")
+                return redirect(url_for('main.modificar_persona_form', dni=dni))
+        except ValueError:
+            flash("Formato de fecha de nacimiento inválido", "danger")
+            return redirect(url_for('main.modificar_persona_form', dni=dni))
+
         if estado_vida == 'fallecido' and not fecha_fallecimiento:
             flash("Debe ingresar la fecha de fallecimiento", "danger")
             return redirect(url_for('main.modificar_persona_form', dni=dni))
         
         # Validaciones de fechas si es fallecido
         if estado_vida == 'fallecido' and fecha_fallecimiento:
-            from datetime import datetime
             try:
                 fecha_fall = datetime.strptime(fecha_fallecimiento, '%Y-%m-%d').date()
                 hoy = date.today()

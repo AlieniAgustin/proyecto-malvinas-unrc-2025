@@ -213,9 +213,39 @@ window.addEventListener('DOMContentLoaded', function () {
 
     setupCodigoPostalHandler('localidad_residencia', 'codigo_postal', 'otro_codigo_postal');
 
-    // Configurar listener de edad
-    calcularEdad();
-    document.getElementById('fecha_nacimiento').addEventListener('change', calcularEdad);
+    // Validacion de fecha de nacimiento
+    const fechaNacInput = document.getElementById('fecha_nacimiento');
+
+    function validarFechaNacimiento() {
+        if (!fechaNacInput || !fechaNacInput.value) return true;
+
+        const hoy = new Date();
+        hoy.setHours(0, 0, 0, 0); // Ignorar hora
+        const fechaNac = new Date(fechaNacInput.value + 'T00:00:00');
+
+        if (fechaNac > hoy) {
+            alert("La fecha de nacimiento no puede ser futura.");
+            fechaNacInput.value = ""; // Limpiar el campo
+            fechaNacInput.classList.add('is-invalid'); // Feedback visual (Bootstrap)
+            document.getElementById('edad').value = ""; // Limpiar edad calculada
+            return false;
+        } else {
+            fechaNacInput.classList.remove('is-invalid');
+            return true;
+        }
+    }
+
+    if (fechaNacInput) {
+        // Calcular edad inicial si hay valor
+        calcularEdad();
+
+        fechaNacInput.addEventListener('change', function() {
+            if (validarFechaNacimiento()) {
+                calcularEdad();
+            }
+        });
+    }
+
 
     // Configurar listener de estado de vida
     document.querySelectorAll('input[name="estado_vida"]').forEach(radio => {
