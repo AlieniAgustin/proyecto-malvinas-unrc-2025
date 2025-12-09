@@ -257,6 +257,48 @@ window.addEventListener('DOMContentLoaded', function () {
         const otroGrado = document.getElementById('otro_grado');
         otroGrado.style.display = this.value === 'otro' ? 'block' : 'none';
     });
+
+    // Validaciones de fechas de fallecimiento
+    const fechaNacimiento = document.getElementById('fecha_nacimiento');
+    const fechaFallecimiento = document.getElementById('fecha_fallecimiento');
+    const errorFechaFallecimiento = document.getElementById('error_fecha_fallecimiento');
+    
+    function validarFechaFallecimiento() {
+        if (!fechaFallecimiento || !fechaFallecimiento.value) {
+            errorFechaFallecimiento.classList.add('d-none');
+            return true;
+        }
+        
+        const hoy = new Date();
+        hoy.setHours(0, 0, 0, 0);
+        const fechaFall = new Date(fechaFallecimiento.value);
+        const fechaNac = fechaNacimiento.value ? new Date(fechaNacimiento.value) : null;
+        
+        // Validar que no sea fecha futura
+        if (fechaFall > hoy) {
+            errorFechaFallecimiento.textContent = 'La fecha de fallecimiento no puede ser futura';
+            errorFechaFallecimiento.classList.remove('d-none');
+            fechaFallecimiento.classList.add('is-invalid');
+            return false;
+        }
+        
+        // Validar que no sea anterior a la fecha de nacimiento
+        if (fechaNac && fechaFall < fechaNac) {
+            errorFechaFallecimiento.textContent = 'La fecha de fallecimiento no puede ser anterior a la de nacimiento';
+            errorFechaFallecimiento.classList.remove('d-none');
+            fechaFallecimiento.classList.add('is-invalid');
+            return false;
+        }
+        
+        errorFechaFallecimiento.classList.add('d-none');
+        fechaFallecimiento.classList.remove('is-invalid');
+        return true;
+    }
+    
+    if (fechaFallecimiento) {
+        fechaFallecimiento.addEventListener('change', validarFechaFallecimiento);
+        fechaNacimiento.addEventListener('change', validarFechaFallecimiento);
+    }
     
     // Ejecutar inicialización
     if (window.APP_DATA && window.APP_DATA.veterano) {

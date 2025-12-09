@@ -110,6 +110,27 @@ def insertar_persona():
             if estado_vida == 'fallecido' and not fecha_fallecimiento:
                 flash("Debe ingresar la fecha de fallecimiento", "danger")
                 return redirect(url_for('main.insertar_persona'))
+            
+            # Validaciones de fechas si es fallecido
+            if estado_vida == 'fallecido' and fecha_fallecimiento:
+                from datetime import datetime
+                try:
+                    fecha_fall = datetime.strptime(fecha_fallecimiento, '%Y-%m-%d').date()
+                    hoy = date.today()
+                    fecha_nac = datetime.strptime(fecha_nacimiento, '%Y-%m-%d').date()
+                    
+                    # No permitir fechas futuras
+                    if fecha_fall > hoy:
+                        flash("La fecha de fallecimiento no puede ser futura", "danger")
+                        return redirect(url_for('main.insertar_persona'))
+                    
+                    # No permitir fechas anteriores a la de nacimiento
+                    if fecha_fall < fecha_nac:
+                        flash("La fecha de fallecimiento no puede ser anterior a la de nacimiento", "danger")
+                        return redirect(url_for('main.insertar_persona'))
+                except ValueError:
+                    flash("Formato de fecha inválido", "danger")
+                    return redirect(url_for('main.insertar_persona'))
 
             id_grado_final = _get_or_create_grado(cursor, 
                                                   id_fuerza, 
@@ -307,6 +328,27 @@ def modificar_persona_guardar(dni):
         if estado_vida == 'fallecido' and not fecha_fallecimiento:
             flash("Debe ingresar la fecha de fallecimiento", "danger")
             return redirect(url_for('main.modificar_persona_form', dni=dni))
+        
+        # Validaciones de fechas si es fallecido
+        if estado_vida == 'fallecido' and fecha_fallecimiento:
+            from datetime import datetime
+            try:
+                fecha_fall = datetime.strptime(fecha_fallecimiento, '%Y-%m-%d').date()
+                hoy = date.today()
+                fecha_nac = datetime.strptime(fecha_nacimiento, '%Y-%m-%d').date()
+                
+                # No permitir fechas futuras
+                if fecha_fall > hoy:
+                    flash("La fecha de fallecimiento no puede ser futura", "danger")
+                    return redirect(url_for('main.modificar_persona_form', dni=dni))
+                
+                # No permitir fechas anteriores a la de nacimiento
+                if fecha_fall < fecha_nac:
+                    flash("La fecha de fallecimiento no puede ser anterior a la de nacimiento", "danger")
+                    return redirect(url_for('main.modificar_persona_form', dni=dni))
+            except ValueError:
+                flash("Formato de fecha inválido", "danger")
+                return redirect(url_for('main.modificar_persona_form', dni=dni))
         
         id_grado_final = _get_or_create_grado(cursor, 
                                               id_fuerza, 

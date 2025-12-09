@@ -157,7 +157,9 @@
                 </div>
                     <div class="estado" id="fecha_fallecido" style="{% if not veterano.es_fallecido %}display: none;{% endif %}">
                     <label>Fecha de fallecimiento</label> 
-                    <input type="date" name="fecha_fallecimiento" value="{{ veterano.fecha_fallecimiento.strftime('%Y-%m-%d') if veterano.fecha_fallecimiento else '' }}">                </div>
+                    <input type="date" id="fecha_fallecimiento" name="fecha_fallecimiento" value="{{ veterano.fecha_fallecimiento.strftime('%Y-%m-%d') if veterano.fecha_fallecimiento else '' }}">
+                    <small class="text-danger d-none" id="error_fecha_fallecimiento"></small>
+                </div>
                 <div id="causa_fallecido" class="estado" style="{% if not veterano.es_fallecido %}display: none;{% endif %}">
                     <label>Causa de fallecimiento</label>
                     <select name="causa_fallecimiento">
