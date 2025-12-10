@@ -49,7 +49,12 @@
                         
                         <dt class="col-5 col-sm-4">Fecha de Nacimiento:</dt>
                         <dd class="col-7 col-sm-8">{{ veterano.fecha_nacimiento.strftime('%d/%m/%Y') if veterano.fecha_nacimiento else 'No especificada' }}</dd>
-                        
+
+                        {% if edad %}
+                        <dt class="col-5 col-sm-4">Edad:</dt>
+                        <dd class="col-7 col-sm-8">{{ edad }} años</dd>
+                        {% endif %}
+
                         <dt class="col-5 col-sm-4">Correo Electrónico:</dt>
                         <dd class="col-7 col-sm-8">{{ veterano_admin.mail or 'No especificado' }}</dd>
                         
@@ -80,6 +85,8 @@
                         <dd class="col-7 col-sm-8">{{ veterano_admin.nro_beneficio_nacional or 'No especificado' }}</dd>
 
                         {% if veterano.fecha_fallecimiento %}
+                        <dt class="col-5 col-sm-4">Fecha Fallecimiento:</dt>
+                        <dd class="col-7 col-sm-8">{{ veterano.fecha_fallecimiento.strftime('%d/%m/%Y') }}</dd>
                         <dt class="col-5 col-sm-4">Causa Fallecimiento:</dt>
                         <dd class="col-7 col-sm-8">{{ veterano_admin.causa_fallecimiento or 'No especificada' }}</dd>
                         {% endif %}

@@ -209,12 +209,19 @@ def ver_perfil(dni):
         cursor.execute("SELECT telefono FROM telefono_persona WHERE dni = %s", (dni,))
         telefonos = cursor.fetchall()
 
+    edad = None
+    if veterano and veterano['fecha_nacimiento'] and not veterano['fecha_fallecimiento']:
+        hoy = date.today()
+        nac = veterano['fecha_nacimiento']
+        edad = hoy.year - nac.year - ((hoy.month, hoy.day) < (nac.month, nac.day))
+
     cursor.close()
 
     return render_template('perfil.html',
                            veterano=veterano,
                            veterano_admin=veterano_admin,
-                           telefonos=telefonos)
+                           telefonos=telefonos,
+                           edad=edad)
 
 @bp.route('/admin')
 @login_required
