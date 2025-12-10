@@ -288,10 +288,16 @@ window.addEventListener('DOMContentLoaded', function () {
         otroGrado.style.display = this.value === 'otro' ? 'block' : 'none';
     });
 
-    // Validaciones de fechas de fallecimiento
+    // Validaciones de fechas de fallecimiento y causa
     const fechaNacimiento = document.getElementById('fecha_nacimiento');
     const fechaFallecimiento = document.getElementById('fecha_fallecimiento');
     const errorFechaFallecimiento = document.getElementById('error_fecha_fallecimiento');
+    const causaFallecimiento = document.getElementById('causa_fallecimiento');
+    const errorCausaFallecimiento = document.getElementById('error_causa_fallecimiento');
+    
+    // Fechas válidas para la Guerra de Malvinas
+    const INICIO_GUERRA_MALVINAS = new Date('1982-04-02');
+    const FIN_GUERRA_MALVINAS = new Date('1982-06-14');
     
     function validarFechaFallecimiento() {
         if (!fechaFallecimiento || !fechaFallecimiento.value) {
@@ -325,10 +331,69 @@ window.addEventListener('DOMContentLoaded', function () {
         return true;
     }
     
+    function validarCausaFallecimiento() {
+        if (!causaFallecimiento || !causaFallecimiento.value) {
+            if (errorCausaFallecimiento) errorCausaFallecimiento.classList.add('d-none');
+            return true;
+        }
+        
+        // Obtener el texto de la opción seleccionada
+        const causaTexto = causaFallecimiento.options[causaFallecimiento.selectedIndex].text.toLowerCase();
+        
+        // Si la causa es "en combate", validar que la fecha esté en el rango de la guerra
+        if (causaTexto === 'en combate' && fechaFallecimiento && fechaFallecimiento.value) {
+            const fechaFall = new Date(fechaFallecimiento.value);
+            
+            if (fechaFall < INICIO_GUERRA_MALVINAS || fechaFall > FIN_GUERRA_MALVINAS) {
+                if (errorCausaFallecimiento) {
+                    errorCausaFallecimiento.textContent = 'La causa "en combate" solo es válida para fechas entre el 2 de abril y el 14 de junio de 1982';
+                    errorCausaFallecimiento.classList.remove('d-none');
+                }
+                causaFallecimiento.classList.add('is-invalid');
+                return false;
+            }
+        }
+        
+        if (errorCausaFallecimiento) errorCausaFallecimiento.classList.add('d-none');
+        causaFallecimiento.classList.remove('is-invalid');
+        return true;
+    }
+    
     if (fechaFallecimiento) {
-        fechaFallecimiento.addEventListener('change', validarFechaFallecimiento);
+        fechaFallecimiento.addEventListener('change', function() {
+            validarFechaFallecimiento();
+            validarCausaFallecimiento(); // También validar causa cuando cambia la fecha
+        });
         fechaNacimiento.addEventListener('change', validarFechaFallecimiento);
     }
+    
+    if (causaFallecimiento) {
+        causaFallecimiento.addEventListener('change', validarCausaFallecimiento);
+    }
+    
+    // Validar formulario antes de enviar
+    const formularios = document.querySelectorAll('.formulario');
+    formularios.forEach(form => {
+        form.addEventListener('submit', function(e) {
+            let esValido = true;
+            
+            // Validar fecha de fallecimiento si existe
+            if (fechaFallecimiento && fechaFallecimiento.value) {
+                if (!validarFechaFallecimiento()) {
+                    esValido = false;
+                }
+                if (!validarCausaFallecimiento()) {
+                    esValido = false;
+                }
+            }
+            
+            if (!esValido) {
+                e.preventDefault();
+                alert('Por favor, corrija los errores en el formulario antes de continuar.');
+                return false;
+            }
+        });
+    });
     
     // Ejecutar inicialización
     if (window.APP_DATA && window.APP_DATA.veterano) {

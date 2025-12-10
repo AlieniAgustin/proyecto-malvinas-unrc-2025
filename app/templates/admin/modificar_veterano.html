@@ -162,12 +162,13 @@
                 </div>
                 <div id="causa_fallecido" class="estado" style="{% if not veterano.es_fallecido %}display: none;{% endif %}">
                     <label>Causa de fallecimiento</label>
-                    <select name="causa_fallecimiento">
+                    <select name="causa_fallecimiento" id="causa_fallecimiento">
                         <option value="">Seleccione una causa</option>
                         {% for causa in causas %} 
                         <option value="{{ causa.id_causa }}" {% if veterano.id_causa == causa.id_causa %}selected{% endif %}>{{ causa.descripcion }}</option>
                         {% endfor %}
                     </select>
+                    <small class="text-danger d-none" id="error_causa_fallecimiento"></small>
                 </div>
             </div>
         </section>
