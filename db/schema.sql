@@ -42,7 +42,7 @@ CREATE TABLE telefono_persona(
 
 CREATE TABLE fuerza(
   id_fuerza INT AUTO_INCREMENT NOT NULL,
-  nombre ENUM ('Ejercito', 'Fuerza Aerea', 'Gendarmeria', 'Marina') NOT NULL UNIQUE,
+  nombre ENUM ('Ejercito', 'Fuerza Aerea', 'Gendarmeria', 'Armada', 'Prefectura') NOT NULL UNIQUE,
   CONSTRAINT pk_fuerza PRIMARY KEY(id_fuerza)
 );
 
@@ -164,9 +164,9 @@ CREATE TABLE autoridad (
 CREATE TABLE causa_fallecimiento (
   id_causa INT AUTO_INCREMENT PRIMARY KEY,
   descripcion ENUM(
-    'en combate',
-    'post combate',
-    'natural'
+    'En combate',
+    'Luego del conflicto',
+    'Natural'
   ) NOT NULL UNIQUE
 );
 
