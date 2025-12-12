@@ -94,7 +94,7 @@ CREATE TABLE veterano(
   direccion VARCHAR(255),
   codigo_postal_residencia VARCHAR(20),
   nro_beneficio_nacional VARCHAR(50),
-  funcion VARCHAR(100),
+  funcion TEXT,
   secuelas TEXT,
   fecha_nacimiento DATE,
   mail VARCHAR(100),
