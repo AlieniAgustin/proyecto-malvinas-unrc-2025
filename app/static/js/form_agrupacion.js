@@ -115,7 +115,7 @@ function setupVeteranoSearchModal() {
                 return {
                     results: data.items.map(v => ({
                         id: v.dni,
-                        text: `${v.nombre} ${v.apellido} (DNI: ${v.dni})`,
+                        text: `${v.apellido}, ${v.nombre} (DNI: ${v.dni})`,
                         data: v 
                     }))
                 };

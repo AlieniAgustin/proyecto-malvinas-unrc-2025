@@ -35,14 +35,14 @@
                             <img src="{{ url_for('static', filename='img/avatar.svg') }}" alt="Avatar default">
                         </div>
                         <div class="record-details">
-                            <strong>{{ veterano.nombre }} {{ veterano.apellido }}</strong>
+                            <strong>{{ veterano.apellido }}, {{ veterano.nombre }}</strong>
                             <span>DNI: {{ veterano.dni }}</span>
                         </div>
                     </div>
                     <button class="btn-delete" 
                             data-bs-toggle="modal" 
                             data-bs-target="#confirmModal"
-                            data-nombre="{{ veterano.nombre }} {{ veterano.apellido }}"
+                            data-nombre="{{ veterano.apellido }}, {{ veterano.nombre }}"
                             data-dni="{{ veterano.dni }}">
                         Eliminar
                     </button>

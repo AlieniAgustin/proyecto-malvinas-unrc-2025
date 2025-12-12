@@ -236,7 +236,7 @@ def modificar_datos():
         if apellido:
             query += " AND LOWER(p.apellido) LIKE %s"
             params.append("%" + apellido.lower() + "%")
-        query += " ORDER BY p.apellido, p.nombre"
+        query += " ORDER BY p.apellido ASC, p.nombre ASC"
         cursor.execute(query, tuple(params))
         veteranos = cursor.fetchall()
         return render_template('admin/modificar.html', veteranos=veteranos)
@@ -474,7 +474,7 @@ def eliminar_persona():
         if apellido:
             query += " AND LOWER(p.apellido) LIKE %s"
             params.append("%" + apellido.lower() + "%")
-        query += " ORDER BY p.apellido, p.nombre"
+        query += " ORDER BY p.apellido ASC, p.nombre ASC"
         cursor.execute(query, tuple(params))
         veteranos = cursor.fetchall()
         return render_template('admin/eliminar.html', veteranos=veteranos)

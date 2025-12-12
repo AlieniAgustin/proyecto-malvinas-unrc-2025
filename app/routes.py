@@ -139,6 +139,7 @@ def buscar():
                 )
             """
 
+    query += " ORDER BY p.apellido ASC, p.nombre ASC"
     cursor.execute(query, tuple(params))
     resultados = cursor.fetchall()
     conn.close()
@@ -290,7 +291,7 @@ def contacto():
 
     autoridades_agrupadas = defaultdict(list)
     for autoridad in autoridades_lista:
-        nombre_completo = f"{autoridad['nombre']} {autoridad['apellido']}"
+        nombre_completo = f"{autoridad['apellido']}, {autoridad['nombre']}"
         autoridades_agrupadas[autoridad['nombre_rol']].append(nombre_completo)
 
     cursor.execute("""

@@ -163,7 +163,7 @@ def buscar_veteranos_api():
           AND (p.dni LIKE %s 
            OR p.nombre LIKE %s 
            OR p.apellido LIKE %s)
-        ORDER BY p.apellido, p.nombre
+        ORDER BY p.apellido ASC, p.nombre ASC
     """
     like_query = f"%{query}%"
     params = (like_query, like_query, like_query)
